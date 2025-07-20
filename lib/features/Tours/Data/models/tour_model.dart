@@ -40,8 +40,8 @@ Map<String, dynamic> ToJson(TourModel tour) {
     'line': {
       'id': tour.line.id,
       'name': tour.line.name,
-      'createdAt': tour.line.createdAt.toIso8601String(),
-      'updatedAt': tour.line.updatedAt.toIso8601String(),
+      'createdAt': tour.line.createdAt!.toIso8601String(),
+      'updatedAt': tour.line.updatedAt!.toIso8601String(),
     },
   };
 }

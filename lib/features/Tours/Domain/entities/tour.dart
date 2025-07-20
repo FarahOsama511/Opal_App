@@ -20,16 +20,11 @@ class Tour extends Equatable {
 
 class LineEntity extends Equatable {
   final String id;
-  final String name;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final String? name;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
-  LineEntity({
-    required this.id,
-    required this.name,
-    required this.createdAt,
-    required this.updatedAt,
-  });
+  LineEntity({required this.id, this.name, this.createdAt, this.updatedAt});
 
   @override
   List<Object?> get props => [id, name, createdAt, updatedAt];

@@ -8,7 +8,7 @@ import '../../../../../core/strings/failures.dart';
 
 class TourCubit extends Cubit<TourState> {
   final GetAllToursUseCase getAllToursUseCase;
-  TourCubit(super.initialState, this.getAllToursUseCase);
+  TourCubit(this.getAllToursUseCase) : super(TourInitial());
 
   Future<void> getAllTours() async {
     emit(TourLoading());
@@ -20,6 +20,7 @@ class TourCubit extends Cubit<TourState> {
         },
         (tours) {
           emit(TourLoaded(tours));
+          print("USE CASE RESULT: $tours");
         },
       );
     } catch (e) {

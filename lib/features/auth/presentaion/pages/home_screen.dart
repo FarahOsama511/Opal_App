@@ -1,26 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:opal_app/features/auth/presentaion/bloc/auth_cubit.dart';
 
 class SupervisorScreen extends StatelessWidget {
   const SupervisorScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-
     // بيانات مؤقتة للعرض
     final List<Map<String, String>> students = [
       {
         'name': 'يمنى أسامة',
         'phone': '01012345678',
         'university': 'جامعة القاهرة',
-        'faculty': 'كلية حاسبات'
+        'faculty': 'كلية حاسبات',
       },
       {
         'name': 'يمنى اسامه',
         'phone': '01098765432',
         'university': 'جامعة عين شمس',
-        'faculty': 'كلية هندسة'
+        'faculty': 'كلية هندسة',
       },
     ];
+    final user = context.read<AuthCubit>().user?.user.name ?? 'مجهول';
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -52,9 +54,9 @@ class SupervisorScreen extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         mainAxisSize: MainAxisSize.min,
-                        children: const [
+                        children: [
                           Text(
-                            '!مرحباً مهاب',
+                            "${user}",
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 22,
@@ -65,10 +67,7 @@ class SupervisorScreen extends StatelessWidget {
                           SizedBox(height: 4),
                           Text(
                             'مشرف خط 1',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
-                            ),
+                            style: TextStyle(color: Colors.black, fontSize: 18),
                             textAlign: TextAlign.right,
                           ),
                         ],
@@ -93,7 +92,10 @@ class SupervisorScreen extends StatelessWidget {
             Expanded(
               child: Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 20,
+                ),
                 decoration: const BoxDecoration(
                   color: Color(0xFFE71A45),
                   borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
@@ -123,7 +125,6 @@ class SupervisorScreen extends StatelessWidget {
                       ],
                     ),
 
-
                     const SizedBox(height: 20),
                     Expanded(
                       child: ListView.builder(
@@ -142,7 +143,6 @@ class SupervisorScreen extends StatelessWidget {
         ),
       ),
     );
-
   }
 }
 

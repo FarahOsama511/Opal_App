@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:opal_app/features/Tours/presentaion/pages/trips.dart';
-
 import 'add_trip_time.dart';
-
 
 class AdminHomeScreen extends StatefulWidget {
   const AdminHomeScreen({super.key});
-
   @override
   State<AdminHomeScreen> createState() => _AdminHomeScreenState();
 }
@@ -22,40 +19,41 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          Column(
-            children: [
-              _buildHeader(),
-              Expanded(
-                child: Stack(
-                  children: [
-                    IndexedStack(
-                      index: currentIndex,
-                      children: [
-                        _buildHomeContent(),
-                        const TripsScreen(),
-                       // const StudentList(),
-                      ],
-                    ),
-                    _buildBottomNav(),
-                  ],
+      body: SafeArea(
+        child: Stack(
+          children: [
+            Column(
+              children: [
+                _buildHeader(),
+                Expanded(
+                  child: Stack(
+                    children: [
+                      IndexedStack(
+                        index: currentIndex,
+                        children: [
+                          _buildHomeContent(),
+                          const TripsScreen(),
+                          // const StudentList(),
+                        ],
+                      ),
+                      _buildBottomNav(),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            if (showAddMenu) _buildAddMenu(),
+            if (showAddTripBox)
+              Positioned(
+                top: 150,
+                left: 20,
+                right: 20,
+                child: AddTripBox(
+                  onClose: () => setState(() => showAddTripBox = false),
                 ),
               ),
-            ],
-          ),
-          if (showAddMenu) _buildAddMenu(),
-          if (showAddTripBox)
-            Positioned(
-              top: 150,
-              left: 20,
-              right: 20,
-              child: AddTripBox(
-                onClose: () => setState(() => showAddTripBox = false),
-              ),
-            ),
-
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -75,10 +73,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
               // Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => SignInScreen()));
             },
           ),
-          Image.asset(
-            'assets/logo.png',
-            height: 60,
-          ),
+          Image.asset('assets/logo.png', height: 60),
           IconButton(
             icon: const Icon(Icons.add_circle_outline, color: Colors.black),
             onPressed: () {
@@ -93,9 +88,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   Widget _buildHomeContent() {
     return Container(
       width: double.infinity,
-      decoration: const BoxDecoration(
-        color: Color(0xFFE71A45),
-      ),
+      decoration: const BoxDecoration(color: Color(0xFFE71A45)),
       child: Container(
         padding: const EdgeInsets.only(
           left: 16,
@@ -123,7 +116,11 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
           color: const Color(0xFFE71A45),
           borderRadius: BorderRadius.circular(24),
           boxShadow: const [
-            BoxShadow(color: Colors.black26, blurRadius: 6, offset: Offset(0, 2)),
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 6,
+              offset: Offset(0, 2),
+            ),
           ],
         ),
         child: ClipRRect(
@@ -180,13 +177,11 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
               _buildAddOption('إضافة مشرف جديد', () {
                 Navigator.pushNamed(context, '/addSupervisor');
               }),
-              _buildAddOption('إضافة ميعاد جديد', ()
-
-              {setState(() {
-                showAddTripBox = true;
-                showAddMenu = false;
-              });
-
+              _buildAddOption('إضافة ميعاد جديد', () {
+                setState(() {
+                  showAddTripBox = true;
+                  showAddMenu = false;
+                });
               }),
               _buildAddOption('إضافة خط جديد', () {
                 Navigator.pushNamed(context, '/addBusLine');
@@ -197,7 +192,6 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       ),
     );
   }
-
 
   Widget _buildAddOption(String title, VoidCallback onTap) {
     return TextButton(
@@ -213,7 +207,6 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       ),
     );
   }
-
 
   Widget _buildSupervisorCard(String name) {
     return Container(
