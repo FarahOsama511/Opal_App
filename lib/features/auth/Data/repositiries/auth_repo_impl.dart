@@ -3,13 +3,13 @@ import 'package:opal_app/core/errors/failure.dart';
 import 'package:opal_app/core/network/network_info.dart';
 import 'package:opal_app/features/Tours/Domain/entities/tour.dart';
 import 'package:opal_app/features/auth/Data/datasource/remote_data_source.dart';
+import 'package:opal_app/features/auth/Data/models/register_model.dart';
 import 'package:opal_app/features/auth/Domain/entities/authentity.dart';
 import 'package:opal_app/features/auth/Domain/entities/login_entity.dart';
 import 'package:opal_app/features/auth/Domain/entities/user_entity.dart';
 import 'package:opal_app/features/auth/Domain/repositires/auth_repo.dart';
 
 import '../../../../core/errors/exceptions.dart';
-import '../models/register_model.dart';
 
 class AuthRepoImpl extends AuthRepository {
   final AuthRemoteDataSource authremoteDataSource;
@@ -17,9 +17,9 @@ class AuthRepoImpl extends AuthRepository {
   AuthRepoImpl({required this.authremoteDataSource, required this.networkInfo});
   @override
   Future<Either<Failure, LoginEntity>> login(
-    String phone,
-    String universityCardId,
-  ) async {
+      String phone,
+      String universityCardId,
+      ) async {
     if (await networkInfo.isConnected) {
       try {
         final user = await authremoteDataSource.login(phone, universityCardId);
@@ -34,8 +34,8 @@ class AuthRepoImpl extends AuthRepository {
 
   @override
   Future<Either<Failure, RegisterEntity>> register(
-    RegisterEntity authEntity,
-  ) async {
+      RegisterEntity authEntity,
+      ) async {
     final registerModel = RegisterModel(
       user: UserEntity(
         name: authEntity.user.name,

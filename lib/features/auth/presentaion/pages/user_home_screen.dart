@@ -56,7 +56,7 @@ class SupervisorScreen extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            "${user}",
+                            "$user",
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 22,
