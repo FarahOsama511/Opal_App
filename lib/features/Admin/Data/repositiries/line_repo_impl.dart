@@ -1,0 +1,52 @@
+import 'package:dartz/dartz.dart';
+import 'package:opal_app/core/errors/failure.dart';
+import 'package:opal_app/features/Admin/Data/dataSource/line_remote_data_source.dart';
+import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
+import 'package:opal_app/features/Admin/Domain/reporistires/line_repo.dart';
+
+import '../../../../core/errors/exceptions.dart';
+import '../../../../core/network/network_info.dart';
+
+class LineRepoImpl extends LineRepo {
+  final LineRemoteDataSource remoteDataSource;
+  final NetworkInfo networkInfo;
+  LineRepoImpl(this.networkInfo, {required this.remoteDataSource});
+  @override
+  Future<Either<Failure, List<LineEntity>>> getAllLines() async {
+    if (await networkInfo.isConnected) {
+      try {
+        final Lines = await remoteDataSource.getAllLines();
+        //localDataSource.saveTours(rempotsTour);
+        return Right(Lines);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return left(NoInternetFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> AddLine(LineEntity lineEntity) {
+    // TODO: implement AddLine
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, Unit>> deleteLine(String id) {
+    // TODO: implement deleteLine
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, LineEntity>> getLineById(String id) {
+    // TODO: implement getLineById
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, Unit>> updateLine(LineEntity lineEntity) {
+    // TODO: implement updateLine
+    throw UnimplementedError();
+  }
+}
