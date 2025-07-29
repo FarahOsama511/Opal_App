@@ -5,7 +5,6 @@ import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines
 import 'package:opal_app/features/Admin/presentaion/widgets/app_header.dart'
     show AppHeader;
 import 'package:opal_app/features/selection/presentation/pages/confirm_details.dart';
-
 import '../../../../core/resources/color_manager.dart';
 import '../../../Admin/Domain/entities/tour.dart';
 import '../../../Admin/presentaion/bloc/get_lines/get_all_lines_state.dart';
@@ -87,9 +86,17 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                   ),
                 ],
               ),
-              trailingWidget: Opacity(
-                opacity: 0.3,
-                child: Image.asset('assets/logo.png', width: 60, height: 60),
+              trailingWidget: Positioned(
+                left: 210,
+                top: -100,
+                child: Opacity(
+                  opacity: 0.2,
+                  child: Image.asset(
+                    'assets/logos.png',
+                    width: 300,
+                    height: 300,
+                  ),
+                ),
               ),
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -116,9 +123,9 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                     horizontal: 20,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.grey[200],
+                    //color: Colors.grey[200],
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.grey),
+                    border: Border.all(color: ColorManager.blackColor),
                   ),
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -166,7 +173,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                   vertical: 20,
                 ),
                 decoration: const BoxDecoration(
-                  color: Color(0xFFE71A45),
+                  color: ColorManager.primaryColor,
                   borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
                 ),
                 child: Column(
@@ -210,22 +217,26 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                                   isExpanded: isExpanded,
                                   onTap: isTripConfirmed
                                       ? null
-                                      : () {
-                                          setState(() {
-                                            expandedCardIndex = isExpanded
-                                                ? null
-                                                : index;
-                                          });
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (_) =>
-                                                  ConfirmDetailsScreen(
-                                                    tourId: tours[index].id!,
-                                                  ),
-                                            ),
-                                          );
+                                      : () async {
+                                          expandedCardIndex = isExpanded
+                                              ? null
+                                              : index;
+                                          final confirmed =
+                                              await showDialog<bool>(
+                                                context: context,
+                                                builder: (_) =>
+                                                    ConfirmDetailsScreen(
+                                                      tourId: tours[index].id!,
+                                                    ),
+                                              );
+
+                                          if (confirmed == true) {
+                                            setState(() {
+                                              isTripConfirmed = true;
+                                            });
+                                          }
                                         },
+
                                   line: tours[index].line.name!,
                                   supervisorName: tours[index].driverName,
                                   departureTime: DateFormat(

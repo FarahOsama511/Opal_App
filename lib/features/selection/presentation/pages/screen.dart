@@ -1,259 +1,143 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_cubit.dart';
-import 'package:opal_app/features/Admin/presentaion/widgets/app_header.dart'
-    show AppHeader;
-import 'package:opal_app/features/selection/presentation/pages/confirm_details.dart';
 
-import '../../../../core/resources/color_manager.dart';
-import '../../../Admin/Domain/entities/tour.dart';
-import '../../../Admin/presentaion/bloc/get_lines/get_all_lines_state.dart';
-import '../../../Admin/presentaion/bloc/get_tour_bloc/tour_cubit.dart';
-import '../../../Admin/presentaion/bloc/get_tour_bloc/tour_state.dart';
-import '../../../Admin/presentaion/pages/trip_details.dart';
-import '../../../Admin/presentaion/widgets/bus_card.dart';
-import '../../../Admin/presentaion/widgets/custom_widgets.dart';
-import '../../../user/presentaion/bloc/auth_cubit.dart';
-import '../../../user/presentaion/bloc/selection_tour/selection_tour_cubit.dart';
-
-class HomeScreen extends StatefulWidget {
-  final bool isTripConfirmed;
-  const HomeScreen({super.key, this.isTripConfirmed = false});
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  int? expandedCardIndex;
-  LineEntity? selectedLine;
-  late bool isTripConfirmed;
-
-  @override
-  void initState() {
-    super.initState();
-    isTripConfirmed = widget.isTripConfirmed;
-    BlocProvider.of<TourCubit>(context).getAllTours();
-    BlocProvider.of<LinesCubit>(context).getAllLiness();
-  }
-
+class BusCard extends StatelessWidget {
+  final bool isExpanded;
+  final VoidCallback onTap;
+  final VoidCallback onCancel;
+  final VoidCallback onNext;
+  final String line;
+  final String supervisorName;
+  final String departureTime;
+  final String date;
+  const BusCard({
+    super.key,
+    required this.isExpanded,
+    required this.onTap,
+    required this.onCancel,
+    required this.onNext,
+    required this.line,
+    required this.supervisorName,
+    required this.departureTime,
+    required this.date,
+  });
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ColorManager.secondColor,
-      body: SafeArea(
-        child: Column(
-          children: [
-            AppHeader(
-              onLogout: () {
-                Navigator.pushReplacementNamed(context, '/signin');
-              },
-              leadingWidget: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.logout),
-                    onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/signin');
-                    },
-                  ),
-                  const SizedBox(width: 10),
-                  const Icon(Icons.person),
-                ],
-              ),
-              titleWidget: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    '!مرحباً ${context.read<AuthCubit>().user?.user.name ?? ''}',
-                    style: TextStyle(
-                      color: ColorManager.blackColor,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.right,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'متى تريد الذهاب؟',
-                    style: TextStyle(
-                      color: ColorManager.blackColor,
-                      fontSize: 18,
-                      fontWeight: FontWeight.normal,
-                    ),
-                    textAlign: TextAlign.right,
-                  ),
-                ],
-              ),
-              trailingWidget: Opacity(
-                opacity: 0.3,
-                child: Image.asset('assets/logo.png', width: 60, height: 60),
-              ),
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        margin: const EdgeInsets.only(bottom: 15),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
             ),
-            const SizedBox(height: 12),
-            if (isTripConfirmed)
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => TripDetailsScreen(
-                        tourId: context
-                            .read<SelectionTourCubit>()
-                            .TourConfirmedId!,
-                      ),
-                    ),
-                  );
-                },
-                child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 20),
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 16,
-                    horizontal: 20,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.grey),
-                  ),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'عرض الرحلة الخاصة بك',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Icon(Icons.arrow_forward_ios, size: 18),
-                    ],
-                  ),
-                ),
-              )
-            else
-              BlocBuilder<LinesCubit, GetAllLinesState>(
-                builder: (context, state) {
-                  if (state is LinesLoading) {
-                    return const CircularProgressIndicator(
-                      color: ColorManager.primaryColor,
-                    );
-                  } else if (state is LinesLoaded) {
-                    return CustomDropdown(
-                      label: 'اختر الخط الخاص بك',
-                      value: selectedLine,
-                      items: state.Liness,
-                      onChanged: (value) {
-                        setState(() => selectedLine = value);
-                      },
-                      displayString: (u) => u.name!,
-                    );
-                  } else {
-                    return const Text('فشل في تحميل الخطوط');
-                  }
-                },
+          ],
+        ),
+        child: Stack(
+          children: [
+            Positioned(
+              bottom: -5,
+              left: -5,
+              child: Opacity(
+                opacity: 0.4,
+                child: Image.asset('assets/logo.png', width: 60),
               ),
-            const SizedBox(height: 10),
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 20,
-                ),
-                decoration: const BoxDecoration(
-                  color: Color(0xFFE71A45),
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    const Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        'مواعبد الذهاب _ العودة',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+            ),
+            Directionality(
+              textDirection: TextDirection.rtl,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  _RowInfo(label: 'الخط', value: line),
+                  _RowInfo(label: 'اسم المشرف', value: supervisorName),
+                  _RowInfo(label: 'ميعاد الذهاب', value: departureTime),
+                  _RowInfo(label: 'تاريخ اليوم', value: date),
+                  if (isExpanded) ...[
+                    const Divider(height: 20),
+                    const Text(
+                      'اختر ميعاد العودة:',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 10),
+                    DropdownButtonFormField<String>(
+                      items: const [
+                        DropdownMenuItem(value: '1', child: Text('1:00 مساءً')),
+                        DropdownMenuItem(value: '2', child: Text('2:00 مساءً')),
+                        DropdownMenuItem(value: '3', child: Text('3:00 مساءً')),
+                      ],
+                      onChanged: (val) {},
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.grey[100],
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 15),
-                    BlocBuilder<TourCubit, TourState>(
-                      builder: (context, state) {
-                        if (state is TourLoading) {
-                          return const Center(
-                            child: CircularProgressIndicator(
-                              color: ColorManager.secondColor,
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: onCancel,
+                            child: const Text('إلغاء'),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: onNext,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFE71A45),
                             ),
-                          );
-                        } else if (state is TourLoaded) {
-                          final tours = selectedLine == null
-                              ? state.tours
-                              : state.tours
-                                    .where(
-                                      (t) => t.line.name == selectedLine!.name,
-                                    )
-                                    .toList();
-
-                          return Expanded(
-                            child: ListView.builder(
-                              itemCount: tours.length,
-                              itemBuilder: (context, index) {
-                                final isExpanded = index == expandedCardIndex;
-                                return BusCard(
-                                  isExpanded: isExpanded,
-                                  onTap: isTripConfirmed
-                                      ? null
-                                      : () {
-                                          setState(() {
-                                            expandedCardIndex = isExpanded
-                                                ? null
-                                                : index;
-                                          });
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (_) =>
-                                                  ConfirmDetailsScreen(
-                                                    tourId: tours[index].id!,
-                                                  ),
-                                            ),
-                                          );
-                                        },
-                                  line: tours[index].line.name!,
-                                  supervisorName: tours[index].driverName,
-                                  departureTime: DateFormat(
-                                    'HH:mm',
-                                  ).format(tours[index].leavesAt),
-                                  date: DateFormat(
-                                    'yyyy-MM-dd',
-                                  ).format(tours[index].leavesAt),
-                                );
-                              },
-                            ),
-                          );
-                        } else {
-                          return const Center(
-                            child: Text(
-                              'حدث خطأ أثناء تحميل الرحلات',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          );
-                        }
-                      },
+                            child: const Text('التالي'),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
-                ),
+                ],
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _RowInfo extends StatelessWidget {
+  final String label;
+  final String value;
+  const _RowInfo({required this.label, required this.value});
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Flexible(
+            child: Text(
+              value,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+              textAlign: TextAlign.right,
+            ),
+          ),
+          Flexible(
+            child: Text(
+              label,
+              style: const TextStyle(color: Colors.grey),
+              textAlign: TextAlign.left,
+            ),
+          ),
+        ],
       ),
     );
   }

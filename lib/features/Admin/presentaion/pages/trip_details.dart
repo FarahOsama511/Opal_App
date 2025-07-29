@@ -1,87 +1,102 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart' as intl;
-import 'package:opal_app/core/resources/color_manager.dart';
+import 'package:opal_app/features/user/presentaion/pages/user_home_screen.dart';
+
+import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
-import '../../../user/presentaion/bloc/auth_cubit.dart';
+import '../../../selection/presentation/pages/screen.dart';
 import '../bloc/get_tour_bloc/tour_cubit.dart';
 import '../bloc/get_tour_bloc/tour_state.dart';
 import '../widgets/cancel_trip_dialog.dart';
 
 class TripDetailsScreen extends StatelessWidget {
-  String tourId;
+  final String tourId;
   TripDetailsScreen({super.key, required this.tourId});
+
   @override
   Widget build(BuildContext context) {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        backgroundColor: ColorManager.primaryColor,
+        backgroundColor: ColorManager.secondColor,
         body: SafeArea(
           child: Stack(
             children: [
-              Align(
-                alignment: Alignment.topRight,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 10, right: 10),
-                  child: Opacity(
-                    opacity: 0.25,
-                    child: Image.asset(
-                      'assets/logo.png',
-                      width: 120,
-                      height: 120,
-                      fit: BoxFit.contain,
-                    ),
+              Positioned(
+                left: 210,
+                top: -100,
+                child: Opacity(
+                  opacity: 0.2,
+                  child: Image.asset(
+                    'assets/logos.png',
+                    width: 300,
+                    height: 300,
                   ),
                 ),
               ),
+
+              // محتوى الصفحة
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      textDirection: TextDirection.ltr,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Icon(
-                          Icons.arrow_back_ios,
-                          color: ColorManager.blackColor,
-                        ),
-                        SizedBox(width: 10.w),
                         Expanded(
-                          child: Directionality(
-                            textDirection: TextDirection.rtl,
-                            child: Text(
-                              'رحلة آمنة\nصحبتك السلامة${context.read<AuthCubit>().user!.user.name}!',
-                              textAlign: TextAlign.start,
-                              style: TextStyles.black20Bold,
-                            ),
+                          child: Text(
+                            'رحلة آمنة\nصحبتك السلامة!',
+                            textAlign: TextAlign.right,
+                            style: TextStyles.black20Bold,
                           ),
+                        ),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.arrow_back_ios,
+                            color: ColorManager.blackColor,
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const UserHomeScreen(),
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),
                   ),
+
+                  const SizedBox(height: 20),
+
+                  // الكارت والمعلومات
                   Expanded(
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 20,
+                    child: Container(
+                      width: double.infinity,
+                      decoration: const BoxDecoration(
+                        color: ColorManager.primaryColor,
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(32),
+                        ),
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          _InfoCard(tourId: tourId),
-                          const SizedBox(height: 20),
-                          _ActionButtons(tourId: tourId),
-                        ],
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 20,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            const SizedBox(height: 40),
+                            _InfoCard(tourId: tourId),
+                            const SizedBox(height: 20),
+                            _ActionButtons(tourId: tourId),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -97,7 +112,7 @@ class TripDetailsScreen extends StatelessWidget {
 
 class _InfoCard extends StatefulWidget {
   final String tourId;
-  _InfoCard({required this.tourId});
+  const _InfoCard({required this.tourId});
 
   @override
   State<_InfoCard> createState() => _InfoCardState();
@@ -115,7 +130,7 @@ class _InfoCardState extends State<_InfoCard> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
       decoration: BoxDecoration(
-        color: ColorManager.secondColor,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.black, width: 1),
       ),
@@ -134,29 +149,21 @@ class _InfoCardState extends State<_InfoCard> {
               final tour = state.tour;
               return Column(
                 children: [
-                  _InfoRow(title: 'اسم الطالب', value: ''),
                   _InfoRow(title: 'اسم المشرف', value: tour.driverName),
-                  _InfoRow(title: 'الخط', value: tour.line.name!),
+                  _InfoRow(title: 'الخط', value: tour.line.name ?? ''),
                   _InfoRow(
                     title: 'ميعاد الذهاب',
                     value:
                         '${intl.DateFormat('HH:mm').format(tour.leavesAt)} صباحاً',
                   ),
-                  // _InfoRow(title: 'ميعاد العودة', value: '3:00 مساءً'),
                   _InfoRow(
                     title: 'تاريخ اليوم',
-                    value:
-                        '${intl.DateFormat('yyyy-MM-dd').format(tour.leavesAt)}',
+                    value: intl.DateFormat('yyyy-MM-dd').format(tour.leavesAt),
                   ),
                 ],
               );
             } else {
-              return Center(
-                child: Text(
-                  "حدث خطأ في جلب البيانات",
-                  style: TextStyles.red10Bold,
-                ),
-              );
+              return const Center(child: Text("حدث خطأ في جلب البيانات"));
             }
           },
         ),
@@ -169,6 +176,7 @@ class _InfoRow extends StatelessWidget {
   final String title;
   final String value;
   const _InfoRow({required this.title, required this.value});
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -185,16 +193,16 @@ class _InfoRow extends StatelessWidget {
 }
 
 class _ActionButtons extends StatelessWidget {
-  String tourId;
-  _ActionButtons({required this.tourId});
+  final String tourId;
+  const _ActionButtons({required this.tourId});
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const SizedBox(height: 12),
         _MainButton(
           label: 'تغيير الرحلة',
-          backgroundColor: ColorManager.secondColor,
+          backgroundColor: Colors.white,
           textColor: ColorManager.primaryColor,
           onPressed: () {
             showDialog(
@@ -234,6 +242,7 @@ class _MainButton extends StatelessWidget {
     required this.textColor,
     required this.onPressed,
   });
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
