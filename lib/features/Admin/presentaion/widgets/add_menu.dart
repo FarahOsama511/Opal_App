@@ -37,7 +37,7 @@ class AddMenu extends StatelessWidget {
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                 ),
               ),
-              _buildAddOption(context, 'إضافة خط جديد', '/addBusLine'),
+              _buildAddOption(context, 'إضافة خط جديد', '/addLine'),
             ],
           ),
         ),

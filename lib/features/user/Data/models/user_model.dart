@@ -13,7 +13,7 @@ class UserModel extends UserEntity {
     String? universityId,
     String? universityCardId,
     LineEntity? line,
-    bool? isActivated,
+    String? status,
     UniversityEntity? university,
     String? email,
     String? password,
@@ -25,7 +25,7 @@ class UserModel extends UserEntity {
          universityId: universityId,
          universityCardId: universityCardId,
          line: line,
-         isActivated: isActivated,
+         status: status,
          university: university,
          email: email,
          password: password,
@@ -43,7 +43,7 @@ class UserModel extends UserEntity {
       line: json['line'] != null
           ? LineModel.fromJson(json['line'] as Map<String, dynamic>)
           : null,
-      isActivated: json['isActivated'] as bool?,
+      status: json['status'] as String?,
       university: json['university'] != null
           ? UniversityModel.fromJson(json['university'] as Map<String, dynamic>)
           : null,
@@ -60,7 +60,7 @@ class UserModel extends UserEntity {
       'universityId': universityId,
       'universityCardId': universityCardId,
       'line': line != null ? (line as LineModel).toJson() : null,
-      'isActivated': isActivated,
+      'status': status,
       'university': university != null
           ? (university as UniversityModel).toJson()
           : null,

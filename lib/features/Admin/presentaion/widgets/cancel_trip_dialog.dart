@@ -1,18 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:opal_app/core/resources/color_manager.dart';
+import 'package:opal_app/features/user/presentaion/bloc/selection_tour/selection_tour_cubit.dart';
 
-class CancelTripDialog extends StatelessWidget {
-  const CancelTripDialog({super.key});
+import '../../../../core/resources/text_styles.dart';
+
+class CancelOREditTripDialog extends StatelessWidget {
+  final String tourId;
+  bool? isCancel;
+
+  CancelOREditTripDialog({super.key, required this.tourId, this.isCancel});
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      title: const Text(
-        'هل أنت متأكد من إلغاء الرحلة؟',
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        textAlign: TextAlign.center,
-      ),
+      title: (isCancel!)
+          ? Text(
+              'هل أنت متأكد من إلغاء الرحلة؟',
+              style: TextStyles.black20Bold,
+              textAlign: TextAlign.center,
+            )
+          : Text(
+              'هل أنت متأكد من تعديل الرحلة؟',
+              style: TextStyles.black20Bold,
+              textAlign: TextAlign.center,
+            ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -20,11 +34,12 @@ class CancelTripDialog extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
-                Navigator.pop(context);
+                context.read<SelectionTourCubit>().UnconfirmTour(tourId);
+                Navigator.pushReplacementNamed(context, '/home');
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFE71A45),
-                foregroundColor: Colors.white,
+                backgroundColor: ColorManager.primaryColor,
+                foregroundColor: ColorManager.secondColor,
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -41,8 +56,8 @@ class CancelTripDialog extends StatelessWidget {
                 Navigator.pop(context);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.grey.shade300,
-                foregroundColor: Colors.black,
+                backgroundColor: ColorManager.greyColor,
+                foregroundColor: ColorManager.blackColor,
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),

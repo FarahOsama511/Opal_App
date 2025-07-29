@@ -125,7 +125,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 if (state is UserSuccess) {
                   print("length:${state.user.length}");
                   final unactivatedUsers = state.user
-                      .where((u) => u.isActivated == false)
+                      .where((u) => u.status == 'pending')
                       .toList();
                   if (unactivatedUsers.isEmpty) {
                     return Center(

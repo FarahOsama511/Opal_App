@@ -1,139 +1,136 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:opal_app/core/resources/color_manager.dart';
+import 'package:opal_app/features/user/presentaion/bloc/selection_tour/selection_tour_cubit.dart';
+import 'package:opal_app/features/user/presentaion/bloc/selection_tour/selection_tour_state.dart';
 import 'confirmation_success.dart';
 
-class ConfirmDetailsScreen extends StatelessWidget {
-  const ConfirmDetailsScreen({super.key});
+class ConfirmDetailsScreen extends StatefulWidget {
+  String tourId;
+  ConfirmDetailsScreen({super.key, required this.tourId});
+
+  @override
+  State<ConfirmDetailsScreen> createState() => _ConfirmDetailsScreenState();
+}
+
+class _ConfirmDetailsScreenState extends State<ConfirmDetailsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<SelectionTourCubit>(context).selectionTour(widget.tourId);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Positioned(
-              top: 50,
-              right: -90,
-              child: Opacity(
-                opacity: 0.2,
-                child: Image.asset(
-                  'assets/logo.png',
-                  width: 200,
+    return Dialog(
+      insetPadding: const EdgeInsets.all(16),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Center(
+                child: Text(
+                  'بيانات الذهاب و العودة',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
-            ),
-
-            Column(
-              children: [
-                const _Header(),
-
-                Expanded(
-                  child: Center(
-                    child: Container(
-                      margin: const EdgeInsets.all(16),
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
-                            blurRadius: 10,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: Stack(
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: BlocBuilder<SelectionTourCubit, SelectionTourState>(
+                  builder: (context, state) {
+                    if (state is SelectionTourLoading) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          color: ColorManager.primaryColor,
+                        ),
+                      );
+                    } else if (state is SelectionTourSuccess) {
+                      final tour = state.tour;
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          // اللوجو الأصفر داخل الكارد
-                          Positioned.fill(
-                            child: Opacity(
-                              opacity: 0.08,
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: Image.asset(
-                                  'assets/logo.png',
-                                  width: 180,
-                                  color: Colors.amber,
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                            ),
+                          _RowInfo(label: 'الخط', value: tour.line.name!),
+                          _RowInfo(
+                            label: 'ميعاد الذهاب',
+                            value:
+                                '${DateFormat('HH:mm').format(tour.leavesAt)} صباحاً',
                           ),
 
-                          // محتوى الكارد
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Text(
-                                'بيانات الذهاب و العودة',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                              const _RowInfo(label: 'الخط', value: 'خط رقم 1'),
-                              const _RowInfo(label: 'ميعاد الذهاب', value: '7:00 صباحاً'),
-                              const _RowInfo(label: 'ميعاد العودة', value: '3:00 مساءً'),
-                              const _RowInfo(label: 'اسم المشرف', value: 'أحمد محمد أحمد'),
-                              const _RowInfo(label: 'تاريخ اليوم', value: '22/6/2025'),
-                              const SizedBox(height: 20),
-
-                              // زر تأكيد
-                              SizedBox(
-                                width: double.infinity,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) => const ConfirmationSuccessScreen(),
-                                      ),
-                                    );
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFFE71A45),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                  ),
-                                  child: const Text(
-                                    'تأكيد',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 10),
-
-                              // زر السابق
-                              SizedBox(
-                                width: double.infinity,
-                                child: ElevatedButton(
-                                  onPressed: () => Navigator.pop(context),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.grey,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                  ),
-                                  child: const Text(
-                                    'السابق',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                            ],
+                          _RowInfo(label: 'اسم المشرف', value: tour.driverName),
+                          _RowInfo(
+                            label: 'تاريخ اليوم',
+                            value:
+                                '${DateFormat('yyyy-MM-dd').format(tour.leavesAt)}',
                           ),
                         ],
-                      ),
+                      );
+                    } else {
+                      return Center(child: Text("فشل في جلب البيانات"));
+                    }
+                  },
+                ),
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    context.read<SelectionTourCubit>().selectionTour(
+                      widget.tourId,
+                    );
+                    Navigator.pop(context);
+                    showDialog(
+                      context: context,
+                      builder: (_) => const ConfirmationSuccessScreen(),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFE71A45),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
                   ),
+                  child: const Text(
+                    'تأكيد',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
-              ],
-            ),
-          ],
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: const Text(
+                    'السابق',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -145,7 +142,6 @@ class _RowInfo extends StatelessWidget {
   final String value;
 
   const _RowInfo({required this.label, required this.value});
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -155,35 +151,6 @@ class _RowInfo extends StatelessWidget {
         children: [
           Text(value, style: const TextStyle(fontWeight: FontWeight.w500)),
           Text(label, style: const TextStyle(color: Colors.grey)),
-        ],
-      ),
-    );
-  }
-}
-
-class _Header extends StatelessWidget {
-  const _Header();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      color: Colors.white,
-      child:  Row(
-        children: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () {
-              Navigator.pushReplacementNamed(context, '/signin');
-            },
-          ),
-          const SizedBox(width: 10),
-          const Icon(Icons.person),
-          Spacer(),
-          Text(
-            'متى تريد الذهاب؟',
-            style: TextStyle(fontSize: 16, color: Colors.black),
-          ),
         ],
       ),
     );

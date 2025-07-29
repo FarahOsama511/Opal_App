@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:opal_app/core/theming/color_manager.dart';
+import 'package:opal_app/core/resources/color_manager.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/trips.dart';
 import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
 import 'package:opal_app/features/user/presentaion/bloc/user_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/user_state.dart';
+
+import '../../../../core/resources/text_styles.dart';
 
 class StudentList extends StatefulWidget {
   const StudentList({super.key});
@@ -17,10 +19,10 @@ class _StudentListState extends State<StudentList> {
   bool showAddMenu = false;
   int currentIndex = 0;
   bool isStudentsSelected = true;
-  bool isSupervisorSelected = true;
 
-  List<bool> _isExpandedList = List.generate(1, (index) => false);
+  List<bool> _isExpandedList = [];
 
+  @override
   void initState() {
     super.initState();
     BlocProvider.of<GetAllUserCubit>(context).fetchAllUsers();
@@ -73,18 +75,21 @@ class _StudentListState extends State<StudentList> {
             child: ElevatedButton(
               onPressed: () {
                 setState(() {
-                  isStudentsSelected = true;
+                  isStudentsSelected = false;
                 });
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: isStudentsSelected
+                backgroundColor: !isStudentsSelected
                     ? ColorManager.primaryColor
                     : ColorManager.greyColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
               ),
               child: Text(
-                'الطلاب',
+                'المشرفين',
                 style: TextStyle(
-                  color: isStudentsSelected
+                  color: !isStudentsSelected
                       ? ColorManager.secondColor
                       : ColorManager.blackColor,
                 ),
@@ -96,18 +101,23 @@ class _StudentListState extends State<StudentList> {
             child: ElevatedButton(
               onPressed: () {
                 setState(() {
-                  isStudentsSelected = false;
+                  isStudentsSelected = true;
                 });
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: isStudentsSelected
-                    ? Colors.grey.shade300
-                    : const Color(0xFFE71A45),
+                    ? ColorManager.primaryColor
+                    : ColorManager.greyColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
               ),
               child: Text(
-                'المشرفين',
+                'الطلاب',
                 style: TextStyle(
-                  color: isStudentsSelected ? Colors.black : Colors.white,
+                  color: isStudentsSelected
+                      ? ColorManager.secondColor
+                      : ColorManager.blackColor,
                 ),
               ),
             ),
@@ -124,7 +134,6 @@ class _StudentListState extends State<StudentList> {
       child: BlocConsumer<GetAllUserCubit, UserState>(
         listener: (context, state) {
           if (state is UserError) {
-            print("ERROR:${state.message}");
             ScaffoldMessenger.of(
               context,
             ).showSnackBar(SnackBar(content: Text(state.message)));
@@ -132,33 +141,45 @@ class _StudentListState extends State<StudentList> {
         },
         builder: (context, state) {
           if (state is UserSuccess) {
-            final activatedUsers = state.user
-                .where((u) => u.isActivated == true)
-                .toList();
-            // تأكد إن القائمة ممتلئة
-            if (_isExpandedList.length != activatedUsers.length) {
+            final filteredUsers = state.user.where((u) {
+              return (u.status == 'active' && isStudentsSelected
+                  ? u.role == "student"
+                  : u.role == "supervisor");
+            }).toList();
+            print("عدد المستخدمين المستلمين من السيرفر: ${state.user.length}");
+
+            if (_isExpandedList.length != filteredUsers.length) {
               _isExpandedList = List.generate(
-                activatedUsers.length,
+                filteredUsers.length,
                 (_) => false,
               );
             }
 
-            if (activatedUsers.isEmpty) {
-              return Center(child: Text("لا يوجد مستخدمون."));
+            if (filteredUsers.isEmpty) {
+              return Center(
+                child: Text("لا يوجد مستخدمون", style: TextStyles.white20Bold),
+              );
             }
 
             return ListView.builder(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 90),
-              itemCount: activatedUsers.length,
+              itemCount: filteredUsers.length,
               itemBuilder: (context, index) {
-                final user = activatedUsers[index];
+                final user = filteredUsers[index];
                 return _buildCard(index, user);
               },
             );
           } else if (state is UserLoading) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(
+              child: CircularProgressIndicator(color: ColorManager.secondColor),
+            );
           } else {
-            return Text("ERROR");
+            return Center(
+              child: Text(
+                "حدث خطأ أثناء تحميل البيانات.",
+                style: TextStyles.white20Bold,
+              ),
+            );
           }
         },
       ),
@@ -182,7 +203,7 @@ class _StudentListState extends State<StudentList> {
             children: [
               Expanded(
                 child: Text(
-                  isStudentsSelected ? user.name! : ' محمد احمد ',
+                  user.name ?? '',
                   textAlign: TextAlign.right,
                   style: const TextStyle(
                     fontSize: 15,
@@ -211,14 +232,13 @@ class _StudentListState extends State<StudentList> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text('رقم الهاتف:  ${user.phone}'),
-                  Text(
-                    'الجامعة: ${isStudentsSelected ? user.university!.name : ""}',
-                  ),
-                  Text(
-                    'الكلية: ${isStudentsSelected ? user.university!.name : ""}',
-                  ),
-                  Text(isSupervisorSelected ? 'الخط:      خط 1  ' : ''),
+                  Text('رقم الهاتف: ${user.phone ?? ""}'),
+                  Text('الخط:  ${user.line?.name ?? ""}'),
+                  if (isStudentsSelected) ...[
+                    Text('الجامعة: ${user.university?.name ?? ""}'),
+                  ] else ...[
+                    // Text('الرقم التعريفي: ${user.universityCardId ?? ""}'),
+                  ],
                 ],
               ),
             ),
@@ -266,7 +286,7 @@ class _StudentListState extends State<StudentList> {
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.list_outlined),
-                label: 'القائمة',
+                label: 'قائمة الطلاب',
               ),
             ],
           ),

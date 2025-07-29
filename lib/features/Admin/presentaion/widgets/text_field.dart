@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:opal_app/core/resources/text_styles.dart';
 
 class CustomTextField extends StatelessWidget {
   final String hint;
@@ -23,7 +24,7 @@ class CustomTextField extends StatelessWidget {
         textAlign: TextAlign.right,
         decoration: InputDecoration(
           hintText: hint,
-          hintStyle: const TextStyle(fontSize: 16, color: Colors.grey),
+          hintStyle: TextStyles.black16Regular,
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 10,
             vertical: 15,

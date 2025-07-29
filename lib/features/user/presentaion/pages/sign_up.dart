@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:opal_app/core/theming/color_manager.dart';
+import 'package:opal_app/core/resources/color_manager.dart';
 import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
 import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
 import 'package:opal_app/features/user/presentaion/bloc/auth_cubit.dart';
@@ -10,6 +10,7 @@ import 'package:opal_app/features/user/presentaion/bloc/get_all_universities/get
 import 'package:opal_app/features/user/presentaion/bloc/get_all_universities/get_all_universities_state.dart';
 import 'package:opal_app/features/user/presentaion/pages/sign_in.dart';
 import 'package:opal_app/features/user/presentaion/pages/waiting_screen.dart';
+import '../../../../core/resources/text_styles.dart';
 import '../../../Admin/presentaion/widgets/custom_widgets.dart';
 import '../../../Admin/presentaion/widgets/text_field.dart';
 import '../../Domain/entities/authentity.dart';
@@ -121,7 +122,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               displayString: (u) => u.name!,
                             );
                           } else {
-                            return const Text('فشل في تحميل الجامعات');
+                            return Text(
+                              'فشل في تحميل الجامعات',
+                              style: TextStyles.black14Bold,
+                            );
                           }
                         },
                       ),
@@ -139,6 +143,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         width: double.infinity,
                         height: 38.h,
                         child: PrimaryButton(
+                          backgroundColor: ColorManager.primaryColor,
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
                               context.read<AuthCubit>().register(
@@ -171,6 +176,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          SizedBox(width: 4.w),
+                          Text(
+                            'لديك حساب بالفعل؟',
+                            style: TextStyles.grey14Regular,
+                          ),
+                          SizedBox(width: 4.w),
                           GestureDetector(
                             onTap: () {
                               Navigator.pushReplacement(
@@ -189,8 +200,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               ),
                             ),
                           ),
-                          SizedBox(width: 4.w),
-                          const Text('لديك حساب بالفعل؟'),
                         ],
                       ),
                       SizedBox(height: 30.h),

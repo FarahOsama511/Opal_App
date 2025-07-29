@@ -11,14 +11,14 @@ class UserEntity extends Equatable {
   final String? universityId;
   final String? universityCardId;
   final LineEntity? line;
-  final bool? isActivated;
+  final String? status;
   final UniversityEntity? university;
   final String? email;
   final String? password;
 
   UserEntity({
     this.university,
-    this.isActivated,
+    this.status,
     this.id,
     this.name,
     this.phone,
@@ -39,7 +39,7 @@ class UserEntity extends Equatable {
     universityId,
     universityCardId,
     line,
-    isActivated,
+    status,
     university,
     email,
     password,

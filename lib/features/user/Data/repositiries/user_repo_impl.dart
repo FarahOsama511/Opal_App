@@ -41,13 +41,13 @@ class UserRepoImpl extends UserRepo {
   @override
   Future<Either<Failure, UserEntity>> userIsActivate(
     String id,
-    bool isActivated,
+    String status,
   ) async {
     if (await networkInfo.isConnected) {
       try {
         final userIsActivate = await userRemoteDataSource.userIsActivate(
           id,
-          isActivated,
+          status,
         );
         // userLocalDataSource.saveUsers(userIsActivate);
         return Right(userIsActivate);
@@ -55,20 +55,20 @@ class UserRepoImpl extends UserRepo {
         throw ServerFailure();
       }
     } else {
-      return Left(EmptyCacheFailure());
+      return Left(NoInternetFailure());
     }
   }
 
   @override
   Future<Either<Failure, UserEntity>> userIsDeactivate(
     String id,
-    bool isActivated,
+    String status,
   ) async {
     if (await networkInfo.isConnected) {
       try {
         final userIsDeactivate = await userRemoteDataSource.userIsDeactivate(
           id,
-          isActivated,
+          status,
         );
         // userLocalDataSource.saveUsers(userIsActivate);
         return Right(userIsDeactivate);
@@ -76,7 +76,7 @@ class UserRepoImpl extends UserRepo {
         throw ServerFailure();
       }
     } else {
-      return Left(EmptyCacheFailure());
+      return Left(NoInternetFailure());
     }
   }
 }

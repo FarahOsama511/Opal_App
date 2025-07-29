@@ -8,8 +8,8 @@ import '../models/user_model.dart';
 
 abstract class UserRemoteDataSource {
   Future<List<UserModel>> getAllUser();
-  Future<UserModel> userIsActivate(String id, bool isActivate);
-  Future<UserModel> userIsDeactivate(String id, bool isActivated);
+  Future<UserModel> userIsActivate(String id, String status);
+  Future<UserModel> userIsDeactivate(String id, String status);
 }
 
 const Base_Url =
@@ -46,7 +46,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   }
 
   @override
-  Future<UserModel> userIsActivate(String id, bool isActivate) async {
+  Future<UserModel> userIsActivate(String id, String status) async {
     final prefs = await SharedPreferences.getInstance();
     final tokenAdmin = prefs.getString('access_token_Admin');
     final response = await client.post(
@@ -68,7 +68,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   }
 
   @override
-  Future<UserModel> userIsDeactivate(String id, bool isActivated) async {
+  Future<UserModel> userIsDeactivate(String id, String status) async {
     final prefs = await SharedPreferences.getInstance();
     final tokenAdmin = prefs.getString('access_token_Admin');
     final response = await client.post(

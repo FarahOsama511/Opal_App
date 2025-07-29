@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:opal_app/core/theming/color_manager.dart';
+import 'package:opal_app/core/resources/color_manager.dart';
 import 'package:opal_app/features/user/presentaion/bloc/auth_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/auth_state.dart';
 import 'package:opal_app/features/user/presentaion/pages/sign_up.dart';
 import 'package:opal_app/features/user/presentaion/pages/user_home_screen.dart';
+import '../../../../core/resources/text_styles.dart';
 import '../../../Admin/presentaion/pages/admin_home_screen.dart';
 import '../../../Admin/presentaion/pages/supervisor_home_screen.dart';
 import '../../../Admin/presentaion/widgets/custom_widgets.dart';
@@ -107,6 +108,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
                   // زر تسجيل الدخول
                   PrimaryButton(
+                    backgroundColor: ColorManager.primaryColor,
                     text: 'تسجيل الدخول',
                     isLoading: state is AuthLoading,
                     onPressed: (state is AuthLoading)
@@ -146,6 +148,9 @@ class _SignInScreenState extends State<SignInScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      SizedBox(width: 4.w),
+                      Text('ليس لديك حساب؟', style: TextStyles.grey14Regular),
+                      SizedBox(width: 3.w),
                       GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -164,27 +169,22 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(width: 4.w),
-                      const Text('ليس لديك حساب؟'),
                     ],
                   ),
 
-                  SizedBox(height: 200.h),
+                  SizedBox(height: 100.h),
 
                   // شروط الاستخدام
                   Column(
                     children: [
                       Text(
                         'بتسجيلك فإنك توافق على',
-                        style: TextStyle(color: Colors.black),
+                        style: TextStyles.black10Bold,
                       ),
                       SizedBox(height: 4.h),
                       Text(
                         'شروط الخدمة وسياسة الخصوصية واستخدام الكوكيز',
-                        style: TextStyle(
-                          color: Color(0xFFE71A45),
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: TextStyles.red10Bold,
                         textAlign: TextAlign.center,
                       ),
                     ],

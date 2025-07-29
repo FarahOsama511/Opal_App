@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:opal_app/core/resources/color_manager.dart';
 import 'package:opal_app/features/Admin/Data/models/add_admin_supervisor_model.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/create_admin_supervisors.dart/add_admin_supervisor_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/create_admin_supervisors.dart/add_admin_supervisor_state.dart';
@@ -86,6 +88,7 @@ class _AddAdminState extends State<AddAdmin> {
                       return const Center(child: CircularProgressIndicator());
                     }
                     return PrimaryButton(
+                      backgroundColor: ColorManager.primaryColor,
                       text: 'اضافة مسؤول',
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
@@ -93,7 +96,7 @@ class _AddAdminState extends State<AddAdmin> {
                               .read<AddAdminSupervisorCubit>()
                               .AddAdminORSupervisor(
                                 AddAdminSupervisorModel(
-                                  name: nameController.text, // ✅ صح
+                                  name: nameController.text, //
                                   phone: phoneController.text,
                                   password: passwordController.text,
                                   email: emailController.text,
@@ -104,6 +107,16 @@ class _AddAdminState extends State<AddAdmin> {
                       },
                     );
                   },
+                ),
+                SizedBox(height: 20.h),
+                PrimaryButton(
+                  text: 'إلفاء ',
+                  onPressed: () {
+                    setState(() {
+                      Navigator.pop(context);
+                    });
+                  },
+                  backgroundColor: ColorManager.greyColor,
                 ),
               ],
             ),

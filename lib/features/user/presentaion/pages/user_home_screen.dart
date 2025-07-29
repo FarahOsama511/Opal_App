@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import 'package:opal_app/core/theming/color_manager.dart';
+import 'package:opal_app/core/resources/color_manager.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_state.dart';
 import 'package:opal_app/features/Admin/presentaion/widgets/custom_widgets.dart';
+import 'package:opal_app/features/selection/presentation/pages/confirm_details.dart';
 import 'package:opal_app/features/user/presentaion/bloc/auth_cubit.dart';
+import 'package:opal_app/features/user/presentaion/bloc/selection_tour/selection_tour_cubit.dart';
+import '../../../../core/resources/text_styles.dart';
 import '../../../Admin/Domain/entities/tour.dart';
 import '../../../Admin/presentaion/bloc/get_lines/get_all_lines_cubit.dart';
 import '../../../Admin/presentaion/bloc/get_tour_bloc/tour_cubit.dart';
@@ -26,6 +29,7 @@ class _HomeScreenState extends State<UserHomeScreen> {
   LineEntity? selectedLine;
   List<LineEntity> allLines = [];
   late bool isTripConfirmed;
+  String? TripConfirmedId;
   @override
   void initState() {
     super.initState();
@@ -54,8 +58,6 @@ class _HomeScreenState extends State<UserHomeScreen> {
                       Navigator.pushReplacementNamed(context, '/signin');
                     },
                   ),
-                  SizedBox(width: 10.w),
-                  const Icon(Icons.person),
                 ],
               ),
               titleWidget: Column(
@@ -101,32 +103,32 @@ class _HomeScreenState extends State<UserHomeScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => const TripDetailsScreen(),
+                      builder: (_) => TripDetailsScreen(
+                        tourId: context
+                            .read<SelectionTourCubit>()
+                            .TourConfirmedId!,
+                      ),
                     ),
                   );
                 },
                 child: Container(
                   margin: EdgeInsets.symmetric(horizontal: 20.w),
                   padding: EdgeInsets.symmetric(
-                    vertical: 16.h,
-                    horizontal: 20.w,
+                    vertical: 10.h,
+                    horizontal: 10.w,
                   ),
                   decoration: BoxDecoration(
-                    color: ColorManager.greyColor,
+                    color: ColorManager.secondColor,
                     borderRadius: BorderRadius.circular(12.r),
-                    border: Border.all(color: ColorManager.greyColor),
+                    border: Border.all(color: ColorManager.blackColor),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         'عرض الرحلة الخاصة بك',
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: TextStyles.black16Regular,
                       ),
-                      Icon(Icons.arrow_forward_ios, size: 18.r),
                     ],
                   ),
                 ),
@@ -174,21 +176,25 @@ class _HomeScreenState extends State<UserHomeScreen> {
                       alignment: Alignment.centerRight,
                       child: Text(
                         'مواعبد الذهاب _ العودة',
-                        style: TextStyle(
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.bold,
-                          color: ColorManager.secondColor,
-                        ),
+                        style: TextStyles.white20Bold,
                       ),
                     ),
                     SizedBox(height: 15.h),
                     BlocBuilder<TourCubit, TourState>(
                       builder: (context, state) {
-                        if (state is TourLoaded) {
+                        if (state is TourLoading) {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              color: ColorManager.secondColor,
+                            ),
+                          );
+                        } else if (state is TourLoaded) {
                           final getTourByLineId = selectedLine == null
                               ? state.tours
                               : state.tours
-                                    .where((u) => u.line.id == selectedLine)
+                                    .where(
+                                      (u) => u.line.name == selectedLine!.name,
+                                    )
                                     .toList();
 
                           return Expanded(
@@ -196,26 +202,31 @@ class _HomeScreenState extends State<UserHomeScreen> {
                               itemCount: getTourByLineId.length,
                               itemBuilder: (context, index) {
                                 final isExpanded = index == expandedCardIndex;
-
                                 return BusCard(
                                   isExpanded: isExpanded,
-                                  onTap: () {
-                                    setState(() {
-                                      expandedCardIndex = isExpanded
-                                          ? null
-                                          : index;
-                                    });
-                                  },
-                                  onCancel: () {
-                                    setState(() {
-                                      expandedCardIndex = null;
-                                    });
-                                  },
-                                  onNext: () {
-                                    Navigator.pushNamed(context, '/confirm');
-                                  },
-                                  line:
-                                      'خط ${getTourByLineId[index].line.name}',
+                                  onTap: (isTripConfirmed)
+                                      ? null
+                                      : () {
+                                          setState(() {
+                                            expandedCardIndex = isExpanded
+                                                ? null
+                                                : index;
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) {
+                                                  return ConfirmDetailsScreen(
+                                                    tourId:
+                                                        getTourByLineId[index]
+                                                            .id!,
+                                                  );
+                                                },
+                                              ),
+                                            );
+                                          });
+                                        },
+
+                                  line: ' ${getTourByLineId[index].line.name}',
                                   supervisorName:
                                       getTourByLineId[index].driverName,
                                   departureTime: DateFormat(
@@ -229,8 +240,11 @@ class _HomeScreenState extends State<UserHomeScreen> {
                             ),
                           );
                         } else {
-                          return const Center(
-                            child: CircularProgressIndicator(),
+                          return Center(
+                            child: Text(
+                              'حدث خطأ أثناء تحميل الرحلات',
+                              style: TextStyles.white14Bold,
+                            ),
                           );
                         }
                       },

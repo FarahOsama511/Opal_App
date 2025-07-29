@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:opal_app/core/resources/color_manager.dart';
+
+import '../../../../core/resources/text_styles.dart';
 
 /// دائرة اللوجو الحمراء
 class LogoCircle extends StatelessWidget {
@@ -9,10 +13,10 @@ class LogoCircle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.all(20.r),
         decoration: const BoxDecoration(
           shape: BoxShape.circle,
-          color: Color(0xFFE71A45),
+          color: ColorManager.primaryColor,
         ),
         child: Image.asset('assets/logo.png', width: size.width * 0.22),
       ),
@@ -25,8 +29,10 @@ class PrimaryButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
   final bool isLoading;
+  final Color backgroundColor;
 
   const PrimaryButton({
+    required this.backgroundColor,
     super.key,
     required this.text,
     required this.onPressed,
@@ -39,19 +45,18 @@ class PrimaryButton extends StatelessWidget {
       width: double.infinity,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFFE71A45),
-          padding: const EdgeInsets.symmetric(vertical: 10),
+          backgroundColor: backgroundColor,
+          padding: EdgeInsets.symmetric(vertical: 8.h),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(25),
+            borderRadius: BorderRadius.circular(25.r),
           ),
         ),
         onPressed: isLoading ? null : onPressed,
         child: isLoading
-            ? (const CircularProgressIndicator(color: Colors.red))
-            : Text(
-                text,
-                style: const TextStyle(fontSize: 16, color: Colors.white),
-              ),
+            ? (const CircularProgressIndicator(
+                color: ColorManager.primaryColor,
+              ))
+            : Text(text, style: TextStyles.white14Bold),
       ),
     );
   }
@@ -76,17 +81,17 @@ class CustomDropdown<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
       child: DropdownButtonHideUnderline(
         child: DropdownButtonFormField<T>(
           decoration: InputDecoration(
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: Colors.black),
+              borderRadius: BorderRadius.circular(10.r),
+              borderSide: BorderSide(color: ColorManager.blackColor),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: Colors.black),
+              borderRadius: BorderRadius.circular(10.r),
+              borderSide: BorderSide(color: ColorManager.blackColor),
             ),
             filled: false,
           ),

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:opal_app/core/theming/color_manager.dart';
-import 'confirm_details.dart';
+import 'package:opal_app/core/resources/color_manager.dart';
+
+import '../../../selection/presentation/pages/confirm_details.dart';
 
 class ChooseReturnTimeScreen extends StatelessWidget {
   const ChooseReturnTimeScreen({super.key});
@@ -68,12 +69,12 @@ class ChooseReturnTimeScreen extends StatelessWidget {
                             ),
                           ),
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const ConfirmDetailsScreen(),
-                              ),
-                            );
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (_) =>  ConfirmDetailsScreen(),
+                            //   ),
+                            // );
                           },
                           child: const Text(
                             'التالي',

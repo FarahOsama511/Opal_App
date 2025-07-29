@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:opal_app/core/resources/color_manager.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_bloc/tour_state.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_state.dart';
@@ -15,7 +17,18 @@ class TripDetailsDialog extends StatefulWidget {
   State<TripDetailsDialog> createState() => _TripDetailsDialogState();
 }
 
+bool _inInit = true;
+
 class _TripDetailsDialogState extends State<TripDetailsDialog> {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_inInit) {
+      BlocProvider.of<TourCubit>(context).getTourById(widget.tourId);
+      _inInit = false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -52,14 +65,37 @@ class _TripDetailsDialogState extends State<TripDetailsDialog> {
                 borderRadius: BorderRadius.circular(12),
                 color: Colors.white,
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _buildRow('الخط', 'خط رقم 1', Colors.black),
-                  _buildRow('ميعاد الذهاب', '7:00 صباحاً', Colors.black),
-                  _buildRow('اسم المشرف', 'أحمد محمد أحمد', Colors.black),
-                  _buildRow('تاريخ اليوم', '22/6/2025', Colors.black),
-                ],
+              child: BlocBuilder<TourCubit, TourState>(
+                builder: (context, state) {
+                  if (state is TourLoading) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: ColorManager.primaryColor,
+                      ),
+                    );
+                  } else if (state is TourByIdLoaded) {
+                    final tour = state.tour;
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        _buildRow('الخط', tour.line.name!, Colors.black),
+                        _buildRow(
+                          'ميعاد الذهاب',
+                          '${DateFormat('yyyy-MM-dd').format(tour.leavesAt)} صباحاً',
+                          Colors.black,
+                        ),
+                        _buildRow('اسم المشرف', tour.driverName, Colors.black),
+                        _buildRow(
+                          'تاريخ اليوم',
+                          DateFormat('yyyy-MM-dd').format(tour.leavesAt),
+                          Colors.black,
+                        ),
+                      ],
+                    );
+                  } else {
+                    return Text("حدث خطأ في جلب البيانات");
+                  }
+                },
               ),
             ),
             const SizedBox(height: 20),
@@ -81,7 +117,10 @@ class _TripDetailsDialogState extends State<TripDetailsDialog> {
                 ),
                 minimumSize: const Size.fromHeight(50),
               ),
-              child: const Text('تعديل الرحلة'),
+              child: const Text(
+                'تعديل الرحلة',
+                style: TextStyle(color: ColorManager.secondColor),
+              ),
             ),
 
             const SizedBox(height: 12),
@@ -116,7 +155,10 @@ class _TripDetailsDialogState extends State<TripDetailsDialog> {
             const SizedBox(height: 12),
 
             ElevatedButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () {
+                Navigator.pop(context);
+                BlocProvider.of<TourCubit>(context).getAllTours();
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.grey,
                 shape: RoundedRectangleBorder(
@@ -124,7 +166,10 @@ class _TripDetailsDialogState extends State<TripDetailsDialog> {
                 ),
                 minimumSize: const Size.fromHeight(50),
               ),
-              child: const Text('إغلاق'),
+              child: const Text(
+                'إغلاق',
+                style: TextStyle(color: ColorManager.secondColor),
+              ),
             ),
           ],
         ),

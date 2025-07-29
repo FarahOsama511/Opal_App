@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_cubit.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_state.dart';
+import 'package:opal_app/features/Admin/presentaion/pages/admin_home_screen.dart';
+import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
+import '../../Data/models/tour_model.dart';
+import '../../Domain/entities/tour.dart';
 import '../widgets/calender_step.dart';
 import '../widgets/summary_step.dart';
 import '../widgets/supervisor_step.dart';
 import '../widgets/time_line_step.dart';
+import '../widgets/trip_steps.dart';
 
 class AddTripBox extends StatefulWidget {
   final VoidCallback onClose;
   const AddTripBox({super.key, required this.onClose});
-
   @override
   State<AddTripBox> createState() => _AddTripBoxState();
 }
@@ -18,48 +25,42 @@ class _AddTripBoxState extends State<AddTripBox> {
   int hour = 10;
   int minute = 0;
   String period = 'صباحًا';
-  String? selectedSupervisor;
-  String? selectedLine;
+  UserEntity? selectedSupervisor;
+  LineEntity? selectedLine;
   DateTime focusedDay = DateTime.now();
+  void submitTour() {
+    if (selectedDate == null ||
+        selectedSupervisor == null ||
+        selectedLine == null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("يرجى تعبئة جميع الحقول")));
+      return;
+    }
+
+    final DateTime fullDateTime = DateTime(
+      selectedDate!.year,
+      selectedDate!.month,
+      selectedDate!.day,
+      period == 'صباحًا' ? hour : hour + 12,
+      minute,
+    );
+
+    final tour = TourModel(
+      type: 'go',
+      driverName: selectedSupervisor?.name ?? "",
+      leavesAt: fullDateTime,
+      line: LineEntity(id: selectedLine!.id),
+    );
+
+    context.read<UpdateAddDeleteTourCubit>().addTour(tour);
+  }
 
   void nextStep() {
     if (currentStep < 3) {
       setState(() => currentStep++);
-    } else {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                'تم التأكيد',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 20),
-              const Icon(Icons.check_circle, color: Colors.green, size: 100),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  widget.onClose();
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFE71A45),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  minimumSize: const Size.fromHeight(50),
-                ),
-                child: const Text('العودة الى الرئيسية'),
-              ),
-            ],
-          ),
-        ),
-      );
+    } else if (currentStep == 3) {
+      submitTour();
     }
   }
 
@@ -95,8 +96,11 @@ class _AddTripBoxState extends State<AddTripBox> {
           onHourChanged: (val) => setState(() => hour = val),
           onMinuteChanged: (val) => setState(() => minute = val),
           onPeriodChanged: (val) => setState(() => period = val),
-          onLineChanged: (val) => setState(() => selectedLine = val),
+          onLineChanged: (value) {
+            setState(() => selectedLine = value);
+          },
         );
+
         break;
       case 2:
         stepContent = SupervisorStep(
@@ -116,54 +120,79 @@ class _AddTripBoxState extends State<AddTripBox> {
         );
     }
 
-    return Center(
-      child: SizedBox(
-        width: boxWidth,
-        height: boxHeight,
-        child: Material(
-          elevation: 8,
-          borderRadius: BorderRadius.circular(20),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: widget.onClose,
+    return BlocListener<UpdateAddDeleteTourCubit, UpdateAddDeleteTourState>(
+      listener: (context, state) {
+        if (state is TourAdded) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text("DONNNNNNNNNNNNNNNNE")));
+          print("STATE IS:${state}");
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'تم التأكيد',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                ),
-                Expanded(child: SingleChildScrollView(child: stepContent)),
-                const SizedBox(height: 20),
-                Row(
-                  children: [
-                    if (currentStep > 0)
-                      Expanded(
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.grey,
-                            minimumSize: const Size.fromHeight(50),
-                          ),
-                          onPressed: prevStep,
-                          child: const Text('السابق'),
-                        ),
+                  const SizedBox(height: 20),
+                  const Icon(
+                    Icons.check_circle,
+                    color: Colors.green,
+                    size: 100,
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      widget.onClose();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFE71A45),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
                       ),
-                    if (currentStep > 0) const SizedBox(width: 10),
-                    Expanded(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFE71A45),
-                          minimumSize: const Size.fromHeight(50),
-                        ),
-                        onPressed: nextStep,
-                        child: Text(currentStep < 3 ? 'التالي' : 'تأكيد'),
-                      ),
+                      minimumSize: const Size.fromHeight(50),
                     ),
-                  ],
-                ),
-              ],
+                    child: const Text('العودة الى الرئيسية'),
+                  ),
+                ],
+              ),
+            ),
+          );
+        } else if (state is UpdateAddDeleteTourError) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
+        }
+      },
+      child: Center(
+        child: SizedBox(
+          width: boxWidth,
+          height: boxHeight,
+          child: Material(
+            elevation: 8,
+            borderRadius: BorderRadius.circular(20),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  StepHeader(onClose: widget.onClose),
+                  Expanded(child: SingleChildScrollView(child: stepContent)),
+                  const SizedBox(height: 20),
+                  StepButtons(
+                    currentStep: currentStep,
+                    onNext: nextStep,
+                    onPrevious: prevStep,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

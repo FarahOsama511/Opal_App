@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_cubit.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_state.dart';
+import 'package:opal_app/features/Admin/presentaion/widgets/custom_widgets.dart';
 
-class TimeLineStep extends StatelessWidget {
+import '../../../../core/resources/color_manager.dart';
+
+class TimeLineStep extends StatefulWidget {
   final int hour;
   final int minute;
   final String period;
-  final String? selectedLine;
+  final LineEntity? selectedLine;
 
   final ValueChanged<int> onHourChanged;
   final ValueChanged<int> onMinuteChanged;
   final ValueChanged<String> onPeriodChanged;
-  final ValueChanged<String?> onLineChanged;
+  final ValueChanged<LineEntity?> onLineChanged;
 
   const TimeLineStep({
     super.key,
@@ -23,21 +30,46 @@ class TimeLineStep extends StatelessWidget {
     required this.onLineChanged,
   });
 
-  Widget timeSelector(String label, int value, VoidCallback onIncrement, VoidCallback onDecrement) {
+  @override
+  State<TimeLineStep> createState() => _TimeLineStepState();
+}
+
+class _TimeLineStepState extends State<TimeLineStep> {
+  Widget timeSelector(
+    String label,
+    int value,
+    VoidCallback onIncrement,
+    VoidCallback onDecrement,
+  ) {
     return Column(
       children: [
-        IconButton(icon: const Icon(Icons.keyboard_arrow_up), onPressed: onIncrement),
+        IconButton(
+          icon: const Icon(Icons.keyboard_arrow_up),
+          onPressed: onIncrement,
+        ),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
             border: Border.all(color: Colors.grey.shade400),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Text(value.toString().padLeft(2, '0'), style: const TextStyle(fontSize: 16)),
+          child: Text(
+            value.toString().padLeft(2, '0'),
+            style: const TextStyle(fontSize: 16),
+          ),
         ),
-        IconButton(icon: const Icon(Icons.keyboard_arrow_down), onPressed: onDecrement),
+        IconButton(
+          icon: const Icon(Icons.keyboard_arrow_down),
+          onPressed: onDecrement,
+        ),
       ],
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<LinesCubit>(context).getAllLiness();
   }
 
   @override
@@ -45,54 +77,86 @@ class TimeLineStep extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const Text('ميعاد الذهاب', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+        const Text(
+          'ميعاد الذهاب',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        ),
         const SizedBox(height: 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            timeSelector('الساعة', hour,
-                    () => onHourChanged(hour == 12 ? 1 : hour + 1),
-                    () => onHourChanged(hour == 1 ? 12 : hour - 1)),
-            timeSelector('الدقيقة', minute,
-                    () => onMinuteChanged((minute + 1) % 60),
-                    () => onMinuteChanged(minute == 0 ? 59 : minute - 1)),
+            timeSelector(
+              'الساعة',
+              widget.hour,
+              () =>
+                  widget.onHourChanged(widget.hour == 12 ? 1 : widget.hour + 1),
+              () =>
+                  widget.onHourChanged(widget.hour == 1 ? 12 : widget.hour - 1),
+            ),
+            timeSelector(
+              'الدقيقة',
+              widget.minute,
+              () => widget.onMinuteChanged((widget.minute + 1) % 60),
+              () => widget.onMinuteChanged(
+                widget.minute == 0 ? 59 : widget.minute - 1,
+              ),
+            ),
             Column(
               children: [
                 IconButton(
                   icon: const Icon(Icons.keyboard_arrow_up),
-                  onPressed: () => onPeriodChanged(period == 'صباحًا' ? 'مساءً' : 'صباحًا'),
+                  onPressed: () => widget.onPeriodChanged(
+                    widget.period == 'صباحًا' ? 'مساءً' : 'صباحًا',
+                  ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey.shade400),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Text(period, style: const TextStyle(fontSize: 16)),
+                  child: Text(
+                    widget.period,
+                    style: const TextStyle(fontSize: 16),
+                  ),
                 ),
                 IconButton(
                   icon: const Icon(Icons.keyboard_arrow_down),
-                  onPressed: () => onPeriodChanged(period == 'صباحًا' ? 'مساءً' : 'صباحًا'),
+                  onPressed: () => widget.onPeriodChanged(
+                    widget.period == 'صباحًا' ? 'مساءً' : 'صباحًا',
+                  ),
                 ),
               ],
             ),
           ],
         ),
         const SizedBox(height: 16),
-        DropdownButtonFormField<String>(
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: Colors.grey.shade200,
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-          ),
-          hint: const Text('اختر الخط'),
-          value: selectedLine,
-          onChanged: onLineChanged,
-          items: const [
-            DropdownMenuItem(value: '1', child: Text('خط رقم 1')),
-            DropdownMenuItem(value: '2', child: Text('خط رقم 2')),
-            DropdownMenuItem(value: '3', child: Text('خط رقم 3')),
-          ],
+
+        BlocBuilder<LinesCubit, GetAllLinesState>(
+          builder: (context, state) {
+            print("state is${state}");
+            if (state is LinesLoading) {
+              return const CircularProgressIndicator(
+                color: ColorManager.primaryColor,
+              );
+            } else if (state is LinesLoaded) {
+              final allLines = state.Liness;
+              print("${state.Liness.length}");
+              return CustomDropdown(
+                label: 'اختر الخط الخاص بك',
+                value: widget.selectedLine,
+                items: allLines,
+                onChanged: widget.onLineChanged,
+
+                displayString: (u) => u.name!,
+              );
+            } else {
+              return const Text('فشل في تحميل الخطوط');
+            }
+          },
         ),
       ],
     );

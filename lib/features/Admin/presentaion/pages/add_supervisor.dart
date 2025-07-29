@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
+import '../../../../core/resources/color_manager.dart';
 import '../../Data/models/add_admin_supervisor_model.dart';
 import '../bloc/create_admin_supervisors.dart/add_admin_supervisor_cubit.dart';
 import '../bloc/create_admin_supervisors.dart/add_admin_supervisor_state.dart';
 import '../bloc/get_lines/get_all_lines_cubit.dart';
 import '../bloc/get_lines/get_all_lines_state.dart';
-import '../widgets/bus_line_dropdown.dart';
 import '../widgets/custom_widgets.dart';
 import '../widgets/text_field.dart';
 import 'admin_home_screen.dart';
@@ -79,15 +80,17 @@ class _AddSupervisorState extends State<AddSupervisor> {
                     } else if (state is LinesLoaded) {
                       final allLines = state.Liness; // دي كافية
 
-                      return CustomDropdown(
+                      return CustomDropdown<LineEntity>(
                         label: 'اختر الخط',
-                        items: allLines,
                         value: selectedLine,
+                        items: allLines,
                         onChanged: (line) {
                           setState(() {
                             selectedLine = line;
                           });
                         },
+                        displayString: (line) =>
+                            ' ${line.name ?? ''}', // هنا بيعرض الاسم
                       );
                     } else {
                       return const Text('فشل في تحميل الخطوط');
@@ -121,6 +124,7 @@ class _AddSupervisorState extends State<AddSupervisor> {
                       return const Center(child: CircularProgressIndicator());
                     }
                     return PrimaryButton(
+                      backgroundColor: ColorManager.primaryColor,
                       text: 'إضافة مشرف',
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
@@ -128,17 +132,31 @@ class _AddSupervisorState extends State<AddSupervisor> {
                               .read<AddAdminSupervisorCubit>()
                               .AddAdminORSupervisor(
                                 AddAdminSupervisorModel(
-                                  name: nameController.text, // ✅ صح
+                                  name: nameController.text,
                                   phone: phoneController.text,
                                   password: passwordController.text,
                                   email: emailController.text,
                                   role: "supervisor",
+                                  line: LineEntity(
+                                    name: selectedLine!.name,
+                                    id: selectedLine!.id,
+                                  ),
                                 ),
                               );
                         }
                       },
                     );
                   },
+                ),
+                SizedBox(height: 20.h),
+                PrimaryButton(
+                  text: 'إلفاء ',
+                  onPressed: () {
+                    setState(() {
+                      Navigator.pop(context);
+                    });
+                  },
+                  backgroundColor: ColorManager.greyColor,
                 ),
 
                 const SizedBox(height: 15),

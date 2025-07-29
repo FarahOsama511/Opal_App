@@ -12,20 +12,29 @@ import 'package:opal_app/features/Admin/Data/repositiries/tour_repo_impl.dart';
 import 'package:opal_app/features/Admin/Domain/reporistires/add_admin_supervisor.dart';
 import 'package:opal_app/features/Admin/Domain/reporistires/line_repo.dart';
 import 'package:opal_app/features/Admin/Domain/usecase/add_admin_supervisor.dart';
+import 'package:opal_app/features/Admin/Domain/usecase/add_line_use_case.dart';
 import 'package:opal_app/features/Admin/Domain/usecase/get_all_lines.dart';
 import 'package:opal_app/features/Admin/Domain/usecase/get_all_tours.dart';
+import 'package:opal_app/features/Admin/Domain/usecase/get_tour_id_use_case.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/add_lines/add_line_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_bloc/tour_cubit.dart';
+import 'package:opal_app/features/user/Data/datasource/select_tour_remote_data_source.dart';
 import 'package:opal_app/features/user/Data/datasource/university_data_source.dart';
 import 'package:opal_app/features/user/Data/datasource/user_local_data_source.dart';
 import 'package:opal_app/features/user/Data/datasource/user_remote_data_source.dart';
+import 'package:opal_app/features/user/Data/repositiries/selection_tour_repo_impl.dart';
 import 'package:opal_app/features/user/Data/repositiries/university_repo_impl.dart';
 import 'package:opal_app/features/user/Data/repositiries/user_repo_impl.dart';
+import 'package:opal_app/features/user/Domain/repositires/select_tour_repo.dart';
 import 'package:opal_app/features/user/Domain/repositires/university_repo.dart';
 import 'package:opal_app/features/user/Domain/repositires/user_repo.dart';
 import 'package:opal_app/features/user/Domain/usecases/get_all_univeristies.dart';
 import 'package:opal_app/features/user/Domain/usecases/get_all_user.dart';
+import 'package:opal_app/features/user/Domain/usecases/select_tour_use_case.dart';
+import 'package:opal_app/features/user/Domain/usecases/unconfirm_tour_use_case.dart';
 import 'package:opal_app/features/user/presentaion/bloc/auth_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/get_all_universities/get_all_universities_cubit.dart';
+import 'package:opal_app/features/user/presentaion/bloc/selection_tour/selection_tour_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/user_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -47,7 +56,7 @@ import '../features/user/Domain/usecases/user_isdeactivat_UseCase.dart';
 final setUp = GetIt.instance;
 Future<void> init() async {
   //cubits
-  setUp.registerFactory(() => TourCubit(setUp()));
+  setUp.registerFactory(() => TourCubit(setUp(), setUp()));
   setUp.registerFactory(
     () => UpdateAddDeleteTourCubit(setUp(), setUp(), setUp()),
   );
@@ -58,6 +67,8 @@ Future<void> init() async {
   setUp.registerFactory(() => LinesCubit(setUp()));
   setUp.registerFactory(() => AddAdminSupervisorCubit(setUp()));
   setUp.registerFactory(() => GetAllUniversitiesCubit(setUp()));
+  setUp.registerFactory(() => AddLineCubit(setUp()));
+  setUp.registerFactory(() => SelectionTourCubit(setUp(), setUp()));
 
   //usecases
   setUp.registerLazySingleton(() => GetAllToursUseCase(setUp()));
@@ -72,6 +83,10 @@ Future<void> init() async {
   setUp.registerLazySingleton(() => UserIsDeactivatUseCase(setUp()));
   setUp.registerLazySingleton(() => AddAdminSupervisorUseCase(setUp()));
   setUp.registerLazySingleton(() => GetAllUniveristiesUseCase(setUp()));
+  setUp.registerLazySingleton(() => GetTourByIdUseCase(setUp()));
+  setUp.registerLazySingleton(() => AddLineUseCase(setUp()));
+  setUp.registerLazySingleton(() => SelectionTourUseCase(setUp()));
+  setUp.registerLazySingleton(() => UnconfirmTourUseCase(setUp()));
 
   //repositories
   setUp.registerLazySingleton<ToursRepository>(
@@ -101,6 +116,13 @@ Future<void> init() async {
     () =>
         UniversityRepoImpl(universityDataSource: setUp(), networkInfo: setUp()),
   );
+  setUp.registerLazySingleton<SelectionTourRepo>(
+    () => SelectionTourRepoImpl(
+      selectTourRemoteDataSource: setUp(),
+      networkInfo: setUp(),
+    ),
+  );
+
   //data sources
   setUp.registerLazySingleton<TourRemoteDataSource>(
     () => TourRemoteDataSourceImpl(client: setUp()),
@@ -128,6 +150,9 @@ Future<void> init() async {
   );
   setUp.registerLazySingleton<UniversityDataSource>(
     () => UniversityDataSourceImpl(client: setUp()),
+  );
+  setUp.registerLazySingleton<SelectTourRemoteDataSource>(
+    () => SelectTourRemoteDataSourceImpl(client: setUp()),
   );
 
   //external dependencies

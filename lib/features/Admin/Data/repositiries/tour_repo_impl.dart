@@ -41,7 +41,6 @@ class TourRepoImpl extends ToursRepository {
   @override
   Future<Either<Failure, Unit>> addTour(Tour tour) async {
     final TourModel tourModel = TourModel(
-      id: tour.id,
       type: tour.type,
       driverName: tour.driverName,
       leavesAt: tour.leavesAt,
@@ -76,7 +75,6 @@ class TourRepoImpl extends ToursRepository {
   @override
   Future<Either<Failure, Unit>> updateTour(Tour tour) async {
     final TourModel tourModel = TourModel(
-      id: tour.id,
       type: tour.type,
       driverName: tour.driverName,
       leavesAt: tour.leavesAt,
@@ -86,6 +84,20 @@ class TourRepoImpl extends ToursRepository {
       try {
         await remoteDataSource.updateTour(tourModel);
         return Right(unit);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NoInternetFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, Tour>> getTourById(String id) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final tour = await remoteDataSource.getTourById(id);
+        return Right(tour);
       } on ServerException {
         return Left(ServerFailure());
       }

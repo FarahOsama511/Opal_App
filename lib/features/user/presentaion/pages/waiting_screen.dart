@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:opal_app/core/theming/color_manager.dart';
+import 'package:opal_app/core/resources/color_manager.dart';
 
 class WaitingScreen extends StatelessWidget {
   const WaitingScreen({super.key});

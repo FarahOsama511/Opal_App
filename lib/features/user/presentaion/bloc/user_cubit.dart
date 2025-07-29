@@ -37,7 +37,7 @@ class GetAllUserCubit extends Cubit<UserState> {
   Future<void> userIsActivate(String userId) async {
     emit(UserLoading());
     try {
-      final activateUser = await userIsactivatUseCase(userId, true);
+      final activateUser = await userIsactivatUseCase(userId, 'active');
       activateUser.fold(
         (failure) {
           emit(UserError(_errorMessage(failure)));
@@ -56,7 +56,7 @@ class GetAllUserCubit extends Cubit<UserState> {
   Future<void> userIsDeactivate(String userId) async {
     emit(UserLoading());
     try {
-      final deactivateUser = await userIsDeactivatUseCase(userId, false);
+      final deactivateUser = await userIsDeactivatUseCase(userId, 'inactive');
       deactivateUser.fold(
         (failure) {
           emit(UserError(_errorMessage(failure)));

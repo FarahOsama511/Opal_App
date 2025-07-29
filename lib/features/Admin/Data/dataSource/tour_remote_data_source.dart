@@ -7,6 +7,7 @@ import 'dart:convert';
 
 abstract class TourRemoteDataSource {
   Future<List<TourModel>> getAllTours();
+  Future<TourModel> getTourById(String id);
   Future<Unit> addTour(TourModel tour);
   Future<Unit> updateTour(TourModel tour);
   Future<Unit> deleteTour(String id);
@@ -41,48 +42,49 @@ class TourRemoteDataSourceImpl implements TourRemoteDataSource {
 
   @override
   Future<Unit> addTour(TourModel tour) async {
+    final prefs = await SharedPreferences.getInstance();
+    final admintoken = prefs.getString('access_token_Admin');
     final body = {
-      'id': tour.id,
       'type': tour.type,
       'driverName': tour.driverName,
-      'leavesAt': tour.leavesAt.toIso8601String(),
-      'line': {
-        'id': tour.line.id,
-        'name': tour.line.name,
-        'createdAt': tour.line.createdAt!.toIso8601String(),
-        'updatedAt': tour.line.updatedAt!.toIso8601String(),
-      },
+      'leavesAt': tour.leavesAt.toUtc().toIso8601String(),
+      'lineId': tour.line.id,
     };
+    print("Request Body: ${jsonEncode(body)}");
     final response = await client.post(
       Uri.parse('${Base_Url}tours'),
-      headers: {'Content-Type': 'application/json'},
-      body: body,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $admintoken',
+      },
+      body: jsonEncode(body),
     );
 
     if (response.statusCode == 201) {
       return unit;
     } else {
+      print("state code add tour is ${response.statusCode}");
+      print("body add tour is:${response.body}");
       throw ServerException();
     }
   }
 
   @override
   Future<Unit> updateTour(TourModel tour) async {
+    final prefs = await SharedPreferences.getInstance();
+    final admintoken = prefs.getString('access_token_Admin');
     final body = {
-      'id': tour.id,
       'type': tour.type,
       'driverName': tour.driverName,
       'leavesAt': tour.leavesAt.toIso8601String(),
-      'line': {
-        'id': tour.line.id,
-        'name': tour.line.name,
-        'createdAt': tour.line.createdAt!.toIso8601String(),
-        'updatedAt': tour.line.updatedAt!.toIso8601String(),
-      },
+      'lineId': tour.line.id,
     };
     final response = await client.put(
       Uri.parse('${Base_Url}tours/${tour.id}'),
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $admintoken',
+      },
       body: body,
     );
 
@@ -104,6 +106,28 @@ class TourRemoteDataSourceImpl implements TourRemoteDataSource {
 
     if (response.statusCode == 204) {
       return unit;
+    } else {
+      print("state code is ${response.statusCode}");
+      print("body:${response.body}");
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<TourModel> getTourById(String id) async {
+    final prefs = await SharedPreferences.getInstance();
+    final admintoken = prefs.getString('access_token_Admin');
+    final response = await client.get(
+      Uri.parse('${Base_Url}tours/${id}'),
+      headers: {'Authorization': 'Bearer $admintoken'},
+    );
+
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+      print('the tour is: $jsonResponse');
+      final tour = TourModel.fromJson(jsonResponse);
+
+      return tour;
     } else {
       print("state code is ${response.statusCode}");
       print("body:${response.body}");

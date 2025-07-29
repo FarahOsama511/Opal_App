@@ -8,7 +8,7 @@ class UserIsDeactivatUseCase {
   final UserRepo userRepo;
 
   UserIsDeactivatUseCase(this.userRepo);
-  Future<Either<Failure, UserEntity>> call(String id, bool isActivated) {
-    return userRepo.userIsActivate(id, isActivated);
+  Future<Either<Failure, UserEntity>> call(String id, String status) {
+    return userRepo.userIsActivate(id, status);
   }
 }

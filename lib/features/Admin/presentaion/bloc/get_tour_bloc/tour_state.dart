@@ -12,6 +12,11 @@ class TourLoaded extends TourState {
   TourLoaded(this.tours);
 }
 
+class TourByIdLoaded extends TourState {
+  final Tour tour;
+  TourByIdLoaded(this.tour);
+}
+
 class TourError extends TourState {
   final String message;
 
