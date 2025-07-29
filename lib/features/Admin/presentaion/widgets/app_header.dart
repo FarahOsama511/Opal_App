@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/resources/color_manager.dart';
+import '../../../../core/resources/text_styles.dart';
+
 class AppHeader extends StatelessWidget {
   final VoidCallback onLogout;
   final bool showAddButton;
@@ -22,43 +25,52 @@ class AppHeader extends StatelessWidget {
     this.title,
     this.titleWidget,
     this.mainAxisAlignment = MainAxisAlignment.spaceBetween,
-    this.crossAxisAlignment = CrossAxisAlignment.center,
+    this.crossAxisAlignment = CrossAxisAlignment.start,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: ColorManager.secondColor,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       child: Row(
         mainAxisAlignment: mainAxisAlignment,
         crossAxisAlignment: crossAxisAlignment,
         children: [
           leadingWidget ??
-              IconButton(icon: const Icon(Icons.logout), onPressed: onLogout),
-
-          // لو في زر إضافة
+              Transform(
+                alignment: Alignment.center,
+                transform: Matrix4.rotationY(3.1416),
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.logout,
+                    size: 24,
+                    color: ColorManager.blackColor,
+                  ),
+                  onPressed: onLogout,
+                ),
+              ),
+          SizedBox(width: 80),
           if (showAddButton && onAddPressed != null)
-            IconButton(
-              icon: const Icon(Icons.add_circle_outline, color: Colors.black),
-              onPressed: onAddPressed,
+            Row(
+              children: [
+                Text("إضافة", style: TextStyles.black14Bold),
+                IconButton(
+                  icon: Icon(
+                    Icons.add_circle_outline,
+                    color: ColorManager.blackColor,
+                  ),
+                  onPressed: onAddPressed,
+                ),
+              ],
             ),
-
-          // العنوان أو ويدجت العنوان في الوسط
+          SizedBox(width: 142),
           Expanded(
-            child: Center(
-              child:
-                  titleWidget ??
-                  (title != null
-                      ? Text(
-                          title!,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
-                        )
-                      : const SizedBox.shrink()),
-            ),
+            child:
+                titleWidget ??
+                (title != null
+                    ? Text(title!, style: TextStyles.black20Bold)
+                    : const SizedBox.shrink()),
           ),
 
           // الطرف الآخر (مثلاً اللوجو)

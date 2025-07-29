@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:opal_app/core/resources/color_manager.dart';
+
+import '../../../../core/resources/text_styles.dart';
 
 class AddMenu extends StatelessWidget {
   final VoidCallback onAddTrip;
@@ -28,14 +31,11 @@ class AddMenu extends StatelessWidget {
               TextButton(
                 onPressed: onAddTrip,
                 style: TextButton.styleFrom(
-                  foregroundColor: const Color(0xFFE71A45),
+                  foregroundColor: ColorManager.blackColor,
                   alignment: Alignment.centerRight,
                   padding: const EdgeInsets.symmetric(vertical: 12),
                 ),
-                child: const Text(
-                  'إضافة ميعاد جديد',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-                ),
+                child: Text('إضافة ميعاد جديد', style: TextStyles.black10Bold),
               ),
               _buildAddOption(context, 'إضافة خط جديد', '/addLine'),
             ],
@@ -53,10 +53,7 @@ class AddMenu extends StatelessWidget {
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.symmetric(vertical: 12),
       ),
-      child: Text(
-        title,
-        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-      ),
+      child: Text(title, style: TextStyles.black10Bold),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:opal_app/core/errors/exceptions.dart';
+import 'package:opal_app/core/network/local_network.dart';
 import 'package:opal_app/features/user/Data/models/register_model.dart';
 import 'package:opal_app/features/user/Data/models/login_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -33,12 +34,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     print("=== login Response Status: ${response.statusCode} ===");
     print("=== login Response Body: ${response.body} ===");
     if (response.statusCode == 200) {
-      final prefs = await SharedPreferences.getInstance();
       final jsonResponse = jsonDecode(response.body);
-      final token = jsonResponse['token'];
-      await prefs.setString('access_token', token);
+      final tokenUser = jsonResponse['token'];
 
-      return LoginModel.fromJson({...jsonResponse, 'token': token});
+      await CacheNetwork.insertToCache(key: 'access_token', value: tokenUser);
+
+      return LoginModel.fromJson({...jsonResponse, 'token': tokenUser});
     } else {
       throw ServerException();
     }
@@ -86,10 +87,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     print("=== login Response Status: ${response.statusCode} ===");
     print("=== login Response Body: ${response.body} ===");
     if (response.statusCode == 200) {
-      final prefs = await SharedPreferences.getInstance();
       final jsonResponse = jsonDecode(response.body);
       final tokenAdmin = jsonResponse['token'];
-      await prefs.setString('access_token_Admin', tokenAdmin);
+      await CacheNetwork.insertToCache(
+        key: 'access_token_Admin',
+        value: tokenAdmin,
+      );
 
       return LoginModel.fromJson({...jsonResponse, 'token': tokenAdmin});
     } else {

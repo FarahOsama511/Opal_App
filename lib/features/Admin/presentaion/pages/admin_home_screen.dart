@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:opal_app/core/resources/color_manager.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/student_list.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/trips.dart';
 import 'package:opal_app/features/user/presentaion/bloc/user_cubit.dart';
@@ -32,10 +33,18 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: ColorManager.secondColor,
       body: SafeArea(
         child: Stack(
           children: [
+            Positioned(
+              left: 210,
+              top: 0,
+              child: Opacity(
+                opacity: 0.2,
+                child: Image.asset('assets/logos.png', width: 200, height: 200),
+              ),
+            ),
             Column(
               children: [
                 AppHeader(

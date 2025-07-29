@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/resources/text_styles.dart';
+
 class BusCard extends StatelessWidget {
   final bool isExpanded;
   final VoidCallback? onTap;
@@ -43,11 +45,12 @@ class BusCard extends StatelessWidget {
         child: Stack(
           children: [
             Positioned(
-              bottom: -5,
-              left: -5,
+              bottom: -40,
+              top: -40,
+              right: 240,
               child: Opacity(
                 opacity: 0.4,
-                child: Image.asset('assets/logo.png', width: 60),
+                child: Image.asset('assets/logos.png', width: 220, height: 240),
               ),
             ),
             Directionality(
@@ -85,15 +88,15 @@ class _RowInfo extends StatelessWidget {
           Flexible(
             child: Text(
               value,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-              textAlign: TextAlign.right,
+              style: TextStyles.black14Bold,
+              textAlign: TextAlign.left,
             ),
           ),
           Flexible(
             child: Text(
               label,
-              style: const TextStyle(color: Colors.grey),
-              textAlign: TextAlign.left,
+              style: TextStyles.black14Bold,
+              textAlign: TextAlign.right,
             ),
           ),
         ],

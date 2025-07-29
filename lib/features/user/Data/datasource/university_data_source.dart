@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:opal_app/core/constants/constants.dart';
 import 'package:opal_app/features/user/Data/models/university_model.dart';
 import 'package:opal_app/features/user/Domain/entities/university_entity.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,9 +22,9 @@ class UniversityDataSourceImpl implements UniversityDataSource {
 
   @override
   Future<List<UniversityModel>> getAllUniversity() async {
-    final prefs = await SharedPreferences.getInstance();
-    final userToken = prefs.getString('access_token_Admin');
-    print("Admin token is${userToken}");
+    // final prefs = await SharedPreferences.getInstance();
+    // final userToken = prefs.getString('access_token_Admin');
+    print("Admin token is${tokenAdmin}");
     final response = await client.get(
       Uri.parse('${Base_Url}universities'),
       //headers: {'Authorization': 'Bearer $userToken'},

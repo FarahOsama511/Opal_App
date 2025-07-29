@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/resources/text_styles.dart';
+
 class ExpandableCard extends StatelessWidget {
   final String name;
   final String phone;
@@ -41,10 +43,7 @@ class ExpandableCard extends StatelessWidget {
                 child: Text(
                   name,
                   textAlign: TextAlign.right,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: TextStyles.black14Bold,
                 ),
               ),
               IconButton(
@@ -84,8 +83,8 @@ class ExpandableCard extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
-          Text(title, style: const TextStyle(color: Colors.black87)),
+          Text(label, style: TextStyles.black10Bold),
+          Text(title, style: TextStyles.black10Bold),
         ],
       ),
     );

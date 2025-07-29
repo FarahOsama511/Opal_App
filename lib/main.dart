@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:opal_app/core/constants/constants.dart';
 import 'package:opal_app/core/get_it.dart' as di;
+import 'package:opal_app/core/network/local_network.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/add_lines/add_line_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/add_line.dart';
@@ -30,10 +32,13 @@ bool isLoggedIn = false;
 bool isStudent = false;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await CacheNetwork.cacheInitialization();
+  tokenUser = CacheNetwork.getCacheData(key: 'access_token');
+  tokenAdmin = CacheNetwork.getCacheData(key: 'access_token_Admin');
+  checkToken();
 
   await di.init();
   await initializeDateFormatting('ar', null);
-  // await checkToken();
   runApp(StudentBusApp());
 }
 
@@ -71,7 +76,10 @@ class StudentBusApp extends StatelessWidget {
             title: 'Student Bus App',
             debugShowCheckedModeBanner: false,
 
-            initialRoute: '/signin',
+            initialRoute: (isLoggedIn == true)
+                ? ((isStudent == true) ? '/home' : '/adminScreen')
+                : '/signin',
+
             routes: {
               '/signup': (context) => const SignUpScreen(),
               '/signin': (context) => const SignInScreen(),
@@ -93,19 +101,15 @@ class StudentBusApp extends StatelessWidget {
   }
 }
 
-// checkToken() async {
-//   final prefs = await SharedPreferences.getInstance();
-//   final userToken = prefs.getString('access_token');
-//   final adminToken = prefs.getString('access_token_Admin');
-
-//   if (userToken != null && userToken.isNotEmpty) {
-//     isLoggedIn = true;
-//     isStudent = true;
-//   } else if (adminToken != null && adminToken.isNotEmpty) {
-//     isLoggedIn = true;
-//     isStudent = false;
-//   } else {
-//     isLoggedIn = false;
-//     isStudent = false;
-//   }
-// }
+checkToken() async {
+  if (tokenUser != null && tokenUser != "") {
+    isLoggedIn = true;
+    isStudent = true;
+  } else if (tokenAdmin != null && tokenAdmin != "") {
+    isLoggedIn = true;
+    isStudent = false;
+  } else {
+    isLoggedIn = false;
+    isStudent = false;
+  }
+}
