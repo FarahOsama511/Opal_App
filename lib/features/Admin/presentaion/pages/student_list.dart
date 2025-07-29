@@ -1,26 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:opal_app/core/resources/color_manager.dart';
-import 'package:opal_app/features/Admin/presentaion/pages/trips.dart';
-import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
-import 'package:opal_app/features/user/presentaion/bloc/user_cubit.dart';
-import 'package:opal_app/features/user/presentaion/bloc/user_state.dart';
-
+import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
+import '../../../user/presentaion/bloc/user_cubit.dart' show GetAllUserCubit;
+import '../../../user/presentaion/bloc/user_state.dart';
+
+import '../widgets/expandable_card.dart';
 
 class StudentList extends StatefulWidget {
   const StudentList({super.key});
-
   @override
   State<StudentList> createState() => _StudentListState();
 }
 
 class _StudentListState extends State<StudentList> {
-  bool showAddMenu = false;
-  int currentIndex = 0;
   bool isStudentsSelected = true;
-
-  List<bool> _isExpandedList = [];
+  List<bool> _isExpandedStudents = [];
+  List<bool> _isExpandedSupervisors = [];
 
   @override
   void initState() {
@@ -32,35 +28,113 @@ class _StudentListState extends State<StudentList> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Stack(
+      body: Column(
         children: [
-          Column(
-            children: [
-              _buildSwitchButtons(),
-              Expanded(
-                child: Stack(
-                  children: [
-                    IndexedStack(
-                      index: currentIndex,
-                      children: [
-                        _buildHomeContent(),
-                        const TripsScreen(),
-                        Center(
-                          child: Text(
-                            isStudentsSelected
-                                ? 'قائمة الطلاب'
-                                : 'قائمة المشرفين',
-                          ),
+          _buildSwitchButtons(),
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(color: Color(0xFFE71A45)),
+              child: BlocConsumer<GetAllUserCubit, UserState>(
+                listener: (context, state) {
+                  if (state is UserError) {
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text(state.message)));
+                  }
+                },
+                builder: (context, state) {
+                  if (state is UserSuccess) {
+                    final filteredUsers = state.user.where((u) {
+                      return (u.status == 'active' && isStudentsSelected
+                          ? u.role == "student"
+                          : u.role == "supervisor");
+                    }).toList();
+
+                    print(
+                      "عدد المستخدمين المستلمين من السيرفر: ${state.user.length}",
+                    );
+
+                    if (isStudentsSelected) {
+                      if (_isExpandedStudents.length != filteredUsers.length) {
+                        _isExpandedStudents = List.generate(
+                          filteredUsers.length,
+                          (_) => false,
+                        );
+                      }
+                    } else {
+                      if (_isExpandedSupervisors.length !=
+                          filteredUsers.length) {
+                        _isExpandedSupervisors = List.generate(
+                          filteredUsers.length,
+                          (_) => false,
+                        );
+                      }
+                    }
+
+                    if (filteredUsers.isEmpty) {
+                      return Center(
+                        child: Text(
+                          "لا يوجد مستخدمون",
+                          style: TextStyles.white20Bold,
                         ),
-                      ],
-                    ),
-                    _buildBottomNav(),
-                  ],
-                ),
+                      );
+                    }
+
+                    return ListView.builder(
+                      padding: const EdgeInsets.fromLTRB(16, 12, 16, 90),
+                      itemCount: filteredUsers.length,
+                      itemBuilder: (context, index) {
+                        final user = filteredUsers[index];
+                        if (isStudentsSelected) {
+                          return ExpandableCard(
+                            name: user.name!,
+                            phone: user.phone!,
+                            university: user.university?.name ?? '',
+                            isSupervisor: false,
+                            isExpanded: _isExpandedStudents[index],
+                            onToggle: () {
+                              setState(() {
+                                _isExpandedStudents[index] =
+                                    !_isExpandedStudents[index];
+                              });
+                            },
+                          );
+                        } else {
+                          return ExpandableCard(
+                            name: user.name!,
+                            phone: user.phone!,
+                            line: user.line?.name ?? '',
+                            isSupervisor: true,
+                            isExpanded: _isExpandedSupervisors[index],
+                            onToggle: () {
+                              setState(() {
+                                _isExpandedSupervisors[index] =
+                                    !_isExpandedSupervisors[index];
+                              });
+                            },
+                          );
+                        }
+                      },
+                    );
+                  } else if (state is UserLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        color: ColorManager.secondColor,
+                      ),
+                    );
+                  } else {
+                    return Center(
+                      child: Text(
+                        "حدث خطأ أثناء تحميل البيانات.",
+                        style: TextStyles.white20Bold,
+                      ),
+                    );
+                  }
+                },
               ),
-            ],
+            ),
           ),
-          if (showAddMenu) _buildAddMenu(),
         ],
       ),
     );
@@ -75,23 +149,18 @@ class _StudentListState extends State<StudentList> {
             child: ElevatedButton(
               onPressed: () {
                 setState(() {
-                  isStudentsSelected = false;
+                  isStudentsSelected = true;
                 });
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: !isStudentsSelected
-                    ? ColorManager.primaryColor
-                    : ColorManager.greyColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
+                backgroundColor: isStudentsSelected
+                    ? const Color(0xFFE71A45)
+                    : Colors.grey.shade300,
               ),
               child: Text(
-                'المشرفين',
+                'الطلاب',
                 style: TextStyle(
-                  color: !isStudentsSelected
-                      ? ColorManager.secondColor
-                      : ColorManager.blackColor,
+                  color: isStudentsSelected ? Colors.white : Colors.black,
                 ),
               ),
             ),
@@ -101,239 +170,23 @@ class _StudentListState extends State<StudentList> {
             child: ElevatedButton(
               onPressed: () {
                 setState(() {
-                  isStudentsSelected = true;
+                  isStudentsSelected = false;
                 });
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: isStudentsSelected
-                    ? ColorManager.primaryColor
-                    : ColorManager.greyColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
+                    ? Colors.grey.shade300
+                    : const Color(0xFFE71A45),
               ),
               child: Text(
-                'الطلاب',
+                'المشرفين',
                 style: TextStyle(
-                  color: isStudentsSelected
-                      ? ColorManager.secondColor
-                      : ColorManager.blackColor,
+                  color: isStudentsSelected ? Colors.black : Colors.white,
                 ),
               ),
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildHomeContent() {
-    return Container(
-      width: double.infinity,
-      decoration: const BoxDecoration(color: Color(0xFFE71A45)),
-      child: BlocConsumer<GetAllUserCubit, UserState>(
-        listener: (context, state) {
-          if (state is UserError) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.message)));
-          }
-        },
-        builder: (context, state) {
-          if (state is UserSuccess) {
-            final filteredUsers = state.user.where((u) {
-              return (u.status == 'active' && isStudentsSelected
-                  ? u.role == "student"
-                  : u.role == "supervisor");
-            }).toList();
-            print("عدد المستخدمين المستلمين من السيرفر: ${state.user.length}");
-
-            if (_isExpandedList.length != filteredUsers.length) {
-              _isExpandedList = List.generate(
-                filteredUsers.length,
-                (_) => false,
-              );
-            }
-
-            if (filteredUsers.isEmpty) {
-              return Center(
-                child: Text("لا يوجد مستخدمون", style: TextStyles.white20Bold),
-              );
-            }
-
-            return ListView.builder(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 90),
-              itemCount: filteredUsers.length,
-              itemBuilder: (context, index) {
-                final user = filteredUsers[index];
-                return _buildCard(index, user);
-              },
-            );
-          } else if (state is UserLoading) {
-            return const Center(
-              child: CircularProgressIndicator(color: ColorManager.secondColor),
-            );
-          } else {
-            return Center(
-              child: Text(
-                "حدث خطأ أثناء تحميل البيانات.",
-                style: TextStyles.white20Bold,
-              ),
-            );
-          }
-        },
-      ),
-    );
-  }
-
-  Widget _buildCard(int index, UserEntity user) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 6),
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(color: Colors.black12, blurRadius: 3, offset: Offset(0, 2)),
-        ],
-      ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  user.name ?? '',
-                  textAlign: TextAlign.right,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-              IconButton(
-                icon: Icon(
-                  _isExpandedList[index]
-                      ? Icons.keyboard_arrow_up
-                      : Icons.keyboard_arrow_down_rounded,
-                  color: Colors.black,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _isExpandedList[index] = !_isExpandedList[index];
-                  });
-                },
-              ),
-            ],
-          ),
-          if (_isExpandedList[index])
-            Padding(
-              padding: const EdgeInsets.only(top: 12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text('رقم الهاتف: ${user.phone ?? ""}'),
-                  Text('الخط:  ${user.line?.name ?? ""}'),
-                  if (isStudentsSelected) ...[
-                    Text('الجامعة: ${user.university?.name ?? ""}'),
-                  ] else ...[
-                    // Text('الرقم التعريفي: ${user.universityCardId ?? ""}'),
-                  ],
-                ],
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBottomNav() {
-    return Positioned(
-      left: 16,
-      right: 16,
-      bottom: 16,
-      child: Container(
-        decoration: BoxDecoration(
-          color: const Color(0xFFE71A45),
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black26,
-              blurRadius: 6,
-              offset: Offset(0, 2),
-            ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(24),
-          child: BottomNavigationBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            currentIndex: currentIndex,
-            selectedItemColor: Colors.white,
-            unselectedItemColor: Colors.white70,
-            onTap: (index) {
-              setState(() => currentIndex = index);
-            },
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'الرئيسية',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.alt_route),
-                label: 'الرحلات',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.list_outlined),
-                label: 'قائمة الطلاب',
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAddMenu() {
-    return Positioned(
-      top: 80,
-      right: 16,
-      left: 16,
-      child: Material(
-        elevation: 6,
-        borderRadius: BorderRadius.circular(16),
-        child: Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _buildAddOption('إضافة مسؤول جديد'),
-              _buildAddOption('إضافة مشرف جديد'),
-              _buildAddOption('إضافة ميعاد جديد'),
-              _buildAddOption('إضافة خط جديد'),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAddOption(String title) {
-    return TextButton(
-      onPressed: () {},
-      style: TextButton.styleFrom(
-        foregroundColor: const Color(0xFFE71A45),
-        alignment: Alignment.centerRight,
-        padding: const EdgeInsets.symmetric(vertical: 12),
-      ),
-      child: Text(
-        title,
-        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
       ),
     );
   }

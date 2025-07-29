@@ -97,11 +97,11 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: Roboto_Condensed
+    - family: Cairo
       fonts:
-        - asset: assets/fonts/Roboto_Condensed-Bold.ttf
+        - asset: assets/fonts/Cairo-Bold.ttf
           weight: 700
-        - asset: assets/fonts/Roboto_Condensed-Regular.ttf
+        - asset: assets/fonts/Cairo-Regular.ttf
           weight: 400
   #   - family: Trajan Pro
   #     fonts:

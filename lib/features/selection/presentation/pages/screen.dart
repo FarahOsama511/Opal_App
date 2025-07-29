@@ -17,15 +17,15 @@ import '../../../Admin/presentaion/widgets/custom_widgets.dart';
 import '../../../user/presentaion/bloc/auth_cubit.dart';
 import '../../../user/presentaion/bloc/selection_tour/selection_tour_cubit.dart';
 
-class UserHomeScreen extends StatefulWidget {
+class HomeScreen extends StatefulWidget {
   final bool isTripConfirmed;
-  const UserHomeScreen({super.key, this.isTripConfirmed = false});
+  const HomeScreen({super.key, this.isTripConfirmed = false});
 
   @override
-  State<UserHomeScreen> createState() => _UserHomeScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _UserHomeScreenState extends State<UserHomeScreen> {
+class _HomeScreenState extends State<HomeScreen> {
   int? expandedCardIndex;
   LineEntity? selectedLine;
   late bool isTripConfirmed;
