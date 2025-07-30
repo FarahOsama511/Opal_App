@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
 import '../../../../core/resources/color_manager.dart';
+import '../../../../core/resources/text_styles.dart';
 import '../../Data/models/add_admin_supervisor_model.dart';
 import '../bloc/create_admin_supervisors.dart/add_admin_supervisor_cubit.dart';
 import '../bloc/create_admin_supervisors.dart/add_admin_supervisor_state.dart';
@@ -74,7 +75,9 @@ class _AddSupervisorState extends State<AddSupervisor> {
                 BlocBuilder<LinesCubit, GetAllLinesState>(
                   builder: (context, state) {
                     if (state is LinesLoading) {
-                      return const CircularProgressIndicator(
+                      return CircularProgressIndicator(
+                        strokeWidth: 20,
+
                         color: Color(0XFFE71A45),
                       );
                     } else if (state is LinesLoaded) {
@@ -108,7 +111,12 @@ class _AddSupervisorState extends State<AddSupervisor> {
                       ).showSnackBar(SnackBar(content: Text(state.message)));
                     } else if (state is AddAdminSupervisorSuccess) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('تمت الإضافة بنجاح')),
+                        SnackBar(
+                          content: Text(
+                            state.message,
+                            style: TextStyles.white12Bold,
+                          ),
+                        ),
                       );
                       Navigator.pushReplacement(
                         context,

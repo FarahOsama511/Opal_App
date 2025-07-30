@@ -3,12 +3,14 @@ import 'package:opal_app/core/errors/failure.dart';
 import 'package:opal_app/features/Admin/Domain/usecase/get_all_tours.dart';
 import 'package:opal_app/features/Admin/Domain/usecase/get_tour_id_use_case.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_bloc/tour_state.dart';
+import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
 
 import '../../../../../core/strings/failures.dart';
 
 class TourCubit extends Cubit<TourState> {
   final GetAllToursUseCase getAllToursUseCase;
   final GetTourByIdUseCase getTourByIdUseCase;
+  List<UserEntity>? numOfUsers;
   TourCubit(this.getAllToursUseCase, this.getTourByIdUseCase)
     : super(TourInitial());
 
@@ -42,6 +44,7 @@ class TourCubit extends Cubit<TourState> {
           emit(TourError(_errorMessage(Failure)));
         },
         (tour) {
+          numOfUsers = tour.users;
           emit(TourByIdLoaded(tour));
           print("USE CASE RESULT: $tour");
         },

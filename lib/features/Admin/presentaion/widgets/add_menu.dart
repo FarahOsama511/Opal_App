@@ -49,7 +49,7 @@ class AddMenu extends StatelessWidget {
     return TextButton(
       onPressed: () => Navigator.pushNamed(context, route),
       style: TextButton.styleFrom(
-        foregroundColor: const Color(0xFFE71A45),
+        foregroundColor: ColorManager.blackColor,
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.symmetric(vertical: 12),
       ),

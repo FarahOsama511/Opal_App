@@ -19,8 +19,6 @@ class SelectTourRemoteDataSourceImpl implements SelectTourRemoteDataSource {
   SelectTourRemoteDataSourceImpl({required this.client});
   @override
   Future<TourModel> SelectionTour(String tourId) async {
-    // final userToken = prefs.getString('access_token');
-
     final response = await client.post(
       Uri.parse('${Base_Url}tours/${tourId}/registration'),
       headers: {'Authorization': 'Bearer ${tokenUser}'},

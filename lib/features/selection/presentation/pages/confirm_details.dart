@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
 import 'package:opal_app/features/user/presentaion/bloc/selection_tour/selection_tour_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/selection_tour/selection_tour_state.dart';
+import '../../../../core/resources/text_styles.dart';
 import 'confirmation_success.dart';
 
 class ConfirmDetailsScreen extends StatefulWidget {
@@ -29,7 +30,7 @@ class _ConfirmDetailsScreenState extends State<ConfirmDetailsScreen> {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: ColorManager.secondColor,
           borderRadius: BorderRadius.circular(20),
         ),
         child: SingleChildScrollView(
@@ -37,17 +38,17 @@ class _ConfirmDetailsScreenState extends State<ConfirmDetailsScreen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Center(
+              Center(
                 child: Text(
                   'بيانات الذهاب و العودة',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyles.black14Bold,
                 ),
               ),
               const SizedBox(height: 12),
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black),
+                  border: Border.all(color: ColorManager.blackColor),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: BlocBuilder<SelectionTourCubit, SelectionTourState>(
@@ -79,7 +80,12 @@ class _ConfirmDetailsScreenState extends State<ConfirmDetailsScreen> {
                         ],
                       );
                     } else {
-                      return Center(child: Text("فشل في جلب البيانات"));
+                      return Center(
+                        child: Text(
+                          "فشل في جلب البيانات",
+                          style: TextStyles.black14Bold,
+                        ),
+                      );
                     }
                   },
                 ),
@@ -104,10 +110,7 @@ class _ConfirmDetailsScreenState extends State<ConfirmDetailsScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text(
-                    'تأكيد',
-                    style: TextStyle(color: Colors.white),
-                  ),
+                  child: Text('تأكيد', style: TextStyles.white14Bold),
                 ),
               ),
               const SizedBox(height: 10),
@@ -123,10 +126,7 @@ class _ConfirmDetailsScreenState extends State<ConfirmDetailsScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text(
-                    'السابق',
-                    style: TextStyle(color: Colors.white),
-                  ),
+                  child: Text('السابق', style: TextStyles.white14Bold),
                 ),
               ),
             ],

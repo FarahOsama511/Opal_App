@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
+import 'package:opal_app/core/constants/constants.dart';
 import 'package:opal_app/core/errors/exceptions.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../models/tour_model.dart';
 import 'dart:convert';
 
@@ -13,21 +13,18 @@ abstract class TourRemoteDataSource {
   Future<Unit> deleteTour(String id);
 }
 
-const Base_Url =
-    'http://student-bus-service-api-oi5yen-ed9bc9-74-161-160-200.traefik.me/';
-
 class TourRemoteDataSourceImpl implements TourRemoteDataSource {
   final http.Client client;
 
   TourRemoteDataSourceImpl({required this.client});
   @override
   Future<List<TourModel>> getAllTours() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('access_token');
+    // final prefs = await SharedPreferences.getInstance();
+    // final token = prefs.getString('access_token');
 
     final response = await client.get(
       Uri.parse('${Base_Url}tours'),
-      headers: {'Authorization': 'Bearer $token'},
+      headers: {'Authorization': 'Bearer $tokenAdmin'},
     );
 
     if (response.statusCode == 200) {
@@ -36,14 +33,14 @@ class TourRemoteDataSourceImpl implements TourRemoteDataSource {
       print('the tours are: $jsonResponse');
       return jsonResponse.map((json) => TourModel.fromJson(json)).toList();
     } else {
+      print("state code is ${response.statusCode}");
+      print("body:${response.body}");
       throw ServerException();
     }
   }
 
   @override
   Future<Unit> addTour(TourModel tour) async {
-    final prefs = await SharedPreferences.getInstance();
-    final admintoken = prefs.getString('access_token_Admin');
     final body = {
       'type': tour.type,
       'driverName': tour.driverName,
@@ -55,7 +52,7 @@ class TourRemoteDataSourceImpl implements TourRemoteDataSource {
       Uri.parse('${Base_Url}tours'),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $admintoken',
+        'Authorization': 'Bearer $tokenAdmin',
       },
       body: jsonEncode(body),
     );
@@ -71,8 +68,7 @@ class TourRemoteDataSourceImpl implements TourRemoteDataSource {
 
   @override
   Future<Unit> updateTour(TourModel tour) async {
-    final prefs = await SharedPreferences.getInstance();
-    final admintoken = prefs.getString('access_token_Admin');
+    final tourId = tour.id.toString();
     final body = {
       'type': tour.type,
       'driverName': tour.driverName,
@@ -80,28 +76,32 @@ class TourRemoteDataSourceImpl implements TourRemoteDataSource {
       'lineId': tour.line.id,
     };
     final response = await client.put(
-      Uri.parse('${Base_Url}tours/${tour.id}'),
+      Uri.parse('${Base_Url}tours/${tourId}'),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $admintoken',
+        'Authorization': 'Bearer $tokenAdmin',
       },
-      body: body,
+      body: jsonEncode(body),
     );
 
     if (response.statusCode == 200) {
+      print("PUT URL: ${Base_Url}tours/${tour.id}");
+      print("PUT BODY: $body");
       return unit;
     } else {
+      print("state code edit tour is ${response.statusCode}");
+      print("PUT URL: ${Base_Url}tours/${tour.id}");
+      print("PUT BODY: $body");
+      print("body edit tour is:${response.body}");
       throw ServerException();
     }
   }
 
   @override
   Future<Unit> deleteTour(String id) async {
-    final prefs = await SharedPreferences.getInstance();
-    final admintoken = prefs.getString('access_token_Admin');
     final response = await client.delete(
       Uri.parse('${Base_Url}tours/${id.toString()}'),
-      headers: {'Authorization': 'Bearer $admintoken'},
+      headers: {'Authorization': 'Bearer $tokenAdmin'},
     );
 
     if (response.statusCode == 204) {
@@ -115,11 +115,9 @@ class TourRemoteDataSourceImpl implements TourRemoteDataSource {
 
   @override
   Future<TourModel> getTourById(String id) async {
-    final prefs = await SharedPreferences.getInstance();
-    final admintoken = prefs.getString('access_token_Admin');
     final response = await client.get(
       Uri.parse('${Base_Url}tours/${id}'),
-      headers: {'Authorization': 'Bearer $admintoken'},
+      headers: {'Authorization': 'Bearer $tokenUser'},
     );
 
     if (response.statusCode == 200) {

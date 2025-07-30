@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:opal_app/core/network/local_network.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/widgets/app_header.dart'
     show AppHeader;
@@ -59,38 +61,52 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                   onLogout: () {
                     Navigator.pushReplacementNamed(context, '/signin');
                   },
-                  leadingWidget: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                  leadingWidget: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        '!مرحباً ${context.read<AuthCubit>().user?.user.name ?? ''}',
-                        style: TextStyles.black20Bold,
-                        textAlign: TextAlign.right,
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'متى تريد الذهاب؟',
-                        style: TextStyles.black20Bold,
-                        // textAlign: TextAlign.right,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            '!مرحباً ${context.read<AuthCubit>().user?.user.name ?? ''}',
+                            style: TextStyles.black20Bold.copyWith(
+                              fontSize: 20.sp,
+                            ),
+                            textAlign: TextAlign.right,
+                          ),
+                          SizedBox(height: 4.h),
+                          Text(
+                            'متى تريد الذهاب؟',
+                            style: TextStyles.black20Bold.copyWith(
+                              fontSize: 20.sp,
+                            ),
+                            textAlign: TextAlign.right,
+                          ),
+                        ],
                       ),
                     ],
                   ),
-
-                  titleWidget: Row(
-                    children: [
-                      IconButton(
-                        icon: Transform(
-                          alignment: Alignment.center,
-                          transform: Matrix4.identity()..scale(-1.0, 1.0),
-                          child: Icon(Icons.logout),
+                  titleWidget: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: Transform(
+                            alignment: Alignment.center,
+                            transform: Matrix4.identity()..scale(-1.0, 1.0),
+                            child: Icon(Icons.logout, size: 24.sp),
+                          ),
+                          onPressed: () async {
+                            await CacheNetwork.deleteCacheData(
+                              key: 'access_token',
+                            );
+                            Navigator.pushReplacementNamed(context, '/signin');
+                          },
                         ),
-                        onPressed: () {
-                          Navigator.pushReplacementNamed(context, '/signin');
-                        },
-                      ),
-                      const SizedBox(width: 10),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -119,15 +135,12 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: ColorManager.blackColor),
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             'عرض الرحلة الخاصة بك',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: TextStyles.black14Bold,
                           ),
                           Icon(Icons.arrow_forward_ios, size: 18),
                         ],
@@ -173,15 +186,11 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        const Align(
+                        Align(
                           alignment: Alignment.centerRight,
                           child: Text(
                             'مواعبد الذهاب _ العودة',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
+                            style: TextStyles.white20Bold,
                           ),
                         ),
                         const SizedBox(height: 15),

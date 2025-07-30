@@ -6,6 +6,7 @@ import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines
 import 'package:opal_app/features/Admin/presentaion/widgets/custom_widgets.dart';
 
 import '../../../../core/resources/color_manager.dart';
+import '../../../../core/resources/text_styles.dart';
 
 class TimeLineStep extends StatefulWidget {
   final int hour;
@@ -77,10 +78,7 @@ class _TimeLineStepState extends State<TimeLineStep> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const Text(
-          'ميعاد الذهاب',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-        ),
+        Text('ميعاد الذهاب', style: TextStyles.black20Bold),
         const SizedBox(height: 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -154,7 +152,7 @@ class _TimeLineStepState extends State<TimeLineStep> {
                 displayString: (u) => u.name!,
               );
             } else {
-              return const Text('فشل في تحميل الخطوط');
+              return Text('فشل في تحميل الخطوط', style: TextStyles.black14Bold);
             }
           },
         ),

@@ -4,6 +4,7 @@ import 'package:opal_app/features/Admin/presentaion/pages/student_list.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/trips.dart';
 import 'package:opal_app/features/user/presentaion/bloc/user_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/user_state.dart';
+import '../../../../core/resources/text_styles.dart';
 import '../widgets/add_menu.dart';
 import '../widgets/app_header.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -101,23 +102,16 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   Widget _buildJoinRequests() {
     return Container(
       width: double.infinity,
-      color: const Color(0xFFE71A45),
+      color: ColorManager.primaryColor,
       padding: const EdgeInsets.only(top: 12, bottom: 90),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          const Align(
+          Align(
             alignment: Alignment.centerRight,
             child: Padding(
               padding: EdgeInsets.only(right: 16, bottom: 12),
-              child: Text(
-                'طلبات الانضمام',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
+              child: Text('طلبات الانضمام', style: TextStyles.white20Bold),
             ),
           ),
           Expanded(

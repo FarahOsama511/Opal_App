@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
 import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
 
+import '../../../../core/resources/text_styles.dart';
+
 class SummaryStep extends StatelessWidget {
   final LineEntity? selectedLine;
   final int hour;
@@ -25,10 +27,7 @@ class SummaryStep extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const Text(
-          'بيانات الرحلة',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-        ),
+        Text('بيانات الرحلة', style: TextStyles.black20Bold),
         const SizedBox(height: 10),
         Container(
           width: double.infinity,
@@ -45,35 +44,45 @@ class SummaryStep extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('الخط'),
-                  Text('${selectedLine!.name ?? ''}'),
+                  Text('الخط', style: TextStyles.black14Bold),
+                  Text(
+                    '${selectedLine!.name ?? ''}',
+                    style: TextStyles.black14Bold,
+                  ),
                 ],
               ),
               const SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('ميعاد الذهاب'),
-                  Text('$hour:${minute.toString().padLeft(2, '0')} $period'),
+                  Text('ميعاد الذهاب', style: TextStyles.black14Bold),
+                  Text(
+                    '$hour:${minute.toString().padLeft(2, '0')} $period',
+                    style: TextStyles.black14Bold,
+                  ),
                 ],
               ),
               const SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('اسم المشرف'),
-                  Text(selectedSupervisor!.name ?? ''),
+                  Text('اسم المشرف', style: TextStyles.black14Bold),
+                  Text(
+                    selectedSupervisor!.name ?? '',
+                    style: TextStyles.black14Bold,
+                  ),
                 ],
               ),
               const SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('تاريخ اليوم'),
+                  Text('تاريخ اليوم', style: TextStyles.black14Bold),
                   Text(
                     selectedDate != null
                         ? '${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}'
                         : '',
+                    style: TextStyles.black14Bold,
                   ),
                 ],
               ),

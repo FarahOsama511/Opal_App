@@ -25,7 +25,7 @@ class UpdateAddDeleteTourCubit extends Cubit<UpdateAddDeleteTourState> {
         emit(UpdateAddDeleteTourError(_errorMessage(failure)));
       },
       (result) {
-        emit(TourAdded(TOUR_ADDED_SUCCESS_MESSAGE));
+        emit(TourAdded(ADDED_SUCCESS_MESSAGE));
       },
     );
   }

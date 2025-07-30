@@ -19,7 +19,7 @@ class AddAdminSupervisorCubit extends Cubit<AddAdminSupervisorState> {
         emit(AddAdminSupervisorError(_errorMessage(failure)));
       },
       (_) {
-        emit(AddAdminSupervisorSuccess(ADD_ADMIN_OR_SUPERVISOR_MESSAGE));
+        emit(AddAdminSupervisorSuccess(ADDED_SUCCESS_MESSAGE));
       },
     );
   }

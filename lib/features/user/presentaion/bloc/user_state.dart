@@ -21,6 +21,11 @@ class DeactivateUser extends UserState {
   DeactivateUser(this.deactivateUser);
 }
 
+class UserByIdSuccess extends UserState {
+  UserEntity userById;
+  UserByIdSuccess(this.userById);
+}
+
 class UserError extends UserState {
   final String message;
   UserError(this.message);

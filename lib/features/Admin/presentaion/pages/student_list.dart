@@ -86,6 +86,7 @@ class _StudentListState extends State<StudentList> {
                       itemCount: filteredUsers.length,
                       itemBuilder: (context, index) {
                         final user = filteredUsers[index];
+                        print(user);
                         if (isStudentsSelected) {
                           return ExpandableCard(
                             name: user.name!,

@@ -1,16 +1,16 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:opal_app/core/constants/constants.dart';
 import 'package:opal_app/core/errors/exceptions.dart';
 import 'package:opal_app/core/network/local_network.dart';
 import 'package:opal_app/features/user/Data/models/register_model.dart';
 import 'package:opal_app/features/user/Data/models/login_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Domain/entities/authentity.dart';
 
 abstract class AuthRemoteDataSource {
   Future<LoginModel> loginStudent(String phone, String universityCardId);
-  Future<LoginModel> loginAdmin(String email, String password);
+  Future<LoginModel> loginAdminOrSuperVisor(String email, String password);
   Future<RegisterEntity> register(RegisterModel authModel);
   //Future<Unit> logout();
 }
@@ -35,9 +35,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     print("=== login Response Body: ${response.body} ===");
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
-      final tokenUser = jsonResponse['token'];
+      // final tokenUser = jsonResponse['token'];
 
-      await CacheNetwork.insertToCache(key: 'access_token', value: tokenUser);
+      await CacheNetwork.insertToCache(
+        key: 'access_token',
+        value: jsonResponse['token'],
+      );
 
       return LoginModel.fromJson({...jsonResponse, 'token': tokenUser});
     } else {
@@ -67,8 +70,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
-      // final token = jsonResponse['token'];
-      // await prefs.setString('access_token', token);
 
       return RegisterModel.fromJson(jsonResponse);
     } else {
@@ -76,7 +77,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     }
   }
 
-  Future<LoginModel> loginAdmin(String email, String password) async {
+  Future<LoginModel> loginAdminOrSuperVisor(
+    String email,
+    String password,
+  ) async {
     final body = {'email': email, 'password': password};
 
     final response = await client.post(

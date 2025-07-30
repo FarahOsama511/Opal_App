@@ -6,6 +6,7 @@ import 'package:opal_app/features/user/presentaion/bloc/user_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/user_state.dart';
 
 import '../../../../core/resources/color_manager.dart';
+import '../../../../core/resources/text_styles.dart';
 
 class SupervisorStep extends StatefulWidget {
   final UserEntity? selectedSupervisor;
@@ -31,11 +32,11 @@ class _SupervisorStepState extends State<SupervisorStep> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        const Text(
+        Text(
           'اختيار المشرف',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          style: TextStyles.black20Bold,
+          textAlign: TextAlign.right,
         ),
         const SizedBox(height: 10),
         BlocBuilder<GetAllUserCubit, UserState>(
@@ -60,7 +61,10 @@ class _SupervisorStepState extends State<SupervisorStep> {
                 displayString: (u) => u.name!,
               );
             } else {
-              return const Text('فشل في تحميل المشرفين');
+              return Text(
+                'فشل في تحميل المشرفين',
+                style: TextStyles.black14Bold,
+              );
             }
           },
         ),

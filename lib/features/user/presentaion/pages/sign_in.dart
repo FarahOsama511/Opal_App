@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
+import 'package:opal_app/features/supervisor/show_tours.dart';
 import 'package:opal_app/features/user/presentaion/bloc/auth_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/auth_state.dart';
+import 'package:opal_app/features/user/presentaion/bloc/user_cubit.dart';
 import 'package:opal_app/features/user/presentaion/pages/sign_up.dart';
 import 'package:opal_app/features/user/presentaion/pages/user_home_screen.dart';
 import '../../../../core/resources/text_styles.dart';
 import '../../../Admin/presentaion/pages/admin_home_screen.dart';
-import '../../../Admin/presentaion/pages/supervisor_home_screen.dart';
 import '../../../Admin/presentaion/widgets/custom_widgets.dart';
 import '../../../Admin/presentaion/widgets/text_field.dart';
 
@@ -46,7 +47,12 @@ class _SignInScreenState extends State<SignInScreen> {
                 } else if (selectedRole == 'مشرف') {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (_) => const SupervisorScreen()),
+                    MaterialPageRoute(
+                      builder: (_) => ShowToursBySuperVisor(
+                        supervisorId:
+                            context.read<GetAllUserCubit>().userId ?? "",
+                      ),
+                    ),
                   );
                 } else if (selectedRole == 'مسؤول') {
                   Navigator.pushReplacement(

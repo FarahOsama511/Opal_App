@@ -30,6 +30,7 @@ import 'package:opal_app/features/user/Domain/repositires/university_repo.dart';
 import 'package:opal_app/features/user/Domain/repositires/user_repo.dart';
 import 'package:opal_app/features/user/Domain/usecases/get_all_univeristies.dart';
 import 'package:opal_app/features/user/Domain/usecases/get_all_user.dart';
+import 'package:opal_app/features/user/Domain/usecases/get_user_id_use_case.dart';
 import 'package:opal_app/features/user/Domain/usecases/select_tour_use_case.dart';
 import 'package:opal_app/features/user/Domain/usecases/unconfirm_tour_use_case.dart';
 import 'package:opal_app/features/user/presentaion/bloc/auth_cubit.dart';
@@ -63,7 +64,9 @@ Future<void> init() async {
   setUp.registerFactory(
     () => AuthCubit(loginUsecase: setUp(), registerUsecase: setUp()),
   );
-  setUp.registerFactory(() => GetAllUserCubit(setUp(), setUp(), setUp()));
+  setUp.registerFactory(
+    () => GetAllUserCubit(setUp(), setUp(), setUp(), setUp()),
+  );
   setUp.registerFactory(() => LinesCubit(setUp()));
   setUp.registerFactory(() => AddAdminSupervisorCubit(setUp()));
   setUp.registerFactory(() => GetAllUniversitiesCubit(setUp()));
@@ -87,6 +90,7 @@ Future<void> init() async {
   setUp.registerLazySingleton(() => AddLineUseCase(setUp()));
   setUp.registerLazySingleton(() => SelectionTourUseCase(setUp()));
   setUp.registerLazySingleton(() => UnconfirmTourUseCase(setUp()));
+  setUp.registerLazySingleton(() => GetUserIdUseCase(setUp()));
 
   //repositories
   setUp.registerLazySingleton<ToursRepository>(

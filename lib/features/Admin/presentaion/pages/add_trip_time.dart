@@ -4,6 +4,7 @@ import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/
 import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_state.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/admin_home_screen.dart';
 import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
+import '../../../../core/resources/text_styles.dart';
 import '../../Data/models/tour_model.dart';
 import '../../Domain/entities/tour.dart';
 import '../widgets/calender_step.dart';
@@ -123,9 +124,11 @@ class _AddTripBoxState extends State<AddTripBox> {
     return BlocListener<UpdateAddDeleteTourCubit, UpdateAddDeleteTourState>(
       listener: (context, state) {
         if (state is TourAdded) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text("DONNNNNNNNNNNNNNNNE")));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message, style: TextStyles.white12Bold),
+            ),
+          );
           print("STATE IS:${state}");
           showDialog(
             context: context,

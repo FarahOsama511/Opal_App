@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:opal_app/core/constants/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/errors/exceptions.dart';
@@ -10,6 +11,7 @@ abstract class UserRemoteDataSource {
   Future<List<UserModel>> getAllUser();
   Future<UserModel> userIsActivate(String id, String status);
   Future<UserModel> userIsDeactivate(String id, String status);
+  Future<UserModel> getUserById(String userId);
 }
 
 const Base_Url =
@@ -22,8 +24,6 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
 
   @override
   Future<List<UserModel>> getAllUser() async {
-    final prefs = await SharedPreferences.getInstance();
-    final tokenAdmin = prefs.getString('access_token_Admin');
     final response = await client.get(
       Uri.parse('${Base_Url}users'),
       headers: {
@@ -47,8 +47,6 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
 
   @override
   Future<UserModel> userIsActivate(String id, String status) async {
-    final prefs = await SharedPreferences.getInstance();
-    final tokenAdmin = prefs.getString('access_token_Admin');
     final response = await client.post(
       Uri.parse('${Base_Url}users/${id}/activate'),
       headers: {'Authorization': 'Bearer $tokenAdmin'},
@@ -69,8 +67,6 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
 
   @override
   Future<UserModel> userIsDeactivate(String id, String status) async {
-    final prefs = await SharedPreferences.getInstance();
-    final tokenAdmin = prefs.getString('access_token_Admin');
     final response = await client.post(
       Uri.parse('${Base_Url}users/${id}/deactivate'),
       headers: {'Authorization': 'Bearer $tokenAdmin'},
@@ -87,6 +83,26 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
       print('the usersdeactivate are: $user');
       return user;
     } else {
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<UserModel> getUserById(String userId) async {
+    final response = await client.get(
+      Uri.parse('${Base_Url}users/${userId}'),
+      headers: {'Authorization': 'Bearer $tokenAdmin'},
+    );
+
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+      print('the supervisor is: $jsonResponse');
+      final user = UserModel.fromJson(jsonResponse);
+
+      return user;
+    } else {
+      print("state code is ${response.statusCode}");
+      print("body:${response.body}");
       throw ServerException();
     }
   }

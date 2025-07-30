@@ -1,10 +1,9 @@
 import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
+import 'package:opal_app/core/constants/constants.dart';
 import 'package:opal_app/features/Admin/Data/models/line_model.dart';
 import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
-import 'package:opal_app/features/Admin/presentaion/pages/add_line.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/errors/exceptions.dart';
 
@@ -23,11 +22,9 @@ class LineRemoteDataSourceImpl extends LineRemoteDataSource {
 
   @override
   Future<List<LineModel>> getAllLines() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('access_token');
     final response = await client.get(
       Uri.parse('${Base_Url}lines'),
-      headers: {'Authorization': 'Bearer $token'},
+      headers: {'Authorization': 'Bearer $tokenUser'},
     );
 
     if (response.statusCode == 200) {
@@ -42,14 +39,12 @@ class LineRemoteDataSourceImpl extends LineRemoteDataSource {
 
   @override
   Future<Unit> AddLine(LineEntity line) async {
-    final prefs = await SharedPreferences.getInstance();
-    final admintoken = prefs.getString('access_token_Admin');
     final body = jsonEncode({'name': line.name});
     final response = await client.post(
       Uri.parse('${Base_Url}lines'),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $admintoken',
+        'Authorization': 'Bearer $tokenAdmin',
       },
       body: body,
     );

@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
+import 'package:opal_app/core/constants/constants.dart';
 import 'package:opal_app/features/Admin/Data/models/add_admin_supervisor_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/errors/exceptions.dart';
 
@@ -20,8 +20,6 @@ class AddAdminSupervisorDatasourceImpl implements AddAdminSupervisorDatasource {
   AddAdminSupervisorDatasourceImpl({required this.client});
 
   Future<Unit> AddAdminOrSupervisor(AddAdminSupervisorModel user) async {
-    final prefs = await SharedPreferences.getInstance();
-    final adminToken = prefs.getString('access_token_Admin');
     final body = {
       'name': user.name,
       'phone': user.phone,
@@ -33,7 +31,7 @@ class AddAdminSupervisorDatasourceImpl implements AddAdminSupervisorDatasource {
       Uri.parse('${Base_Url}users'),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${adminToken}',
+        'Authorization': 'Bearer ${tokenAdmin}',
       },
       body: jsonEncode(body), // ✅ هنا التحويل إلى JSON
     );

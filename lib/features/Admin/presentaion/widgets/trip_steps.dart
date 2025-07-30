@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:opal_app/core/resources/color_manager.dart';
+
+import '../../../../core/resources/text_styles.dart';
 
 class StepHeader extends StatelessWidget {
   final VoidCallback onClose;
@@ -30,11 +33,11 @@ class StepButtons extends StatelessWidget {
           Expanded(
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.grey,
+                backgroundColor: ColorManager.greyColor,
                 minimumSize: const Size.fromHeight(50),
               ),
               onPressed: onPrevious,
-              child: const Text('السابق'),
+              child: Text('السابق', style: TextStyles.white14Bold),
             ),
           ),
         if (currentStep > 0) const SizedBox(width: 10),
@@ -45,7 +48,10 @@ class StepButtons extends StatelessWidget {
               minimumSize: const Size.fromHeight(50),
             ),
             onPressed: onNext,
-            child: Text(currentStep < 3 ? 'التالي' : 'تأكيد'),
+            child: Text(
+              currentStep < 3 ? 'التالي' : 'تأكيد',
+              style: TextStyles.white14Bold,
+            ),
           ),
         ),
       ],

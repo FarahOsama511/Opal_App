@@ -10,6 +10,7 @@ import 'package:opal_app/features/Admin/presentaion/bloc/add_lines/add_line_cubi
 import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/add_line.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/admin_home_screen.dart';
+import 'package:opal_app/features/Admin/presentaion/pages/trips.dart';
 import 'package:opal_app/features/user/presentaion/bloc/get_all_universities/get_all_universities_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/selection_tour/selection_tour_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/user_cubit.dart';
@@ -35,7 +36,8 @@ void main() async {
   await CacheNetwork.cacheInitialization();
   tokenUser = CacheNetwork.getCacheData(key: 'access_token');
   tokenAdmin = CacheNetwork.getCacheData(key: 'access_token_Admin');
-  checkToken();
+  print('TOKENADNIN IS:${tokenAdmin}');
+  await checkToken();
 
   await di.init();
   await initializeDateFormatting('ar', null);
@@ -93,6 +95,7 @@ class StudentBusApp extends StatelessWidget {
               '/addAdmin': (context) => const AddAdmin(),
               '/addSupervisor': (context) => const AddSupervisor(),
               '/addLine': (context) => const AddLine(),
+              '/trips': (context) => const TripsScreen(),
             },
           ),
         );

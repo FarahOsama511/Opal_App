@@ -10,4 +10,5 @@ abstract class UserRepo {
     String id,
     String status,
   );
+  Future<Either<Failure, UserEntity>> getUserById(String userId);
 }

@@ -3,10 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
+import 'package:opal_app/features/Admin/Data/models/tour_model.dart';
+import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_bloc/tour_cubit.dart';
 import '../../../../core/resources/text_styles.dart';
 import '../bloc/get_tour_bloc/tour_state.dart';
-import '../bloc/update_add_delete_tour/update_add_delete_tour_cubit.dart';
+
 import '../widgets/bus_card.dart';
 import '../widgets/trip_dialog.dart';
 
@@ -19,13 +21,10 @@ class TripsScreen extends StatefulWidget {
 
 class _TripsScreenState extends State<TripsScreen> {
   int? expandedIndex;
-  void _showTripOptionsDialog(BuildContext context, String tourId) {
+  void _showTripOptionsDialog(BuildContext context, String tourId, Tour tour) {
     showDialog(
       context: context,
-      builder: (_) => BlocProvider.value(
-        value: context.read<UpdateAddDeleteTourCubit>(),
-        child: TripDetailsDialog(tourId: tourId),
-      ),
+      builder: (_) => TripDetailsDialog(tourId: tourId, selectedtour: tour),
     );
   }
 
@@ -97,19 +96,20 @@ class _TripsScreenState extends State<TripsScreen> {
                         itemCount: state.tours.length,
                         itemBuilder: (context, index) {
                           String tourId = state.tours[index].id ?? "";
+                          final tour = state.tours[index];
                           return BusCard(
                             line: 'خط ${state.tours[index].line.name}',
                             supervisorName: state.tours[index].driverName,
                             departureTime: DateFormat(
-                              'yyyy-MM-dd',
+                              'HH:mm',
                             ).format(state.tours[index].leavesAt),
 
                             date: DateFormat(
-                              'HH:mm',
+                              'yyy/MM/dd',
                             ).format(state.tours[index].leavesAt),
                             isExpanded: expandedIndex == index,
                             onTap: () =>
-                                _showTripOptionsDialog(context, tourId),
+                                _showTripOptionsDialog(context, tourId, tour),
                             onCancel: () =>
                                 setState(() => expandedIndex = null),
                             onNext: () {},

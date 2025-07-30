@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:opal_app/core/errors/failure.dart';
 import 'package:opal_app/features/user/Domain/usecases/get_all_user.dart';
+import 'package:opal_app/features/user/Domain/usecases/get_user_id_use_case.dart';
 import 'package:opal_app/features/user/Domain/usecases/user_isactivat.dart';
 import 'package:opal_app/features/user/Domain/usecases/user_isdeactivat_UseCase.dart';
 import '../../../../core/strings/failures.dart';
@@ -10,7 +11,10 @@ class GetAllUserCubit extends Cubit<UserState> {
   final GetAllUserUseCase getAllUserUseCase;
   final UserIsactivatUseCase userIsactivatUseCase;
   final UserIsDeactivatUseCase userIsDeactivatUseCase;
+  final GetUserIdUseCase getUserIdUseCase;
+  String? userId;
   GetAllUserCubit(
+    this.getUserIdUseCase,
     this.getAllUserUseCase,
     this.userIsactivatUseCase,
     this.userIsDeactivatUseCase,
@@ -65,6 +69,25 @@ class GetAllUserCubit extends Cubit<UserState> {
           emit(DeactivateUser(deactivateUser));
           print("Deactivate User successfully: ${deactivateUser}");
           await fetchAllUsers();
+        },
+      );
+    } catch (e) {
+      emit(UserError(e.toString()));
+    }
+  }
+
+  Future<void> getUserById(String userId) async {
+    emit(UserLoading());
+    try {
+      final userById = await getUserIdUseCase(userId);
+      userById.fold(
+        (failure) {
+          emit(UserError(_errorMessage(failure)));
+        },
+        (userById) async {
+          emit(UserByIdSuccess(userById));
+          userId = userById.id!;
+          print(" User successfully: ${userById}");
         },
       );
     } catch (e) {

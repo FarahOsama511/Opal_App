@@ -55,6 +55,12 @@ class TextStyles {
     color: ColorManager.primaryColor,
     fontWeight: FontWeight.w700,
   );
+  static TextStyle red12Bold = TextStyle(
+    fontSize: 12.sp,
+    fontFamily: 'Cairo',
+    color: ColorManager.primaryColor,
+    fontWeight: FontWeight.w700,
+  );
 
   static TextStyle black10Bold = TextStyle(
     fontSize: 10.sp,

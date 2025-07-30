@@ -6,49 +6,39 @@ import '../../Domain/entities/university_entity.dart';
 
 class UserModel extends UserEntity {
   UserModel({
-    String? id,
-    String? name,
-    String? phone,
-    String? role,
-    String? universityId,
-    String? universityCardId,
-    LineEntity? line,
-    String? status,
-    UniversityEntity? university,
-    String? email,
-    String? password,
-  }) : super(
-         id: id,
-         name: name,
-         phone: phone,
-         role: role,
-         universityId: universityId,
-         universityCardId: universityCardId,
-         line: line,
-         status: status,
-         university: university,
-         email: email,
-         password: password,
-       );
+    super.id,
+    super.name,
+    super.phone,
+    super.role,
+    super.universityId,
+    super.universityCardId,
+
+    super.email,
+    super.status,
+    super.university,
+    super.password,
+    super.line,
+  });
+
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: json['id']?.toString() ?? "",
-      name: json['name']?.toString() ?? "",
-      phone: json['phone']?.toString() ?? "",
-      role: json['role']?.toString() ?? "",
-      universityId: json['universityId']?.toString() ?? "",
-      universityCardId: json['universityCardId']?.toString() ?? "",
-      email: json['email']?.toString() ?? "",
-      password: json['password']?.toString() ?? "",
-      line: json['line'] != null
-          ? LineModel.fromJson(json['line'] as Map<String, dynamic>)
-          : null,
-      status: json['status'] as String?,
+      id: json['id'],
+      name: json['name'],
+      phone: json['phone'],
+      role: json['role'],
+      universityId: json['universityId'],
+      universityCardId: json['universityCardId'],
+      email: json['email'],
+      status: json['status'],
+      password: json['password'],
+      // 👇 المشكلة هنا: لازم تعمل parsing للـ university object
       university: json['university'] != null
-          ? UniversityModel.fromJson(json['university'] as Map<String, dynamic>)
+          ? UniversityModel.fromJson(json['university'])
           : null,
+      line: json['line'] != null ? LineModel.fromJson(json['line']) : null,
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

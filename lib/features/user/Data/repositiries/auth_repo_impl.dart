@@ -68,10 +68,8 @@ class AuthRepoImpl extends AuthRepository {
   ) async {
     if (await networkInfo.isConnected) {
       try {
-        final adminOrSupervisors = await authremoteDataSource.loginAdmin(
-          email,
-          password,
-        );
+        final adminOrSupervisors = await authremoteDataSource
+            .loginAdminOrSuperVisor(email, password);
         return Right(adminOrSupervisors);
       } on WrongDataException {
         return Left(WrongDataFailure());

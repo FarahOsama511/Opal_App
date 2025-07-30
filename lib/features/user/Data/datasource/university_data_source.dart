@@ -22,8 +22,6 @@ class UniversityDataSourceImpl implements UniversityDataSource {
 
   @override
   Future<List<UniversityModel>> getAllUniversity() async {
-    // final prefs = await SharedPreferences.getInstance();
-    // final userToken = prefs.getString('access_token_Admin');
     print("Admin token is${tokenAdmin}");
     final response = await client.get(
       Uri.parse('${Base_Url}universities'),
