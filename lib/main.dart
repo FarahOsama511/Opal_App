@@ -8,6 +8,7 @@ import 'package:opal_app/core/get_it.dart' as di;
 import 'package:opal_app/core/network/local_network.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/add_lines/add_line_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_cubit.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_id.dart/get_tour_id_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/add_line.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/admin_home_screen.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/trips.dart';
@@ -30,13 +31,14 @@ import 'features/selection/presentation/pages/confirmation_success.dart';
 
 bool isLoggedIn = false;
 bool isStudent = false;
+bool isAdmin = false;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await CacheNetwork.cacheInitialization();
-  tokenUser = CacheNetwork.getCacheData(key: 'access_token');
-  tokenAdmin = CacheNetwork.getCacheData(key: 'access_token_Admin');
-  print('TOKENADMIN IS:${tokenAdmin}');
-  print("TokenUser:${tokenUser}");
+  token = CacheNetwork.getCacheData(key: 'access_token');
+  role = CacheNetwork.getCacheData(key: 'access_role');
+  print('TOKEN IS ${token}');
+  print('ROLE IS ${role}');
   await checkToken();
 
   await di.init();
@@ -65,6 +67,7 @@ class StudentBusApp extends StatelessWidget {
             BlocProvider(create: (_) => di.setUp<AddAdminSupervisorCubit>()),
             BlocProvider(create: (_) => di.setUp<GetAllUniversitiesCubit>()),
             BlocProvider(create: (_) => di.setUp<SelectionTourCubit>()),
+            BlocProvider(create: (_) => di.setUp<GetTourIdCubit>()),
           ],
           child: MaterialApp(
             localizationsDelegates: const [
@@ -79,15 +82,18 @@ class StudentBusApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
 
             initialRoute: (isLoggedIn == true)
-                ? ((isStudent == true) ? '/home' : '/adminScreen')
+                ? ((isStudent == true)
+                      ? '/home'
+                      : (isAdmin == true)
+                      ? '/adminScreen'
+                      : '/students')
                 : '/signin',
-
             routes: {
               '/signup': (context) => const SignUpScreen(),
               '/signin': (context) => const SignInScreen(),
               '/waiting': (context) => const WaitingScreen(),
               '/home': (context) => const UserHomeScreen(),
-              // '/return': (context) => const ChooseReturnTimeScreen(),
+              '/supervisorScreen': (context) => ShowToursBySuperVisor(),
               '/success': (context) => const ConfirmationSuccessScreen(),
               '/students': (context) => const StudentList(),
               '/adminScreen': (context) => AdminHomeScreen(),
@@ -103,15 +109,22 @@ class StudentBusApp extends StatelessWidget {
   }
 }
 
-checkToken() async {
-  if (tokenUser != null && tokenUser != "") {
-    isLoggedIn = true;
+checkToken() {
+  if (token != null && token != "" && role == 'student') {
     isStudent = true;
-  } else if (tokenAdmin != null && tokenAdmin != "") {
+    isAdmin = false;
     isLoggedIn = true;
+  } else if (token != null && token != "" && role == 'admin') {
     isStudent = false;
+    isAdmin = true;
+    isLoggedIn = true;
+  } else if (token != null && token != "" && role == 'supervisor') {
+    isStudent = false;
+    isAdmin = false;
+    isLoggedIn = true;
   } else {
-    isLoggedIn = false;
     isStudent = false;
+    isAdmin = false;
+    isLoggedIn = false;
   }
 }

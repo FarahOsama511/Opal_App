@@ -6,20 +6,21 @@ import 'package:opal_app/core/constants/constants.dart';
 import 'package:opal_app/features/Admin/Data/models/add_admin_supervisor_model.dart';
 
 import '../../../../core/errors/exceptions.dart';
+import '../../../../core/network/local_network.dart';
 
 abstract class AddAdminSupervisorDatasource {
   Future<Unit> AddAdminOrSupervisor(AddAdminSupervisorModel addUser);
 }
 
-const Base_Url =
-    'http://student-bus-service-api-oi5yen-ed9bc9-74-161-160-200.traefik.me/';
-
 class AddAdminSupervisorDatasourceImpl implements AddAdminSupervisorDatasource {
   final http.Client client;
-
+  String? tokenAdmin;
   AddAdminSupervisorDatasourceImpl({required this.client});
 
   Future<Unit> AddAdminOrSupervisor(AddAdminSupervisorModel user) async {
+    if (token != null && token != "" && role == 'admin') {
+      tokenAdmin = CacheNetwork.getCacheData(key: 'access_token');
+    }
     final body = {
       'name': user.name,
       'phone': user.phone,
@@ -33,7 +34,7 @@ class AddAdminSupervisorDatasourceImpl implements AddAdminSupervisorDatasource {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ${tokenAdmin}',
       },
-      body: jsonEncode(body), // ✅ هنا التحويل إلى JSON
+      body: jsonEncode(body),
     );
 
     if (response.statusCode == 201) {

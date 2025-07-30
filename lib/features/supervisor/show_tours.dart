@@ -20,12 +20,12 @@ import '../user/presentaion/bloc/user_cubit.dart';
 import '../user/presentaion/bloc/user_state.dart';
 
 class ShowToursBySuperVisor extends StatefulWidget {
-  final bool isTripConfirmed;
-  String supervisorId;
+  final bool? isTripConfirmed;
+  String? supervisorId;
   ShowToursBySuperVisor({
     super.key,
     this.isTripConfirmed = false,
-    required this.supervisorId,
+    this.supervisorId,
   });
 
   @override
@@ -44,7 +44,7 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
     if (_inInit) {
       BlocProvider.of<GetAllUserCubit>(
         context,
-      ).getUserById(widget.supervisorId);
+      ).getUserById(widget.supervisorId!);
       _inInit = false;
     }
   }
@@ -72,7 +72,8 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
             Column(
               children: [
                 AppHeader(
-                  onLogout: () {
+                  onLogout: () async {
+                    await CacheNetwork.deleteCacheData(key: 'access_token');
                     Navigator.pushReplacementNamed(context, '/signin');
                   },
                   leadingWidget: Row(
@@ -126,7 +127,7 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
                           ),
                           onPressed: () async {
                             await CacheNetwork.deleteCacheData(
-                              key: 'access_token_Admin',
+                              key: 'access_token',
                             );
                             Navigator.pushReplacementNamed(context, '/signin');
                           },
@@ -214,7 +215,7 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
                                               return SupervisorScreen(
                                                 tourId: tours[index].id!,
                                                 superVisorId:
-                                                    widget.supervisorId,
+                                                    widget.supervisorId!,
                                               );
                                             },
                                           ),
@@ -222,7 +223,8 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
                                       },
 
                                       line: tours[index].line.name!,
-                                      supervisorName: tours[index].driverName,
+                                      supervisorName:
+                                          tours[index].driverName ?? "غير معرف",
                                       departureTime: DateFormat(
                                         'HH:mm',
                                       ).format(tours[index].leavesAt),

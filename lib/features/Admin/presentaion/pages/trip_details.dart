@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart' as intl;
+import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_id.dart/get_tour_id_cubit.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_id.dart/get_tour_id_state.dart';
 import 'package:opal_app/features/user/presentaion/pages/user_home_screen.dart';
 
 import '../../../../core/resources/color_manager.dart';
@@ -122,7 +124,7 @@ class _InfoCardState extends State<_InfoCard> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<TourCubit>(context).getTourById(widget.tourId);
+    BlocProvider.of<GetTourIdCubit>(context).getTourById(widget.tourId);
   }
 
   @override
@@ -137,9 +139,9 @@ class _InfoCardState extends State<_InfoCard> {
       width: double.infinity,
       child: Directionality(
         textDirection: TextDirection.rtl,
-        child: BlocBuilder<TourCubit, TourState>(
+        child: BlocBuilder<GetTourIdCubit, GetTourIdState>(
           builder: (context, state) {
-            if (state is TourLoading) {
+            if (state is GetTourByIdLoading) {
               return Center(
                 child: CircularProgressIndicator(
                   color: ColorManager.primaryColor,
@@ -149,7 +151,10 @@ class _InfoCardState extends State<_InfoCard> {
               final tour = state.tour;
               return Column(
                 children: [
-                  _InfoRow(title: 'اسم المشرف', value: tour.driverName),
+                  _InfoRow(
+                    title: 'اسم المشرف',
+                    value: tour.driverName ?? "غير معرف",
+                  ),
                   _InfoRow(title: 'الخط', value: tour.line.name ?? ''),
                   _InfoRow(
                     title: 'ميعاد الذهاب',

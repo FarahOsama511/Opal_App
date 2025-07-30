@@ -117,7 +117,7 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20.sw, vertical: 16.sh),
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
       color: ColorManager.secondColor,
       child: Row(
         children: [

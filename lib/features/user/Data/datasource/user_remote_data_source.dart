@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:opal_app/core/constants/constants.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/errors/exceptions.dart';
+import '../../../../core/network/local_network.dart';
 import '../models/user_model.dart';
 
 abstract class UserRemoteDataSource {
@@ -16,16 +16,20 @@ abstract class UserRemoteDataSource {
 
 class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   final http.Client client;
+  String? tokenAdmin;
 
   UserRemoteDataSourceImpl({required this.client});
 
   @override
   Future<List<UserModel>> getAllUser() async {
+    if (token != null && token != "" && role == 'admin') {
+      tokenAdmin = CacheNetwork.getCacheData(key: 'access_token');
+    }
     final response = await client.get(
       Uri.parse('${Base_Url}users'),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $tokenAdmin',
+        'Authorization': 'Bearer $token',
       },
     );
 
@@ -44,6 +48,9 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
 
   @override
   Future<UserModel> userIsActivate(String id, String status) async {
+    if (token != null && token != "" && role == 'admin') {
+      tokenAdmin = CacheNetwork.getCacheData(key: 'access_token');
+    }
     final response = await client.post(
       Uri.parse('${Base_Url}users/${id}/activate'),
       headers: {'Authorization': 'Bearer $tokenAdmin'},
@@ -64,6 +71,9 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
 
   @override
   Future<UserModel> userIsDeactivate(String id, String status) async {
+    if (token != null && token != "" && role == 'admin') {
+      tokenAdmin = CacheNetwork.getCacheData(key: 'access_token');
+    }
     final response = await client.post(
       Uri.parse('${Base_Url}users/${id}/deactivate'),
       headers: {'Authorization': 'Bearer $tokenAdmin'},
@@ -88,7 +98,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   Future<UserModel> getUserById(String userId) async {
     final response = await client.get(
       Uri.parse('${Base_Url}users/${userId}'),
-      headers: {'Authorization': 'Bearer $tokenAdmin'},
+      headers: {'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 200) {

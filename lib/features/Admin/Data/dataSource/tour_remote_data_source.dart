@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
 import 'package:opal_app/core/constants/constants.dart';
 import 'package:opal_app/core/errors/exceptions.dart';
+import 'package:opal_app/core/network/local_network.dart';
 import '../models/tour_model.dart';
 import 'dart:convert';
 
@@ -15,18 +16,15 @@ abstract class TourRemoteDataSource {
 
 class TourRemoteDataSourceImpl implements TourRemoteDataSource {
   final http.Client client;
-
+  String? tokenAdmin;
   TourRemoteDataSourceImpl({required this.client});
   @override
   Future<List<TourModel>> getAllTours() async {
-    // final prefs = await SharedPreferences.getInstance();
-    // final token = prefs.getString('access_token');
-
     final response = await client.get(
       Uri.parse('${Base_Url}tours'),
-      headers: {'Authorization': 'Bearer $tokenAdmin'},
-    );
 
+      headers: {'Authorization': 'Bearer ${token}'},
+    );
     if (response.statusCode == 200) {
       final List<dynamic> jsonResponse =
           jsonDecode(response.body) as List<dynamic>;
@@ -41,6 +39,9 @@ class TourRemoteDataSourceImpl implements TourRemoteDataSource {
 
   @override
   Future<Unit> addTour(TourModel tour) async {
+    if (token != null && token != "" && role == 'admin') {
+      tokenAdmin = CacheNetwork.getCacheData(key: 'access_token');
+    }
     final body = {
       'type': tour.type,
       'driverName': tour.driverName,
@@ -52,7 +53,7 @@ class TourRemoteDataSourceImpl implements TourRemoteDataSource {
       Uri.parse('${Base_Url}tours'),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $tokenAdmin',
+        'Authorization': 'Bearer ${tokenAdmin}',
       },
       body: jsonEncode(body),
     );
@@ -68,6 +69,9 @@ class TourRemoteDataSourceImpl implements TourRemoteDataSource {
 
   @override
   Future<Unit> updateTour(TourModel tour) async {
+    if (token != null && token != "" && role == 'admin') {
+      tokenAdmin = CacheNetwork.getCacheData(key: 'access_token');
+    }
     final tourId = tour.id.toString();
     final body = {
       'type': tour.type,
@@ -99,6 +103,12 @@ class TourRemoteDataSourceImpl implements TourRemoteDataSource {
 
   @override
   Future<Unit> deleteTour(String id) async {
+    if (token != null && token != "" && role == 'admin') {
+      tokenAdmin = CacheNetwork.getCacheData(key: 'access_token');
+    }
+    if (token != null && token != "" && role == 'admin') {
+      tokenAdmin = CacheNetwork.getCacheData(key: 'access_token');
+    }
     final response = await client.delete(
       Uri.parse('${Base_Url}tours/${id.toString()}'),
       headers: {'Authorization': 'Bearer $tokenAdmin'},
@@ -117,7 +127,7 @@ class TourRemoteDataSourceImpl implements TourRemoteDataSource {
   Future<TourModel> getTourById(String id) async {
     final response = await client.get(
       Uri.parse('${Base_Url}tours/${id}'),
-      headers: {'Authorization': 'Bearer $tokenAdmin'},
+      headers: {'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 200) {

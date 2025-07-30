@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_bloc/tour_cubit.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_id.dart/get_tour_id_cubit.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_id.dart/get_tour_id_state.dart';
 import 'package:opal_app/features/user/presentaion/bloc/user_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/user_state.dart';
 import '../../core/network/local_network.dart' show CacheNetwork;
 import '../../core/resources/text_styles.dart';
 import '../user/presentaion/bloc/auth_cubit.dart';
-import '../Admin/presentaion/bloc/get_tour_bloc/tour_state.dart';
 import '../Admin/presentaion/widgets/app_header.dart';
 import '../Admin/presentaion/widgets/expandable_card.dart';
 
@@ -34,7 +34,7 @@ class _SupervisorScreenState extends State<SupervisorScreen> {
       BlocProvider.of<GetAllUserCubit>(
         context,
       ).getUserById(widget.superVisorId);
-      BlocProvider.of<TourCubit>(context).getTourById(widget.tourId);
+      BlocProvider.of<GetTourIdCubit>(context).getTourById(widget.tourId);
       _inInit = false;
     }
   }
@@ -117,7 +117,7 @@ class _SupervisorScreenState extends State<SupervisorScreen> {
                           ),
                           onPressed: () async {
                             await CacheNetwork.deleteCacheData(
-                              key: 'access_token_Admin',
+                              key: 'access_token',
                             );
                             Navigator.pushReplacementNamed(context, '/signin');
                           },
@@ -148,7 +148,7 @@ class _SupervisorScreenState extends State<SupervisorScreen> {
                   children: [
                     const SizedBox(height: 20),
                     Expanded(
-                      child: BlocBuilder<TourCubit, TourState>(
+                      child: BlocBuilder<GetTourIdCubit, GetTourIdState>(
                         builder: (context, state) {
                           if (state is TourByIdLoaded) {
                             final users = state.tour.users ?? [];
@@ -212,13 +212,13 @@ class _SupervisorScreenState extends State<SupervisorScreen> {
                                 ),
                               ],
                             );
-                          } else if (state is TourLoading) {
+                          } else if (state is GetTourByIdLoading) {
                             return const Center(
                               child: CircularProgressIndicator(
                                 color: ColorManager.secondColor,
                               ),
                             );
-                          } else if (state is TourError) {
+                          } else if (state is getTourByIdError) {
                             return const Center(
                               child: Text(
                                 'فشل تحميل البيانات',

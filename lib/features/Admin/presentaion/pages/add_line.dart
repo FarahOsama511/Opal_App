@@ -34,7 +34,7 @@ class _AddLineState extends State<AddLine> {
             child: Column(
               children: [
                 SizedBox(height: 50.h),
-                LogoCircle(size: size),
+                LogoCircle(),
                 SizedBox(height: 47.h),
                 CustomTextField(
                   hint: 'اسم الخط',

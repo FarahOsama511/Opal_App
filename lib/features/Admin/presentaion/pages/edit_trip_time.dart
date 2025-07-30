@@ -55,6 +55,7 @@ class _EditTripTimeState extends State<EditTripBox> {
     );
 
     final tour = TourModel(
+      // superVisorName: selectedSupervisor?.name ?? "",
       id: widget.tourId,
       type: 'ذهاب',
       driverName: selectedSupervisor?.name ?? "",
@@ -85,7 +86,7 @@ class _EditTripTimeState extends State<EditTripBox> {
     selectedDate = selectedTour.leavesAt;
     focusedDay = selectedTour.leavesAt;
     selectedLine = selectedTour.line;
-
+    // selectedSupervisor = UserEntity(name: selectedTour.supervisorName);
     type = selectedTour.type;
     hour = selectedTour.leavesAt.hour > 12
         ? selectedTour.leavesAt.hour - 12

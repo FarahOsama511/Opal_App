@@ -71,7 +71,10 @@ class _ConfirmDetailsScreenState extends State<ConfirmDetailsScreen> {
                                 '${DateFormat('HH:mm').format(tour.leavesAt)} صباحاً',
                           ),
 
-                          _RowInfo(label: 'اسم المشرف', value: tour.driverName),
+                          _RowInfo(
+                            label: 'اسم المشرف',
+                            value: tour.driverName ?? "غير معرف",
+                          ),
                           _RowInfo(
                             label: 'تاريخ اليوم',
                             value:

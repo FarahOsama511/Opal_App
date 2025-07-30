@@ -3,7 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
 import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_bloc/tour_state.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_id.dart/get_tour_id_cubit.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_id.dart/get_tour_id_state.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_state.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/admin_home_screen.dart';
@@ -26,7 +27,7 @@ class _TripDetailsDialogState extends State<TripDetailsDialog> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (_inInit) {
-      BlocProvider.of<TourCubit>(context).getTourById(widget.tourId);
+      BlocProvider.of<GetTourIdCubit>(context).getTourById(widget.tourId);
       _inInit = false;
     }
   }
@@ -63,9 +64,9 @@ class _TripDetailsDialogState extends State<TripDetailsDialog> {
                     borderRadius: BorderRadius.circular(12),
                     color: ColorManager.secondColor,
                   ),
-                  child: BlocBuilder<TourCubit, TourState>(
+                  child: BlocBuilder<GetTourIdCubit, GetTourIdState>(
                     builder: (context, state) {
-                      if (state is TourLoading) {
+                      if (state is GetTourByIdLoading) {
                         return Center(
                           child: CircularProgressIndicator(
                             color: ColorManager.primaryColor,
@@ -81,7 +82,10 @@ class _TripDetailsDialogState extends State<TripDetailsDialog> {
                               'ميعاد الذهاب',
                               '${DateFormat('HH:mm').format(tour.leavesAt)} صباحاً',
                             ),
-                            _buildRow('اسم المشرف', tour.driverName),
+                            _buildRow(
+                              'اسم المشرف',
+                              tour.driverName ?? "غير معرف",
+                            ),
                             _buildRow(
                               'تاريخ اليوم',
                               DateFormat('yyyy-MM-dd').format(tour.leavesAt),

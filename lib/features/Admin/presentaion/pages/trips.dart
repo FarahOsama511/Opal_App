@@ -28,21 +28,6 @@ class _TripsScreenState extends State<TripsScreen> {
     );
   }
 
-  // bool _isinit = true;
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   if (_isinit) {
-  //     BlocProvider.of<TourCubit>(context).getAllTours();
-  //     _isinit = false;
-  //   }
-  // }
-  @override
-  void initState() {
-    super.initState();
-    BlocProvider.of<TourCubit>(context).getAllTours();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -104,7 +89,8 @@ class _TripsScreenState extends State<TripsScreen> {
                           final tour = state.tours[index];
                           return BusCard(
                             line: 'خط ${state.tours[index].line.name}',
-                            supervisorName: state.tours[index].driverName,
+                            supervisorName:
+                                state.tours[index].driverName ?? "غير معرف",
                             departureTime: DateFormat(
                               'HH:mm',
                             ).format(state.tours[index].leavesAt),

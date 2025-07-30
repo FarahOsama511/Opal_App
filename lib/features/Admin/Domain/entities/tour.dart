@@ -1,15 +1,18 @@
 import 'package:equatable/equatable.dart';
-import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
+
+import '../../../user/Domain/entities/user_entity.dart';
 
 class Tour extends Equatable {
   final String? id;
   final String type;
-  final String driverName;
+  final String? driverName; // <-- خليتها nullable
   final DateTime leavesAt;
+  //final String? supervisorName;
   final LineEntity line;
   final List<UserEntity>? users;
 
   Tour({
+    //  required this.supervisorName,
     this.users,
     this.id,
     required this.type,
@@ -17,8 +20,17 @@ class Tour extends Equatable {
     required this.leavesAt,
     required this.line,
   });
+
   @override
-  List<Object?> get props => [id, type, driverName, leavesAt, line, users];
+  List<Object?> get props => [
+    id,
+    type,
+    driverName,
+    leavesAt,
+    line,
+    users,
+    // supervisorName,
+  ];
 }
 
 class LineEntity extends Equatable {

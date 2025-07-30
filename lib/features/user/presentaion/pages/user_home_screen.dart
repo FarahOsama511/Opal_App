@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:opal_app/core/network/local_network.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/widgets/app_header.dart'
@@ -37,7 +37,6 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     super.initState();
     isTripConfirmed = widget.isTripConfirmed;
     BlocProvider.of<TourCubit>(context).getAllTours();
-    BlocProvider.of<LinesCubit>(context).getAllLiness();
   }
 
   @override
@@ -48,17 +47,22 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
         child: Stack(
           children: [
             Positioned(
-              left: 210,
-              top: -50,
+              left: 210.w,
+              top: -75.h,
               child: Opacity(
                 opacity: 0.2,
-                child: Image.asset('assets/logos.png', width: 300, height: 300),
+                child: Image.asset(
+                  'assets/logos.png',
+                  width: 330.w,
+                  height: 330.h,
+                ),
               ),
             ),
             Column(
               children: [
                 AppHeader(
-                  onLogout: () {
+                  onLogout: () async {
+                    await CacheNetwork.deleteCacheData(key: 'access_token');
                     Navigator.pushReplacementNamed(context, '/signin');
                   },
                   leadingWidget: Row(
@@ -109,7 +113,8 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 12),
+
+                SizedBox(height: 12.h),
                 if (isTripConfirmed)
                   GestureDetector(
                     onTap: () {
@@ -125,14 +130,13 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                       );
                     },
                     child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 20),
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 16,
-                        horizontal: 20,
+                      margin: EdgeInsets.symmetric(horizontal: 20.w),
+                      padding: EdgeInsets.symmetric(
+                        vertical: 16.h,
+                        horizontal: 20.w,
                       ),
                       decoration: BoxDecoration(
-                        //color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(12.r),
                         border: Border.all(color: ColorManager.blackColor),
                       ),
                       child: Row(
@@ -142,7 +146,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                             'عرض الرحلة الخاصة بك',
                             style: TextStyles.black14Bold,
                           ),
-                          Icon(Icons.arrow_forward_ios, size: 18),
+                          Icon(Icons.arrow_forward_ios, size: 18.sp),
                         ],
                       ),
                     ),
@@ -165,22 +169,28 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                           displayString: (u) => u.name!,
                         );
                       } else {
-                        return const Text('فشل في تحميل الخطوط');
+                        return Text(
+                          'فشل في تحميل الخطوط',
+                          style: TextStyle(
+                            color: ColorManager.primaryColor,
+                            fontSize: 14.sp,
+                          ),
+                        );
                       }
                     },
                   ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10.h),
                 Expanded(
                   child: Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 20,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.w,
+                      vertical: 20.h,
                     ),
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       color: ColorManager.primaryColor,
                       borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(30),
+                        top: Radius.circular(30.r),
                       ),
                     ),
                     child: Column(
@@ -189,15 +199,15 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                         Align(
                           alignment: Alignment.centerRight,
                           child: Text(
-                            'مواعبد الذهاب _ العودة',
+                            'مواعيد الذهاب _ العودة',
                             style: TextStyles.white20Bold,
                           ),
                         ),
-                        const SizedBox(height: 15),
+                        SizedBox(height: 15.h),
                         BlocBuilder<TourCubit, TourState>(
                           builder: (context, state) {
                             if (state is TourLoading) {
-                              return const Center(
+                              return Center(
                                 child: CircularProgressIndicator(
                                   color: ColorManager.secondColor,
                                 ),
@@ -223,9 +233,12 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                                       onTap: isTripConfirmed
                                           ? null
                                           : () async {
-                                              expandedCardIndex = isExpanded
-                                                  ? null
-                                                  : index;
+                                              setState(() {
+                                                expandedCardIndex = isExpanded
+                                                    ? null
+                                                    : index;
+                                              });
+
                                               final confirmed =
                                                   await showDialog<bool>(
                                                     context: context,
@@ -242,9 +255,9 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                                                 });
                                               }
                                             },
-
-                                      line: tours[index].line.name!,
-                                      supervisorName: tours[index].driverName,
+                                      line: tours[index].line.name ?? "",
+                                      supervisorName:
+                                          tours[index].driverName ?? "غير معرف",
                                       departureTime: DateFormat(
                                         'HH:mm',
                                       ).format(tours[index].leavesAt),
@@ -256,10 +269,10 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                                 ),
                               );
                             } else {
-                              return const Center(
+                              return Center(
                                 child: Text(
                                   'حدث خطأ أثناء تحميل الرحلات',
-                                  style: TextStyle(color: Colors.white),
+                                  style: TextStyles.white20Bold,
                                 ),
                               );
                             }

@@ -4,16 +4,17 @@ import '../../Domain/entities/user_entity.dart';
 class LoginModel extends LoginEntity {
   LoginModel({required super.user, required super.token});
   factory LoginModel.fromJson(Map<String, dynamic> json) {
+    final userJson = json['user'] ?? {};
     return LoginModel(
       user: UserEntity(
-        id: json['user']['id'] as String ?? "",
-        name: json['user']['name'] as String ?? "",
-        phone: json['user']['phone'] as String ?? "",
-        role: json['user']['role'] as String ?? "",
-        //  universityId: json['user']['universityId'] as String ?? "",
-        // universityCardId: json['user']['universityCardId'] as String ?? "",
+        id: userJson['id'] ?? "",
+        name: userJson['name'] ?? "",
+        phone: userJson['phone'] ?? "",
+        role: userJson['role'] ?? "",
+        universityId: userJson['universityId'] ?? "",
+        universityCardId: userJson['universityCardId'] ?? "",
       ),
-      token: json['token'] as String,
+      token: json['token'] ?? "",
     );
   }
   Map<String, dynamic> toJson() {

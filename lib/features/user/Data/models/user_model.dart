@@ -1,8 +1,6 @@
 import 'package:opal_app/features/user/Data/models/university_model.dart';
 import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
 import '../../../Admin/Data/models/line_model.dart';
-import '../../../Admin/Domain/entities/tour.dart';
-import '../../Domain/entities/university_entity.dart';
 
 class UserModel extends UserEntity {
   UserModel({
@@ -12,7 +10,6 @@ class UserModel extends UserEntity {
     super.role,
     super.universityId,
     super.universityCardId,
-
     super.email,
     super.status,
     super.university,
@@ -22,15 +19,15 @@ class UserModel extends UserEntity {
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: json['id'],
-      name: json['name'],
-      phone: json['phone'],
-      role: json['role'],
-      universityId: json['universityId'],
-      universityCardId: json['universityCardId'],
-      email: json['email'],
-      status: json['status'],
-      password: json['password'],
+      id: json['id'] as String?,
+      name: json['name'] as String?,
+      phone: json['phone'] as String?,
+      role: json['role'] as String?,
+      universityId: json['universityId'] as String?,
+      universityCardId: json['universityCardId'] as String?,
+      email: json['email'] as String?,
+      status: json['status'] as String?,
+      password: json['password'] as String?,
       // 👇 المشكلة هنا: لازم تعمل parsing للـ university object
       university: json['university'] != null
           ? UniversityModel.fromJson(json['university'])

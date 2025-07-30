@@ -48,7 +48,7 @@ class _AddSupervisorState extends State<AddSupervisor> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 SizedBox(height: size.height * 0.05),
-                LogoCircle(size: size),
+                LogoCircle(),
                 const SizedBox(height: 37),
 
                 CustomTextField(

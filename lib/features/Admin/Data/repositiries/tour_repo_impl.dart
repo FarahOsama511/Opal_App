@@ -41,6 +41,7 @@ class TourRepoImpl extends ToursRepository {
   @override
   Future<Either<Failure, Unit>> addTour(Tour tour) async {
     final TourModel tourModel = TourModel(
+      // superVisorName: tour.supervisorName ?? "",
       type: tour.type,
       driverName: tour.driverName,
       leavesAt: tour.leavesAt,
@@ -75,6 +76,7 @@ class TourRepoImpl extends ToursRepository {
   @override
   Future<Either<Failure, Unit>> updateTour(Tour tour) async {
     final TourModel tourModel = TourModel(
+      //  superVisorName: tour.supervisorName ?? "",
       type: tour.type,
       driverName: tour.driverName,
       leavesAt: tour.leavesAt,

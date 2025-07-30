@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:opal_app/core/network/local_network.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/student_list.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/trips.dart';
@@ -49,8 +50,10 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
             Column(
               children: [
                 AppHeader(
-                  onLogout: () =>
-                      Navigator.pushReplacementNamed(context, '/signin'),
+                  onLogout: () async {
+                    await CacheNetwork.deleteCacheData(key: 'access_token');
+                    Navigator.pushReplacementNamed(context, '/signin');
+                  },
                   showAddButton: true,
                   onAddPressed: () =>
                       setState(() => showAddMenu = !showAddMenu),

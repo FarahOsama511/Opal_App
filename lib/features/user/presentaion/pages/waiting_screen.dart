@@ -53,14 +53,11 @@ class WaitingScreen extends StatelessWidget {
                       shape: BoxShape.circle,
                       color: ColorManager.primaryColor,
                     ),
-                    child: Image.asset(
-                      'assets/logo.png',
-                      width: size.width * 0.35,
-                    ),
+                    child: Image.asset('assets/logo.png', width: 0.35.sw),
                   ),
                   SizedBox(height: 30.h),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 30.h),
+                    padding: EdgeInsets.symmetric(horizontal: 30.w),
                     child: Text(
                       'برجاء الانتظار، في أقرب وقت سيتم الموافقة على طلب إنشاء حسابك من قبل أحد المسؤولين',
                       textAlign: TextAlign.center,
@@ -74,7 +71,7 @@ class WaitingScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 30.h),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20.h),
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
                     child: SizedBox(
                       width: double.infinity,
                       height: 40.h,

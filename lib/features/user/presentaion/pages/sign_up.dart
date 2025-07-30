@@ -26,16 +26,12 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  // bool _showPassword = false;
   UniversityEntity? selectedUniversity;
-  String? selectedCollege;
-
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController universityCardId = TextEditingController();
   final TextEditingController otherUniversityController =
       TextEditingController();
-  final TextEditingController otherCollegeController = TextEditingController();
 
   @override
   void initState() {
@@ -45,12 +41,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 20.h),
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
           child: BlocConsumer<AuthCubit, AuthState>(
             listener: (context, state) {
               if (state is AuthSuccess) {
@@ -68,50 +62,51 @@ class _SignUpScreenState extends State<SignUpScreen> {
             },
             builder: (context, state) {
               if (state is AuthLoading) {
-                return const Center(child: CircularProgressIndicator());
+                return SizedBox(
+                  height: 500.h,
+                  child: const Center(child: CircularProgressIndicator()),
+                );
               } else {
                 return Form(
                   key: _formKey,
                   child: Column(
                     children: [
-                      SizedBox(height: size.height * 0.05),
-                      LogoCircle(size: size),
+                      SizedBox(height: 40.h),
+                      const LogoCircle(),
                       SizedBox(height: 37.h),
+
                       // الاسم
                       CustomTextField(
                         hint: 'الاسم',
                         controller: nameController,
                         validatorMessage: 'يرجى إدخال الاسم',
                       ),
+
                       // رقم الهاتف
                       CustomTextField(
                         hint: 'رقم الهاتف',
                         controller: phoneController,
                         validatorMessage: 'يرجى إدخال رقم الهاتف',
-                        //  keyboardType: TextInputType.phone,
                       ),
-                      // كلمة السر
-                      CustomTextField(
-                        hint: ' الرقم الجامعي',
-                        controller: universityCardId,
 
+                      // الرقم الجامعي
+                      CustomTextField(
+                        hint: 'الرقم الجامعي',
+                        controller: universityCardId,
                         validatorMessage: 'يرجى إدخال الرقم الجامعي',
                       ),
-
-                      // الجامعة
+                      SizedBox(height: 16.h),
                       BlocBuilder<
                         GetAllUniversitiesCubit,
                         GetAllUniversitiesState
                       >(
                         builder: (context, state) {
-                          print("state is${state}");
                           if (state is GetAllUniversitiesLoading) {
                             return const CircularProgressIndicator(
                               color: ColorManager.primaryColor,
                             );
                           } else if (state is GetAllUniversitiesSuccess) {
                             final allUniversities = state.GetAllUniversities;
-                            print("${state.GetAllUniversities.length}");
                             return CustomDropdown(
                               label: 'الجامعة',
                               value: selectedUniversity,
@@ -130,7 +125,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         },
                       ),
 
-                      if (selectedUniversity == 'غير ذلك')
+                      // إذا كانت الجامعة "غير ذلك"
+                      if (selectedUniversity?.name == 'غير ذلك')
                         CustomTextField(
                           hint: 'اكتب اسم الجامعة',
                           controller: otherUniversityController,
@@ -139,9 +135,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                       SizedBox(height: 25.h),
 
+                      // زر التسجيل
                       SizedBox(
                         width: double.infinity,
-                        height: 38.h,
+                        height: 48.h,
                         child: PrimaryButton(
                           backgroundColor: ColorManager.primaryColor,
                           onPressed: () {
@@ -149,34 +146,32 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               context.read<AuthCubit>().register(
                                 RegisterEntity(
                                   user: UserEntity(
-                                    university: UniversityEntity(
-                                      name: selectedUniversity!.name,
-                                    ),
                                     name: nameController.text,
                                     phone: phoneController.text,
                                     universityCardId: universityCardId.text,
+                                    university: UniversityEntity(
+                                      name: selectedUniversity!.name,
+                                    ),
                                     universityId: selectedUniversity!.id,
                                     line: LineEntity(
                                       id: "cmd1np26i0000uwjo1i800xn1",
                                     ),
-
-                                    role: 'طالب', // إذا بتسجلي الطالب فقط الآن
+                                    role: 'طالب',
                                   ),
                                 ),
                               );
                             }
                           },
-
                           text: 'تقديم الطلب',
                         ),
                       ),
 
                       SizedBox(height: 15.h),
 
+                      // سجل الدخول
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(width: 4.w),
                           Text(
                             'لديك حساب بالفعل؟',
                             style: TextStyles.grey14Regular,
@@ -193,11 +188,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             },
                             child: Text(
                               'سجل الدخول',
-                              style: TextStyle(
-                                color: ColorManager.primaryColor,
-                                fontWeight: FontWeight.bold,
-                                decoration: TextDecoration.underline,
-                              ),
+                              style: TextStyles.red12Bold,
                             ),
                           ),
                         ],

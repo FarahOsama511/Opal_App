@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_state.dart';
-import 'package:opal_app/features/Admin/presentaion/pages/admin_home_screen.dart';
 import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
 import '../../../../core/resources/text_styles.dart';
 import '../../Data/models/tour_model.dart';
@@ -48,6 +47,7 @@ class _AddTripBoxState extends State<AddTripBox> {
     );
 
     final tour = TourModel(
+      //  superVisorName: selectedSupervisor?.name ?? "",
       type: 'go',
       driverName: selectedSupervisor?.name ?? "",
       leavesAt: fullDateTime,

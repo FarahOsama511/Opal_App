@@ -18,6 +18,7 @@ import 'package:opal_app/features/Admin/Domain/usecase/get_all_tours.dart';
 import 'package:opal_app/features/Admin/Domain/usecase/get_tour_id_use_case.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/add_lines/add_line_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_bloc/tour_cubit.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_id.dart/get_tour_id_cubit.dart';
 import 'package:opal_app/features/user/Data/datasource/select_tour_remote_data_source.dart';
 import 'package:opal_app/features/user/Data/datasource/university_data_source.dart';
 import 'package:opal_app/features/user/Data/datasource/user_local_data_source.dart';
@@ -57,7 +58,7 @@ import '../features/user/Domain/usecases/user_isdeactivat_UseCase.dart';
 final setUp = GetIt.instance;
 Future<void> init() async {
   //cubits
-  setUp.registerFactory(() => TourCubit(setUp(), setUp()));
+  setUp.registerFactory(() => TourCubit(setUp()));
   setUp.registerFactory(
     () => UpdateAddDeleteTourCubit(setUp(), setUp(), setUp()),
   );
@@ -72,6 +73,7 @@ Future<void> init() async {
   setUp.registerFactory(() => GetAllUniversitiesCubit(setUp()));
   setUp.registerFactory(() => AddLineCubit(setUp()));
   setUp.registerFactory(() => SelectionTourCubit(setUp(), setUp()));
+  setUp.registerFactory(() => GetTourIdCubit(setUp()));
 
   //usecases
   setUp.registerLazySingleton(() => GetAllToursUseCase(setUp()));

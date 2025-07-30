@@ -18,7 +18,7 @@ class SelectTourRemoteDataSourceImpl implements SelectTourRemoteDataSource {
   Future<TourModel> SelectionTour(String tourId) async {
     final response = await client.post(
       Uri.parse('${Base_Url}tours/${tourId}/registration'),
-      headers: {'Authorization': 'Bearer ${tokenUser}'},
+      headers: {'Authorization': 'Bearer ${token}'},
     );
     print("=== Selection tour: ${response.statusCode} ===");
     print("=== Selection tour: ${response.body} ===");
@@ -36,7 +36,7 @@ class SelectTourRemoteDataSourceImpl implements SelectTourRemoteDataSource {
     // final userToken = prefs.getString('access_token');
     final response = await client.delete(
       Uri.parse('${Base_Url}tours/${tourId}/registration}'),
-      headers: {'Authorization': 'Bearer $tokenUser'},
+      headers: {'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 200) {

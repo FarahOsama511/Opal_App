@@ -12,7 +12,6 @@ abstract class AuthRemoteDataSource {
   Future<LoginModel> loginStudent(String phone, String universityCardId);
   Future<LoginModel> loginAdminOrSuperVisor(String email, String password);
   Future<RegisterEntity> register(RegisterModel authModel);
-  //Future<Unit> logout();
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -32,15 +31,19 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     print("=== login Response Body: ${response.body} ===");
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
-      // final tokenUser = jsonResponse['token'];
-
+      final tokenUser = jsonResponse['token'];
+      print(jsonResponse['user']['role']);
       await CacheNetwork.insertToCache(
         key: 'access_token',
         value: jsonResponse['token'],
       );
-
+      await CacheNetwork.insertToCache(
+        key: 'access_role',
+        value: jsonResponse['user']['role'],
+      );
       return LoginModel.fromJson({...jsonResponse, 'token': tokenUser});
     } else {
+      print('===============${response.body}================');
       throw ServerException();
     }
   }
@@ -90,10 +93,19 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
-      final token = jsonResponse['token'];
-      await CacheNetwork.insertToCache(key: 'access_token_Admin', value: token);
+      await CacheNetwork.insertToCache(
+        key: 'access_token',
+        value: jsonResponse['token'],
+      );
+      await CacheNetwork.insertToCache(
+        key: 'access_role',
+        value: jsonResponse['user']['role'],
+      );
 
-      return LoginModel.fromJson({...jsonResponse, 'token': tokenAdmin});
+      return LoginModel.fromJson({
+        ...jsonResponse,
+        'token': jsonResponse['token'],
+      });
     } else {
       throw ServerException();
     }

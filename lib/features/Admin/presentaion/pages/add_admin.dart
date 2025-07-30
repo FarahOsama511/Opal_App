@@ -39,7 +39,7 @@ class _AddAdminState extends State<AddAdmin> {
               children: [
                 SizedBox(height: size.height * 0.05),
 
-                LogoCircle(size: size),
+                LogoCircle(),
                 const SizedBox(height: 20),
 
                 CustomTextField(

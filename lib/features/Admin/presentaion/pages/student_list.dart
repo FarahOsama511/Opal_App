@@ -28,115 +28,118 @@ class _StudentListState extends State<StudentList> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          _buildSwitchButtons(),
-          Expanded(
-            child: Container(
-              width: double.infinity,
-              decoration: const BoxDecoration(color: Color(0xFFE71A45)),
-              child: BlocConsumer<GetAllUserCubit, UserState>(
-                listener: (context, state) {
-                  if (state is UserError) {
-                    ScaffoldMessenger.of(
-                      context,
-                    ).showSnackBar(SnackBar(content: Text(state.message)));
-                  }
-                },
-                builder: (context, state) {
-                  if (state is UserSuccess) {
-                    final filteredUsers = state.user.where((u) {
-                      return (u.status == 'active' && isStudentsSelected
-                          ? u.role == "student"
-                          : u.role == "supervisor");
-                    }).toList();
-
-                    print(
-                      "عدد المستخدمين المستلمين من السيرفر: ${state.user.length}",
-                    );
-
-                    if (isStudentsSelected) {
-                      if (_isExpandedStudents.length != filteredUsers.length) {
-                        _isExpandedStudents = List.generate(
-                          filteredUsers.length,
-                          (_) => false,
-                        );
-                      }
-                    } else {
-                      if (_isExpandedSupervisors.length !=
-                          filteredUsers.length) {
-                        _isExpandedSupervisors = List.generate(
-                          filteredUsers.length,
-                          (_) => false,
-                        );
-                      }
+      body: SafeArea(
+        child: Column(
+          children: [
+            _buildSwitchButtons(),
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                decoration: const BoxDecoration(color: Color(0xFFE71A45)),
+                child: BlocConsumer<GetAllUserCubit, UserState>(
+                  listener: (context, state) {
+                    if (state is UserError) {
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text(state.message)));
                     }
+                  },
+                  builder: (context, state) {
+                    if (state is UserSuccess) {
+                      final filteredUsers = state.user.where((u) {
+                        return (u.status == 'active' && isStudentsSelected
+                            ? u.role == "student"
+                            : u.role == "supervisor");
+                      }).toList();
 
-                    if (filteredUsers.isEmpty) {
+                      print(
+                        "عدد المستخدمين المستلمين من السيرفر: ${state.user.length}",
+                      );
+
+                      if (isStudentsSelected) {
+                        if (_isExpandedStudents.length !=
+                            filteredUsers.length) {
+                          _isExpandedStudents = List.generate(
+                            filteredUsers.length,
+                            (_) => false,
+                          );
+                        }
+                      } else {
+                        if (_isExpandedSupervisors.length !=
+                            filteredUsers.length) {
+                          _isExpandedSupervisors = List.generate(
+                            filteredUsers.length,
+                            (_) => false,
+                          );
+                        }
+                      }
+
+                      if (filteredUsers.isEmpty) {
+                        return Center(
+                          child: Text(
+                            "لا يوجد مستخدمون",
+                            style: TextStyles.white20Bold,
+                          ),
+                        );
+                      }
+
+                      return ListView.builder(
+                        padding: const EdgeInsets.fromLTRB(16, 12, 16, 90),
+                        itemCount: filteredUsers.length,
+                        itemBuilder: (context, index) {
+                          final user = filteredUsers[index];
+                          print(user);
+                          if (isStudentsSelected) {
+                            return ExpandableCard(
+                              name: user.name!,
+                              phone: user.phone!,
+                              university: user.university?.name ?? '',
+                              isSupervisor: false,
+                              isExpanded: _isExpandedStudents[index],
+                              onToggle: () {
+                                setState(() {
+                                  _isExpandedStudents[index] =
+                                      !_isExpandedStudents[index];
+                                });
+                              },
+                            );
+                          } else {
+                            return ExpandableCard(
+                              name: user.name!,
+                              phone: user.phone!,
+                              line: user.line?.name ?? '',
+                              isSupervisor: true,
+                              isExpanded: _isExpandedSupervisors[index],
+                              onToggle: () {
+                                setState(() {
+                                  _isExpandedSupervisors[index] =
+                                      !_isExpandedSupervisors[index];
+                                });
+                              },
+                            );
+                          }
+                        },
+                      );
+                    } else if (state is UserLoading) {
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: ColorManager.secondColor,
+                        ),
+                      );
+                    } else {
                       return Center(
                         child: Text(
-                          "لا يوجد مستخدمون",
+                          "حدث خطأ أثناء تحميل البيانات.",
                           style: TextStyles.white20Bold,
                         ),
                       );
                     }
-
-                    return ListView.builder(
-                      padding: const EdgeInsets.fromLTRB(16, 12, 16, 90),
-                      itemCount: filteredUsers.length,
-                      itemBuilder: (context, index) {
-                        final user = filteredUsers[index];
-                        print(user);
-                        if (isStudentsSelected) {
-                          return ExpandableCard(
-                            name: user.name!,
-                            phone: user.phone!,
-                            university: user.university?.name ?? '',
-                            isSupervisor: false,
-                            isExpanded: _isExpandedStudents[index],
-                            onToggle: () {
-                              setState(() {
-                                _isExpandedStudents[index] =
-                                    !_isExpandedStudents[index];
-                              });
-                            },
-                          );
-                        } else {
-                          return ExpandableCard(
-                            name: user.name!,
-                            phone: user.phone!,
-                            line: user.line?.name ?? '',
-                            isSupervisor: true,
-                            isExpanded: _isExpandedSupervisors[index],
-                            onToggle: () {
-                              setState(() {
-                                _isExpandedSupervisors[index] =
-                                    !_isExpandedSupervisors[index];
-                              });
-                            },
-                          );
-                        }
-                      },
-                    );
-                  } else if (state is UserLoading) {
-                    return const Center(
-                      child: CircularProgressIndicator(
-                        color: ColorManager.secondColor,
-                      ),
-                    );
-                  } else {
-                    return Center(
-                      child: Text(
-                        "حدث خطأ أثناء تحميل البيانات.",
-                        style: TextStyles.white20Bold,
-                      ),
-                    );
-                  }
-                },
+                  },
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -177,12 +180,14 @@ class _StudentListState extends State<StudentList> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: isStudentsSelected
                     ? Colors.grey.shade300
-                    : const Color(0xFFE71A45),
+                    : ColorManager.primaryColor,
               ),
               child: Text(
                 'المشرفين',
                 style: TextStyle(
-                  color: isStudentsSelected ? Colors.black : Colors.white,
+                  color: isStudentsSelected
+                      ? ColorManager.blackColor
+                      : ColorManager.secondColor,
                 ),
               ),
             ),

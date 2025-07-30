@@ -1,5 +1,5 @@
+import 'dart:developer';
 import 'package:opal_app/features/user/Data/models/user_model.dart';
-import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
 
 import '../../Domain/entities/tour.dart';
 import 'line_model.dart';
@@ -8,7 +8,7 @@ class TourModel extends Tour {
   TourModel({
     String? id,
     required String type,
-    required String driverName,
+    String? driverName, // <-- nullable هنا برضو
     required DateTime leavesAt,
     required LineEntity line,
     super.users,
@@ -21,13 +21,15 @@ class TourModel extends Tour {
        );
 
   factory TourModel.fromJson(Map<String, dynamic> json) {
+    log('TourModel fromJson: $json');
+
     final lineJson = json['line'];
     final usersJson = json['users'] as List<dynamic>?;
 
     return TourModel(
       id: json['id'] as String?,
       type: json['type'] as String,
-      driverName: json['driverName'] as String,
+      driverName: json['driverName'] as String?, // <-- nullable read
       leavesAt: DateTime.parse(json['leavesAt'] as String),
       line: lineJson != null
           ? LineModel.fromJson(lineJson as Map<String, dynamic>)
@@ -48,7 +50,7 @@ Map<String, dynamic> ToJson(TourModel tour) {
     'type': tour.type,
     'driverName': tour.driverName,
     'leavesAt': tour.leavesAt.toIso8601String(),
-    'line': tour.line != null ? (tour.line as LineModel).toJson() : null,
+    'line': tour.line is LineModel ? (tour.line as LineModel).toJson() : null,
     'users': tour.users?.map((user) => (user as UserModel).toJson()).toList(),
   };
 }

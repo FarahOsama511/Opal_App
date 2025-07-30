@@ -6,8 +6,7 @@ import '../../../../core/resources/text_styles.dart';
 
 /// دائرة اللوجو الحمراء
 class LogoCircle extends StatelessWidget {
-  final Size size;
-  const LogoCircle({super.key, required this.size});
+  const LogoCircle({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +17,7 @@ class LogoCircle extends StatelessWidget {
           shape: BoxShape.circle,
           color: ColorManager.primaryColor,
         ),
-        child: Image.asset('assets/logo.png', width: size.width * 0.22),
+        child: Image.asset('assets/logo.png', width: 80.w, fit: BoxFit.contain),
       ),
     );
   }
