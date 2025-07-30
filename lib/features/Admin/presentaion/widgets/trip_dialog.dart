@@ -6,7 +6,7 @@ import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_bloc/tour_state.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_state.dart';
-
+import 'package:opal_app/features/Admin/presentaion/pages/admin_home_screen.dart';
 import '../../../../core/resources/text_styles.dart';
 import '../bloc/get_tour_bloc/tour_cubit.dart';
 import '../pages/edit_trip_time.dart';
@@ -108,7 +108,14 @@ class _TripDetailsDialogState extends State<TripDetailsDialog> {
                       builder: (context) => Dialog(
                         backgroundColor: Colors.transparent,
                         child: EditTripBox(
-                          onClose: () => Navigator.pop(context),
+                          onClose: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return AdminHomeScreen();
+                              },
+                            ),
+                          ),
                           tour: widget.selectedtour,
                           tourId: widget.tourId,
                         ),

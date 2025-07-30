@@ -15,9 +15,6 @@ abstract class AuthRemoteDataSource {
   //Future<Unit> logout();
 }
 
-const Base_Url =
-    'http://student-bus-service-api-oi5yen-ed9bc9-74-161-160-200.traefik.me/';
-
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final http.Client client;
 
@@ -90,13 +87,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     );
     print("=== login Response Status: ${response.statusCode} ===");
     print("=== login Response Body: ${response.body} ===");
+
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
-      final tokenAdmin = jsonResponse['token'];
-      await CacheNetwork.insertToCache(
-        key: 'access_token_Admin',
-        value: tokenAdmin,
-      );
+      final token = jsonResponse['token'];
+      await CacheNetwork.insertToCache(key: 'access_token_Admin', value: token);
 
       return LoginModel.fromJson({...jsonResponse, 'token': tokenAdmin});
     } else {

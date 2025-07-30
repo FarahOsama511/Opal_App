@@ -14,9 +14,6 @@ abstract class UserRemoteDataSource {
   Future<UserModel> getUserById(String userId);
 }
 
-const Base_Url =
-    'http://student-bus-service-api-oi5yen-ed9bc9-74-161-160-200.traefik.me/';
-
 class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   final http.Client client;
 
@@ -96,7 +93,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
 
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
-      print('the supervisor is: $jsonResponse');
+      print('the user is: $jsonResponse');
       final user = UserModel.fromJson(jsonResponse);
 
       return user;

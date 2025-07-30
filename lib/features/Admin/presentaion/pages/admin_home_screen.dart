@@ -39,11 +39,11 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
         child: Stack(
           children: [
             Positioned(
-              left: 210,
-              top: 0,
+              left: 240,
+              top: -80,
               child: Opacity(
                 opacity: 0.2,
-                child: Image.asset('assets/logos.png', width: 200, height: 200),
+                child: Image.asset('assets/logos.png', width: 300, height: 300),
               ),
             ),
             Column(

@@ -65,8 +65,7 @@ class _SupervisorScreenState extends State<SupervisorScreen> {
                     children: [
                       BlocBuilder<GetAllUserCubit, UserState>(
                         builder: (context, state) {
-                          String lineName =
-                              '...'; // الافتراضي لو لسه البيانات بتيجي
+                          String lineName = '...';
                           if (state is UserByIdSuccess) {
                             print('LINEName:${state.userById.line!.name}');
                             lineName = state.userById.line?.name ?? 'غير معروف';
@@ -104,6 +103,12 @@ class _SupervisorScreenState extends State<SupervisorScreen> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        IconButton(
+                          icon: Icon(Icons.arrow_back),
+                          onPressed: () {
+                            Navigator.of(context, rootNavigator: true).pop();
+                          },
+                        ),
                         IconButton(
                           icon: Transform(
                             alignment: Alignment.center,

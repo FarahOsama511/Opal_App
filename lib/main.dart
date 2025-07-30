@@ -11,17 +11,16 @@ import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines
 import 'package:opal_app/features/Admin/presentaion/pages/add_line.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/admin_home_screen.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/trips.dart';
+import 'package:opal_app/features/supervisor/show_tours.dart';
 import 'package:opal_app/features/user/presentaion/bloc/get_all_universities/get_all_universities_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/selection_tour/selection_tour_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/user_cubit.dart';
-
 import 'features/Admin/presentaion/bloc/create_admin_supervisors.dart/add_admin_supervisor_cubit.dart';
 import 'features/Admin/presentaion/bloc/get_tour_bloc/tour_cubit.dart';
 import 'features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_cubit.dart';
 import 'features/Admin/presentaion/pages/add_admin.dart';
 import 'features/Admin/presentaion/pages/add_supervisor.dart';
 import 'features/Admin/presentaion/pages/student_list.dart';
-
 import 'features/user/presentaion/bloc/auth_cubit.dart';
 import 'features/user/presentaion/pages/sign_in.dart';
 import 'features/user/presentaion/pages/sign_up.dart';
@@ -36,7 +35,8 @@ void main() async {
   await CacheNetwork.cacheInitialization();
   tokenUser = CacheNetwork.getCacheData(key: 'access_token');
   tokenAdmin = CacheNetwork.getCacheData(key: 'access_token_Admin');
-  print('TOKENADNIN IS:${tokenAdmin}');
+  print('TOKENADMIN IS:${tokenAdmin}');
+  print("TokenUser:${tokenUser}");
   await checkToken();
 
   await di.init();
@@ -56,11 +56,11 @@ class StudentBusApp extends StatelessWidget {
       builder: (_, child) {
         return MultiBlocProvider(
           providers: [
-            BlocProvider(create: (_) => di.setUp<TourCubit>()),
+            BlocProvider(create: (_) => di.setUp<TourCubit>()..getAllTours()),
             BlocProvider(create: (_) => di.setUp<UpdateAddDeleteTourCubit>()),
             BlocProvider(create: (_) => di.setUp<AuthCubit>()),
             BlocProvider(create: (_) => di.setUp<GetAllUserCubit>()),
-            BlocProvider(create: (_) => di.setUp<LinesCubit>()),
+            BlocProvider(create: (_) => di.setUp<LinesCubit>()..getAllLiness()),
             BlocProvider(create: (_) => di.setUp<AddLineCubit>()),
             BlocProvider(create: (_) => di.setUp<AddAdminSupervisorCubit>()),
             BlocProvider(create: (_) => di.setUp<GetAllUniversitiesCubit>()),
@@ -91,7 +91,6 @@ class StudentBusApp extends StatelessWidget {
               '/success': (context) => const ConfirmationSuccessScreen(),
               '/students': (context) => const StudentList(),
               '/adminScreen': (context) => AdminHomeScreen(),
-              // '/supervisors': (context) => const SupervisorsScreen(),
               '/addAdmin': (context) => const AddAdmin(),
               '/addSupervisor': (context) => const AddSupervisor(),
               '/addLine': (context) => const AddLine(),

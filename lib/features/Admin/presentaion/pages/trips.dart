@@ -28,14 +28,19 @@ class _TripsScreenState extends State<TripsScreen> {
     );
   }
 
-  bool _inInit = true;
+  // bool _isinit = true;
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   if (_isinit) {
+  //     BlocProvider.of<TourCubit>(context).getAllTours();
+  //     _isinit = false;
+  //   }
+  // }
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_inInit) {
-      BlocProvider.of<TourCubit>(context).getAllTours();
-      _inInit = false;
-    }
+  void initState() {
+    super.initState();
+    BlocProvider.of<TourCubit>(context).getAllTours();
   }
 
   @override

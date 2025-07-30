@@ -117,7 +117,7 @@ class TourRemoteDataSourceImpl implements TourRemoteDataSource {
   Future<TourModel> getTourById(String id) async {
     final response = await client.get(
       Uri.parse('${Base_Url}tours/${id}'),
-      headers: {'Authorization': 'Bearer $tokenUser'},
+      headers: {'Authorization': 'Bearer $tokenAdmin'},
     );
 
     if (response.statusCode == 200) {

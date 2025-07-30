@@ -10,9 +10,6 @@ abstract class SelectTourRemoteDataSource {
   Future<Unit> UnconfirmTourByUser(String tourId);
 }
 
-const Base_Url =
-    'http://student-bus-service-api-oi5yen-ed9bc9-74-161-160-200.traefik.me/';
-
 class SelectTourRemoteDataSourceImpl implements SelectTourRemoteDataSource {
   final http.Client client;
 

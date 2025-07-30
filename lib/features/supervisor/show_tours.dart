@@ -42,13 +42,16 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (_inInit) {
-      BlocProvider.of<TourCubit>(context).getAllTours();
-      BlocProvider.of<LinesCubit>(context).getAllLiness();
       BlocProvider.of<GetAllUserCubit>(
         context,
       ).getUserById(widget.supervisorId);
       _inInit = false;
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
@@ -77,8 +80,7 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
                     children: [
                       BlocBuilder<GetAllUserCubit, UserState>(
                         builder: (context, state) {
-                          String lineName =
-                              '...'; // الافتراضي لو لسه البيانات بتيجي
+                          String lineName = '...';
                           if (state is UserByIdSuccess) {
                             print('LINEName:${state.userById.line!.name}');
                             lineName = state.userById.line?.name ?? 'غير معروف';
