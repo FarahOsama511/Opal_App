@@ -4,12 +4,8 @@ import 'package:intl/intl.dart' as intl;
 import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_id.dart/get_tour_id_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_id.dart/get_tour_id_state.dart';
 import 'package:opal_app/features/user/presentaion/pages/user_home_screen.dart';
-
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
-import '../../../selection/presentation/pages/screen.dart';
-import '../bloc/get_tour_bloc/tour_cubit.dart';
-import '../bloc/get_tour_bloc/tour_state.dart';
 import '../widgets/cancel_trip_dialog.dart';
 
 class TripDetailsScreen extends StatelessWidget {

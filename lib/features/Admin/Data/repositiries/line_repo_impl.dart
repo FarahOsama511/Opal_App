@@ -6,23 +6,34 @@ import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
 import 'package:opal_app/features/Admin/Domain/reporistires/line_repo.dart';
 import '../../../../core/errors/exceptions.dart';
 import '../../../../core/network/network_info.dart';
+import '../dataSource/line_local_data_source.dart';
 
 class LineRepoImpl extends LineRepo {
+  final LineLocalDataSource lineLocalDataSource;
   final LineRemoteDataSource remoteDataSource;
   final NetworkInfo networkInfo;
-  LineRepoImpl(this.networkInfo, {required this.remoteDataSource});
+  LineRepoImpl(
+    this.networkInfo, {
+    required this.remoteDataSource,
+    required this.lineLocalDataSource,
+  });
   @override
   Future<Either<Failure, List<LineEntity>>> getAllLines() async {
     if (await networkInfo.isConnected) {
       try {
         final Lines = await remoteDataSource.getAllLines();
-        //localDataSource.saveTours(rempotsTour);
+        lineLocalDataSource.saveLines(Lines);
         return Right(Lines);
       } on ServerException {
         return Left(ServerFailure());
       }
     } else {
-      return left(NoInternetFailure());
+      final remoteLines = await lineLocalDataSource.getLines();
+      try {
+        return Right(remoteLines);
+      } on EmptyCacheException {
+        return Left(EmptyCacheFailure());
+      }
     }
   }
 

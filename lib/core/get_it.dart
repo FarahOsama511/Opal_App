@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:opal_app/core/network/network_info.dart';
 import 'package:opal_app/features/Admin/Data/dataSource/add_admin_supervisor_datasource.dart';
+import 'package:opal_app/features/Admin/Data/dataSource/line_local_data_source.dart';
 import 'package:opal_app/features/Admin/Data/dataSource/line_remote_data_source.dart';
 import 'package:opal_app/features/Admin/Data/dataSource/tour_local_data_source.dart';
 import 'package:opal_app/features/Admin/Data/dataSource/tour_remote_data_source.dart';
@@ -113,7 +114,11 @@ Future<void> init() async {
     ),
   );
   setUp.registerLazySingleton<LineRepo>(
-    () => LineRepoImpl(setUp(), remoteDataSource: setUp()),
+    () => LineRepoImpl(
+      setUp(),
+      remoteDataSource: setUp(),
+      lineLocalDataSource: setUp(),
+    ),
   );
   setUp.registerLazySingleton<AddAdminORSupervisorRepo>(
     () => AddAdminSupervisorRepoImpl(setUp(), setUp()),
@@ -133,9 +138,7 @@ Future<void> init() async {
   setUp.registerLazySingleton<TourRemoteDataSource>(
     () => TourRemoteDataSourceImpl(client: setUp()),
   );
-  setUp.registerLazySingleton<LocalDataSource>(
-    () => TourLocalDataSourceImpl(prefs: setUp()),
-  );
+  setUp.registerLazySingleton<LocalDataSource>(() => TourLocalDataSourceImpl());
   setUp.registerLazySingleton<AuthRemoteDataSource>(
     () => AuthRemoteDataSourceImpl(client: setUp()),
   );
@@ -147,6 +150,9 @@ Future<void> init() async {
   );
   setUp.registerLazySingleton<LineRemoteDataSource>(
     () => LineRemoteDataSourceImpl(client: setUp()),
+  );
+  setUp.registerLazySingleton<LineLocalDataSource>(
+    () => LineLocalDataSourceImpl(),
   );
   setUp.registerLazySingleton<NetworkInfo>(
     () => NetworkInfoImpl(internetConnectionChecker: setUp()),

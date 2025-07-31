@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
 import 'package:opal_app/core/errors/exceptions.dart';
+import 'package:opal_app/core/network/local_network.dart';
 import 'package:opal_app/features/Admin/Data/models/tour_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class LocalDataSource {
   Future<List<TourModel>> getTours();
@@ -11,12 +11,9 @@ abstract class LocalDataSource {
 }
 
 class TourLocalDataSourceImpl implements LocalDataSource {
-  final SharedPreferences prefs;
-
-  TourLocalDataSourceImpl({required this.prefs});
   @override
   Future<List<TourModel>> getTours() {
-    final jsonString = prefs.getString("SAVE_TOURS");
+    final jsonString = CacheNetwork.getCacheData(key: 'SAVE_TOURS');
     if (jsonString != null) {
       List decodeJsonData = json.decode(jsonString);
       List<TourModel> tours = decodeJsonData
@@ -33,7 +30,10 @@ class TourLocalDataSourceImpl implements LocalDataSource {
     final tourModelToJson = tours
         .map<Map<String, dynamic>>((tour) => ToJson(tour))
         .toList();
-    prefs.setString("SAVE_TOURS", jsonEncode(tourModelToJson));
+    await CacheNetwork.insertToCache(
+      key: "SAVE_TOURS",
+      value: jsonEncode(tourModelToJson),
+    );
     return unit;
   }
 }

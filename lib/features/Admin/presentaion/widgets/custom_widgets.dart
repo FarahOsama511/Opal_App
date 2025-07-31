@@ -102,6 +102,7 @@ class CustomDropdown<T> extends StatelessWidget {
               value: item,
               child: Text(
                 displayString != null ? displayString!(item) : item.toString(),
+                style: TextStyles.black16Regular,
               ),
             );
           }).toList(),

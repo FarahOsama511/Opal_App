@@ -37,10 +37,13 @@ void main() async {
   await CacheNetwork.cacheInitialization();
   token = CacheNetwork.getCacheData(key: 'access_token');
   role = CacheNetwork.getCacheData(key: 'access_role');
+  lines = CacheNetwork.getCacheData(key: "SAVE_LINES");
+  tour = CacheNetwork.getCacheData(key: "SAVE_TOURS");
+  print('LINES IS ${lines}');
+  print('TOUR IS ${tour}');
   print('TOKEN IS ${token}');
   print('ROLE IS ${role}');
   await checkToken();
-
   await di.init();
   await initializeDateFormatting('ar', null);
   runApp(StudentBusApp());

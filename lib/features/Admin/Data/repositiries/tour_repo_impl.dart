@@ -5,7 +5,6 @@ import 'package:opal_app/core/network/network_info.dart';
 import 'package:opal_app/features/Admin/Data/models/tour_model.dart';
 import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
 import 'package:opal_app/features/Admin/Domain/reporistires/tour_repo.dart';
-
 import '../dataSource/tour_local_data_source.dart';
 import '../dataSource/tour_remote_data_source.dart';
 
@@ -31,6 +30,7 @@ class TourRepoImpl extends ToursRepository {
     } else {
       try {
         final localTours = await localDataSource.getTours();
+        print("========${localTours.length}==========");
         return Right(localTours);
       } on EmptyCacheException {
         return Left(EmptyCacheFailure());
@@ -77,6 +77,7 @@ class TourRepoImpl extends ToursRepository {
   Future<Either<Failure, Unit>> updateTour(Tour tour) async {
     final TourModel tourModel = TourModel(
       //  superVisorName: tour.supervisorName ?? "",
+      id: tour.id,
       type: tour.type,
       driverName: tour.driverName,
       leavesAt: tour.leavesAt,
