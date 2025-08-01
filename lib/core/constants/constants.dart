@@ -1,5 +1,3 @@
-import '../../features/Admin/Domain/entities/tour.dart';
-
 String? token;
 String? role;
 String? tour;

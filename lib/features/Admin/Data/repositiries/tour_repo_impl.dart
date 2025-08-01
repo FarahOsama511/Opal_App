@@ -24,9 +24,18 @@ class TourRepoImpl extends ToursRepository {
         final rempotsTour = await remoteDataSource.getAllTours();
         localDataSource.saveTours(rempotsTour);
         return Right(rempotsTour);
-      } on ServerException {
-        return Left(ServerFailure());
+      } catch (e) {
+        try {
+          final localTours = await localDataSource.getTours();
+          print("========${localTours.length}==========");
+          return Right(localTours);
+        } on EmptyCacheException {
+          return Left(EmptyCacheFailure());
+        }
       }
+      //  on ServerException {
+      //   return Left(ServerFailure());
+      // }
     } else {
       try {
         final localTours = await localDataSource.getTours();

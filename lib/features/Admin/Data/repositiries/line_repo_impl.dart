@@ -24,13 +24,19 @@ class LineRepoImpl extends LineRepo {
         final Lines = await remoteDataSource.getAllLines();
         lineLocalDataSource.saveLines(Lines);
         return Right(Lines);
-      } on ServerException {
-        return Left(ServerFailure());
+      } catch (e) {
+        try {
+          final localLines = await lineLocalDataSource.getLines();
+          print("========${localLines.length}==========");
+          return Right(localLines);
+        } on EmptyCacheException {
+          return Left(EmptyCacheFailure());
+        }
       }
     } else {
-      final remoteLines = await lineLocalDataSource.getLines();
+      final localLines = await lineLocalDataSource.getLines();
       try {
-        return Right(remoteLines);
+        return Right(localLines);
       } on EmptyCacheException {
         return Left(EmptyCacheFailure());
       }
