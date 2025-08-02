@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
-import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
 import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
 import 'package:opal_app/features/user/presentaion/bloc/auth_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/auth_state.dart';
@@ -25,7 +24,6 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
-
   UniversityEntity? selectedUniversity;
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
@@ -133,37 +131,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           validatorMessage: 'يرجى إدخال اسم الجامعة',
                         ),
 
-                      SizedBox(height: 25.h),
+                      SizedBox(height: 20.h),
 
                       // زر التسجيل
-                      SizedBox(
-                        width: double.infinity,
-                        height: 48.h,
-                        child: PrimaryButton(
-                          backgroundColor: ColorManager.primaryColor,
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              context.read<AuthCubit>().register(
-                                RegisterEntity(
-                                  user: UserEntity(
-                                    name: nameController.text,
-                                    phone: phoneController.text,
-                                    universityCardId: universityCardId.text,
-                                    university: UniversityEntity(
-                                      name: selectedUniversity!.name,
-                                    ),
-                                    universityId: selectedUniversity!.id,
-                                    line: LineEntity(
-                                      id: "cmd1np26i0000uwjo1i800xn1",
-                                    ),
-                                    role: 'طالب',
+                      PrimaryButton(
+                        backgroundColor: ColorManager.primaryColor,
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            context.read<AuthCubit>().register(
+                              RegisterEntity(
+                                user: UserEntity(
+                                  name: nameController.text,
+                                  phone: phoneController.text,
+                                  universityCardId: universityCardId.text,
+                                  university: UniversityEntity(
+                                    name: selectedUniversity!.name,
                                   ),
+                                  universityId: selectedUniversity!.id,
+                                  role: 'طالب',
                                 ),
-                              );
-                            }
-                          },
-                          text: 'تقديم الطلب',
-                        ),
+                              ),
+                            );
+                          }
+                        },
+                        text: 'تقديم الطلب',
                       ),
 
                       SizedBox(height: 15.h),

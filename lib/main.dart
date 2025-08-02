@@ -28,10 +28,8 @@ import 'features/user/presentaion/pages/sign_up.dart';
 import 'features/user/presentaion/pages/user_home_screen.dart';
 import 'features/user/presentaion/pages/waiting_screen.dart';
 import 'features/selection/presentation/pages/confirmation_success.dart';
+import 'splashscreen.dart';
 
-bool isLoggedIn = false;
-bool isStudent = false;
-bool isAdmin = false;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await CacheNetwork.cacheInitialization();
@@ -43,7 +41,7 @@ void main() async {
   print('TOUR IS ${tour}');
   print('TOKEN IS ${token}');
   print('ROLE IS ${role}');
-  await checkToken();
+  // await checkToken();
   await di.init();
   await initializeDateFormatting('ar', null);
   runApp(StudentBusApp());
@@ -81,17 +79,12 @@ class StudentBusApp extends StatelessWidget {
             supportedLocales: const [
               Locale('ar'), // اللغة العربية
             ],
-            title: 'Student Bus App',
+            title: 'Opal',
             debugShowCheckedModeBanner: false,
 
-            initialRoute: (isLoggedIn == true)
-                ? ((isStudent == true)
-                      ? '/home'
-                      : (isAdmin == true)
-                      ? '/adminScreen'
-                      : '/students')
-                : '/signin',
+            initialRoute: '/',
             routes: {
+              '/': (context) => const SplashScreen(),
               '/signup': (context) => const SignUpScreen(),
               '/signin': (context) => const SignInScreen(),
               '/waiting': (context) => const WaitingScreen(),
@@ -112,22 +105,11 @@ class StudentBusApp extends StatelessWidget {
   }
 }
 
-checkToken() {
-  if (token != null && token != "" && role == 'student') {
-    isStudent = true;
-    isAdmin = false;
-    isLoggedIn = true;
-  } else if (token != null && token != "" && role == 'admin') {
-    isStudent = false;
-    isAdmin = true;
-    isLoggedIn = true;
-  } else if (token != null && token != "" && role == 'supervisor') {
-    isStudent = false;
-    isAdmin = false;
-    isLoggedIn = true;
-  } else {
-    isStudent = false;
-    isAdmin = false;
-    isLoggedIn = false;
-  }
-}
+
+// (isLoggedIn == true)
+//                 ? ((isStudent == true)
+//                       ? '/home'
+//                       : (isAdmin == true)
+//                       ? '/adminScreen'
+//                       : '/students')
+//                 : '/signin'

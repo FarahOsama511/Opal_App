@@ -28,6 +28,8 @@ class AuthRepoImpl extends AuthRepository {
         return Right(user);
       } on WrongDataException {
         return Left(WrongDataFailure());
+      } catch (e) {
+        return Left(ServerFailure());
       }
     } else {
       return Left(NoInternetFailure());
@@ -73,6 +75,8 @@ class AuthRepoImpl extends AuthRepository {
         return Right(adminOrSupervisors);
       } on WrongDataException {
         return Left(WrongDataFailure());
+      } catch (e) {
+        return Left(ServerFailure());
       }
     } else {
       return Left(NoInternetFailure());

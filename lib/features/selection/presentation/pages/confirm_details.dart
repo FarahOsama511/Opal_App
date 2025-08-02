@@ -19,7 +19,6 @@ class _ConfirmDetailsScreenState extends State<ConfirmDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    //  BlocProvider.of<SelectionTourCubit>(context).selectionTour(widget.tourId);
   }
 
   @override

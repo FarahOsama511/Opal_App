@@ -1,5 +1,5 @@
-const SERVER_FAILURE_MESSAGE = 'Server Failure';
-const EMPTY_CACHE_FAILURE_MESSAGE = 'NO DATA';
-const UNEXPECTED_FAILURE_MESSAGE = 'Unexpected Failure';
-const NO_INTERNET_FAILURE_MESSAGE = 'No Internet Connection';
-const WRONG_DATA_FAILURE_MESSAGE = 'Wrong Data';
+const SERVER_FAILURE_MESSAGE = 'حدث خطأ في السيرفر';
+const EMPTY_CACHE_FAILURE_MESSAGE = 'لا يوجد بيانات';
+const UNEXPECTED_FAILURE_MESSAGE = ' حدث خطأ غير متوقع';
+const NO_INTERNET_FAILURE_MESSAGE = '  لا يوجد اتصال بالانترنت';
+const WRONG_DATA_FAILURE_MESSAGE = ' البيانات المدخلة غير صحيحة';

@@ -27,6 +27,12 @@ class _SignInScreenState extends State<SignInScreen> {
 
   String? phoneError;
   String? IdError;
+  @override
+  void dispose() {
+    super.dispose();
+    phoneController.dispose();
+    universityCardId.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,9 +65,12 @@ class _SignInScreenState extends State<SignInScreen> {
                   );
                 }
               } else if (state is AuthFailure) {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text(state.error)));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: ColorManager.greyColor,
+                    content: Text(state.error, style: TextStyles.white12Bold),
+                  ),
+                );
               }
             },
             builder: (context, state) {
@@ -88,7 +97,9 @@ class _SignInScreenState extends State<SignInScreen> {
                   CustomTextField(
                     controller: phoneController,
                     hint: selectedRole == 'طالب' ? 'رقم الهاتف' : 'ايميل',
-                    validatorMessage: 'يرجى إدخال رقم الهاتف',
+                    validatorMessage: selectedRole == 'طالب'
+                        ? 'يرجى إدخال رقم الهاتف'
+                        : 'يرجى إدخال الايميل',
                     errorText: phoneError,
                   ),
                   CustomTextField(
@@ -96,7 +107,9 @@ class _SignInScreenState extends State<SignInScreen> {
                     hint: selectedRole == 'طالب'
                         ? ' الرقم الجامعي'
                         : 'كلمه السر',
-                    validatorMessage: 'يرجى إدخال الرقم الجامعي',
+                    validatorMessage: selectedRole == 'طالب'
+                        ? 'يرجى إدخال الرقم الجامعي'
+                        : 'يرجى إدخال كلمه السر',
                     errorText: IdError,
                   ),
 
@@ -110,17 +123,25 @@ class _SignInScreenState extends State<SignInScreen> {
                         : () {
                             setState(() {
                               phoneError = phoneController.text.isEmpty
-                                  ? 'يرجى إدخال رقم الهاتف'
+                                  ? selectedRole == 'طالب'
+                                        ? 'يرجى إدخال رقم الهاتف'
+                                        : 'يرجى إدخال الايميل'
                                   : null;
                               IdError = universityCardId.text.isEmpty
-                                  ? 'يرجى إدخال الرقم الجامعي'
+                                  ? selectedRole == 'طالب'
+                                        ? 'يرجى إدخال الرقم الجامعي'
+                                        : 'يرجى إدخال كلمه السر'
                                   : null;
                             });
 
                             if (selectedRole == null) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('يرجى اختيار الدور أولاً'),
+                                SnackBar(
+                                  backgroundColor: ColorManager.greyColor,
+                                  content: Text(
+                                    'يرجى اختيار الدور أولاً',
+                                    style: TextStyles.white12Bold,
+                                  ),
                                 ),
                               );
                               return;
