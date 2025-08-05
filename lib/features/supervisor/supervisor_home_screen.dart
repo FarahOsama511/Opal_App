@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_id.dart/get_tour_id_cubit.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_id.dart/get_tour_id_state.dart';
+import 'package:opal_app/features/Admin/Data/models/tour_model.dart';
 import 'package:opal_app/features/user/presentaion/bloc/user_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/user_state.dart';
 import '../../core/network/local_network.dart' show CacheNetwork;
@@ -12,13 +11,9 @@ import '../Admin/presentaion/widgets/app_header.dart';
 import '../Admin/presentaion/widgets/expandable_card.dart';
 
 class SupervisorScreen extends StatefulWidget {
-  String tourId;
-  String superVisorId;
-  SupervisorScreen({
-    super.key,
-    required this.tourId,
-    required this.superVisorId,
-  });
+  TourModel tour;
+  // String superVisorId;
+  SupervisorScreen({super.key, required this.tour});
   @override
   State<SupervisorScreen> createState() => _SupervisorScreenState();
 }
@@ -26,20 +21,32 @@ class SupervisorScreen extends StatefulWidget {
 class _SupervisorScreenState extends State<SupervisorScreen> {
   List<bool>? expandedList;
   bool _inInit = true;
+
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   if (_inInit) {
+  //     BlocProvider.of<GetAllUserCubit>(
+  //       context,
+  //     ).getUserById(widget.superVisorId);
+  //     // BlocProvider.of<GetTourIdCubit>(context).getTourById(widget.tourId);
+  //     _inInit = false;
+  //   }
+  // }
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_inInit) {
-      BlocProvider.of<GetAllUserCubit>(
-        context,
-      ).getUserById(widget.superVisorId);
-      BlocProvider.of<GetTourIdCubit>(context).getTourById(widget.tourId);
-      _inInit = false;
+  void initState() {
+    super.initState();
+    if (expandedList == null ||
+        expandedList!.length != widget.tour.users!.length) {
+      final usersLength = widget.tour.users?.length ?? 0;
+      expandedList = List.generate(usersLength, (_) => false);
+      print("====${usersLength}====");
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    print('Tour users: ${widget.tour.users}');
+    print('Users length: ${widget.tour.users?.length}');
     return Scaffold(
       backgroundColor: ColorManager.secondColor,
       body: SafeArea(
@@ -147,87 +154,55 @@ class _SupervisorScreenState extends State<SupervisorScreen> {
                   children: [
                     const SizedBox(height: 20),
                     Expanded(
-                      child: BlocBuilder<GetTourIdCubit, GetTourIdState>(
-                        builder: (context, state) {
-                          if (state is TourByIdLoaded) {
-                            final users = state.tour.users ?? [];
-                            if (expandedList == null ||
-                                expandedList!.length != users.length) {
-                              expandedList = List.generate(
-                                users.length,
-                                (_) => false,
-                              );
-                            }
-
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text(
-                                      'عدد الطلاب:',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Text(
-                                      '${users.length}',
-                                      style: const TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'عدد الطلاب:',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                const SizedBox(height: 20),
-                                Expanded(
-                                  child: ListView.builder(
-                                    itemCount: users.length,
-                                    itemBuilder: (context, index) {
-                                      print('UNIVERSIT IS:${users[index]}');
-                                      final user = users[index];
-                                      return ExpandableCard(
-                                        name: user.name ?? '',
-                                        phone: user.phone ?? '',
-                                        university: user.university?.name ?? '',
+                              ),
+                              Text(
+                                '${widget.tour.users?.length ?? "5"}',
 
-                                        isSupervisor: false,
-                                        isExpanded:
-                                            expandedList![index], // آمن هنا لأننا تأكدنا فوق إنه مهيّأ
-                                        onToggle: () {
-                                          setState(() {
-                                            expandedList![index] =
-                                                !expandedList![index];
-                                          });
-                                        },
-                                      );
-                                    },
-                                  ),
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                              ],
-                            );
-                          } else if (state is GetTourByIdLoading) {
-                            return const Center(
-                              child: CircularProgressIndicator(
-                                color: ColorManager.secondColor,
                               ),
-                            );
-                          } else if (state is getTourByIdError) {
-                            return const Center(
-                              child: Text(
-                                'فشل تحميل البيانات',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            );
-                          } else {
-                            return const SizedBox();
-                          }
-                        },
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          Expanded(
+                            child: ListView.builder(
+                              itemCount: widget.tour.users?.length ?? 0,
+                              itemBuilder: (context, index) {
+                                final user = widget.tour.users![index];
+                                return ExpandableCard(
+                                  name: user.name ?? '',
+                                  phone: user.phone ?? '',
+                                  university: user.university?.name ?? '',
+
+                                  isSupervisor: false,
+                                  isExpanded: expandedList![index],
+                                  onToggle: () {
+                                    setState(() {
+                                      expandedList![index] =
+                                          !expandedList![index];
+                                    });
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],

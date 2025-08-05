@@ -9,13 +9,13 @@ import 'package:opal_app/features/Admin/presentaion/widgets/app_header.dart'
 import 'package:opal_app/features/supervisor/supervisor_home_screen.dart';
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
+import '../Admin/Data/models/tour_model.dart';
 import '../Admin/Domain/entities/tour.dart';
 import '../Admin/presentaion/bloc/get_lines/get_all_lines_state.dart';
 import '../Admin/presentaion/bloc/get_tour_bloc/tour_cubit.dart';
 import '../Admin/presentaion/bloc/get_tour_bloc/tour_state.dart';
 import '../Admin/presentaion/widgets/bus_card.dart';
 import '../Admin/presentaion/widgets/custom_widgets.dart';
-import '../user/presentaion/bloc/auth_cubit.dart';
 import '../user/presentaion/bloc/user_cubit.dart';
 import '../user/presentaion/bloc/user_state.dart';
 
@@ -39,19 +39,19 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
   bool _inInit = true;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_inInit) {
-      BlocProvider.of<GetAllUserCubit>(
-        context,
-      ).getUserById(widget.supervisorId!);
-      _inInit = false;
-    }
-  }
-
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   if (_inInit) {
+  //     // BlocProvider.of<GetAllUserCubit>(
+  //     //   context,
+  //     // ).getUserById(widget.supervisorId!);
+  //     _inInit = false;
+  //   }
+  // }
   @override
   void initState() {
     super.initState();
+    BlocProvider.of<TourCubit>(context).getAllTours();
   }
 
   @override
@@ -213,16 +213,16 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
                                           MaterialPageRoute(
                                             builder: (context) {
                                               return SupervisorScreen(
-                                                tourId: tours[index].id ?? "",
-                                                superVisorId:
-                                                    widget.supervisorId ?? "",
+                                                tour: tours[index] as TourModel,
+                                                // superVisorId:
+                                                //     widget.supervisorId ?? "",
                                               );
                                             },
                                           ),
                                         );
                                       },
 
-                                      line: tours[index].line.name!,
+                                      line: tours[index].line.name ?? "",
                                       supervisorName:
                                           tours[index].driverName ?? "غير معرف",
                                       departureTime: DateFormat(
