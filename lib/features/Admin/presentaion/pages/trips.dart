@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
-import 'package:opal_app/features/Admin/Data/models/tour_model.dart';
 import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_bloc/tour_cubit.dart';
 import '../../../../core/resources/text_styles.dart';
@@ -26,6 +25,12 @@ class _TripsScreenState extends State<TripsScreen> {
       context: context,
       builder: (_) => TripDetailsDialog(tourId: tourId, selectedtour: tour),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<TourCubit>(context).getAllTours();
   }
 
   @override

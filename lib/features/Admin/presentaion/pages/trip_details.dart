@@ -6,11 +6,12 @@ import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_id.dart/get_to
 import 'package:opal_app/features/user/presentaion/pages/user_home_screen.dart';
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
+import '../../Data/models/tour_model.dart';
 import '../widgets/cancel_trip_dialog.dart';
 
 class TripDetailsScreen extends StatelessWidget {
-  final String tourId;
-  TripDetailsScreen({super.key, required this.tourId});
+  final TourModel tour;
+  TripDetailsScreen({super.key, required this.tour});
 
   @override
   Widget build(BuildContext context) {
@@ -90,9 +91,9 @@ class TripDetailsScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             const SizedBox(height: 40),
-                            _InfoCard(tourId: tourId),
+                            _InfoCard(tourId: tour.id!),
                             const SizedBox(height: 20),
-                            _ActionButtons(tourId: tourId),
+                            _ActionButtons(tourId: tour.id!),
                           ],
                         ),
                       ),

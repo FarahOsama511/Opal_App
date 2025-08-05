@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:opal_app/features/Admin/Domain/usecase/add_tour.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_bloc/tour_state.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_state.dart';
 import '../../../../../core/errors/failure.dart';
 import '../../../../../core/strings/failures.dart';
@@ -7,6 +8,7 @@ import '../../../../../core/strings/messages.dart';
 import '../../../Domain/entities/tour.dart';
 import '../../../Domain/usecase/delete_tour.dart';
 import '../../../Domain/usecase/update_tour.dart';
+import '../get_tour_bloc/tour_cubit.dart';
 
 class UpdateAddDeleteTourCubit extends Cubit<UpdateAddDeleteTourState> {
   final AddTourUseCase addTourUseCase;
@@ -24,7 +26,7 @@ class UpdateAddDeleteTourCubit extends Cubit<UpdateAddDeleteTourState> {
       (failure) {
         emit(UpdateAddDeleteTourError(_errorMessage(failure)));
       },
-      (result) {
+      (result) async {
         emit(TourAdded(ADDED_SUCCESS_MESSAGE));
       },
     );
@@ -38,7 +40,7 @@ class UpdateAddDeleteTourCubit extends Cubit<UpdateAddDeleteTourState> {
         emit(UpdateAddDeleteTourError(_errorMessage(failure)));
       },
       (_) {
-        emit(TourAdded(TOUR_UPDATED_SUCCESS_MESSAGE));
+        emit(TourUpdated(ADDED_SUCCESS_MESSAGE));
       },
     );
   }

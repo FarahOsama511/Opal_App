@@ -22,6 +22,7 @@ import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_bloc/tour_cubi
 import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_id.dart/get_tour_id_cubit.dart';
 import 'package:opal_app/features/user/Data/datasource/select_tour_remote_data_source.dart';
 import 'package:opal_app/features/user/Data/datasource/university_data_source.dart';
+import 'package:opal_app/features/user/Data/datasource/university_local_data_source.dart';
 import 'package:opal_app/features/user/Data/datasource/user_local_data_source.dart';
 import 'package:opal_app/features/user/Data/datasource/user_remote_data_source.dart';
 import 'package:opal_app/features/user/Data/repositiries/selection_tour_repo_impl.dart';
@@ -124,8 +125,11 @@ Future<void> init() async {
     () => AddAdminSupervisorRepoImpl(setUp(), setUp()),
   );
   setUp.registerLazySingleton<UniversityRepo>(
-    () =>
-        UniversityRepoImpl(universityDataSource: setUp(), networkInfo: setUp()),
+    () => UniversityRepoImpl(
+      universityDataSource: setUp(),
+      networkInfo: setUp(),
+      universityLocalDataSource: setUp(),
+    ),
   );
   setUp.registerLazySingleton<SelectionTourRepo>(
     () => SelectionTourRepoImpl(
@@ -162,6 +166,9 @@ Future<void> init() async {
   );
   setUp.registerLazySingleton<UniversityDataSource>(
     () => UniversityDataSourceImpl(client: setUp()),
+  );
+  setUp.registerLazySingleton<UniversityLocalDataSource>(
+    () => UniversityLocalDataSourceImpl(),
   );
   setUp.registerLazySingleton<SelectTourRemoteDataSource>(
     () => SelectTourRemoteDataSourceImpl(client: setUp()),

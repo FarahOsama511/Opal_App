@@ -136,6 +136,7 @@ class _AddSupervisorState extends State<AddSupervisor> {
                       text: 'إضافة مشرف',
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
+                          print('selectedLine is $selectedLine');
                           context
                               .read<AddAdminSupervisorCubit>()
                               .AddAdminORSupervisor(
@@ -145,10 +146,7 @@ class _AddSupervisorState extends State<AddSupervisor> {
                                   password: passwordController.text,
                                   email: emailController.text,
                                   role: "supervisor",
-                                  line: LineEntity(
-                                    name: selectedLine!.name,
-                                    id: selectedLine!.id,
-                                  ),
+                                  line: selectedLine,
                                 ),
                               );
                         }

@@ -122,9 +122,9 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (_) => TripDetailsScreen(
-                            tourId: context
+                            tour: context
                                 .read<SelectionTourCubit>()
-                                .TourConfirmedId!,
+                                .tourCurrent!,
                           ),
                         ),
                       );

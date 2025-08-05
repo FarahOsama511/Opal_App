@@ -25,12 +25,19 @@ class UserRepoImpl extends UserRepo {
         final allUser = await userRemoteDataSource.getAllUser();
         userLocalDataSource.saveUsers(allUser);
         return Right(allUser);
-      } on ServerException {
-        throw ServerFailure();
+      } catch (e) {
+        try {
+          final localUsers = await userLocalDataSource.getUsers();
+          print("========${localUsers.length}==========");
+          return Right(localUsers);
+        } on EmptyCacheException {
+          return Left(EmptyCacheFailure());
+        }
       }
     } else {
       try {
         final localUsers = await userLocalDataSource.getUsers();
+        print("========${localUsers.length}==========");
         return Right(localUsers);
       } on EmptyCacheException {
         return Left(EmptyCacheFailure());

@@ -17,7 +17,7 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
   UserLocalDataSourceImpl({required this.prefs});
   @override
   Future<List<UserModel>> getUsers() {
-    final jsonString = prefs.getString("SAVE_Users");
+    final jsonString = prefs.getString("SAVE_USERS");
     if (jsonString != null) {
       List decodeJsonData = json.decode(jsonString);
       List<UserModel> Users = decodeJsonData
@@ -34,7 +34,7 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
     final UserModelToJson = Users.map<Map<String, dynamic>>(
       (user) => user.toJson(),
     ).toList();
-    prefs.setString("SAVE_Users", jsonEncode(UserModelToJson));
+    prefs.setString("SAVE_USERS", jsonEncode(UserModelToJson));
     return unit;
   }
 }

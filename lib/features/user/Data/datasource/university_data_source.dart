@@ -3,12 +3,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:opal_app/core/constants/constants.dart';
 import 'package:opal_app/features/user/Data/models/university_model.dart';
-import 'package:opal_app/features/user/Domain/entities/university_entity.dart';
-
 import '../../../../core/errors/exceptions.dart';
 
 abstract class UniversityDataSource {
-  Future<List<UniversityEntity>> getAllUniversity();
+  Future<List<UniversityModel>> getAllUniversity();
 }
 
 class UniversityDataSourceImpl implements UniversityDataSource {

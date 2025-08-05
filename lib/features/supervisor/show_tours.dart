@@ -213,9 +213,9 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
                                           MaterialPageRoute(
                                             builder: (context) {
                                               return SupervisorScreen(
-                                                tourId: tours[index].id!,
+                                                tourId: tours[index].id ?? "",
                                                 superVisorId:
-                                                    widget.supervisorId!,
+                                                    widget.supervisorId ?? "",
                                               );
                                             },
                                           ),

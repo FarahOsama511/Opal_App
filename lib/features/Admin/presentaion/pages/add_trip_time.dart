@@ -124,6 +124,7 @@ class _AddTripBoxState extends State<AddTripBox> {
     return BlocListener<UpdateAddDeleteTourCubit, UpdateAddDeleteTourState>(
       listener: (context, state) {
         if (state is TourAdded) {
+          Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message, style: TextStyles.white12Bold),
@@ -162,7 +163,10 @@ class _AddTripBoxState extends State<AddTripBox> {
                       ),
                       minimumSize: const Size.fromHeight(50),
                     ),
-                    child: const Text('العودة الى الرئيسية'),
+                    child: Text(
+                      'العودة الى الرئيسية',
+                      style: TextStyles.white12Bold,
+                    ),
                   ),
                 ],
               ),

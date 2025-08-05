@@ -28,6 +28,7 @@ class AddAdminSupervisorRepoImpl extends AddAdminORSupervisorRepo {
           phone: user.phone,
           role: user.role,
           email: user.email,
+          line: user.line,
         );
     if (await networkInfo.isConnected) {
       try {

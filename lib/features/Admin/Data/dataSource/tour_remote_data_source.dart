@@ -76,7 +76,7 @@ class TourRemoteDataSourceImpl implements TourRemoteDataSource {
     final body = {
       'type': tour.type,
       'driverName': tour.driverName,
-      'leavesAt': tour.leavesAt.toIso8601String(),
+      'leavesAt': tour.leavesAt.toUtc().toIso8601String(),
       'lineId': tour.line.id,
     };
     final response = await client.put(

@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:opal_app/features/Admin/Data/models/tour_model.dart';
 import 'package:opal_app/features/user/Domain/usecases/select_tour_use_case.dart';
 import 'package:opal_app/features/user/Domain/usecases/unconfirm_tour_use_case.dart';
 import 'package:opal_app/features/user/presentaion/bloc/selection_tour/selection_tour_state.dart';
@@ -8,7 +9,7 @@ import '../../../../../core/strings/failures.dart';
 class SelectionTourCubit extends Cubit<SelectionTourState> {
   final SelectionTourUseCase selectionTourUseCase;
   final UnconfirmTourUseCase unconfirmTourUseCase;
-  String? TourConfirmedId;
+  TourModel? tourCurrent;
 
   SelectionTourCubit(this.selectionTourUseCase, this.unconfirmTourUseCase)
     : super(SelectionTourInitial());
@@ -23,7 +24,8 @@ class SelectionTourCubit extends Cubit<SelectionTourState> {
         },
         (selectTour) {
           emit(SelectionTourSuccess(selectTour));
-          TourConfirmedId = selectTour.id;
+          tourCurrent = selectTour as TourModel;
+          ;
           print("Fetched tour successfully: ${selectTour}");
         },
       );

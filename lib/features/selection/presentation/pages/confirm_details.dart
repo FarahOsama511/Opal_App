@@ -19,6 +19,7 @@ class _ConfirmDetailsScreenState extends State<ConfirmDetailsScreen> {
   @override
   void initState() {
     super.initState();
+    BlocProvider.of<SelectionTourCubit>(context).selectionTour(widget.tourId);
   }
 
   @override
@@ -34,19 +35,10 @@ class _ConfirmDetailsScreenState extends State<ConfirmDetailsScreen> {
         ),
         child: BlocListener<SelectionTourCubit, SelectionTourState>(
           listener: (context, state) {
-            if (state is SelectionTourSuccess) {
-              Navigator.pop(context);
-              showDialog(
-                context: context,
-                builder: (_) => const ConfirmationSuccessScreen(),
-              );
-            } else if (state is SelectionTourError) {
+            if (state is SelectionTourError) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(
-                    'فشل في تأكيد البيانات',
-                    style: TextStyles.white12Bold,
-                  ),
+                  content: Text(state.message, style: TextStyles.white12Bold),
                   backgroundColor: ColorManager.greyColor,
                 ),
               );
@@ -115,13 +107,20 @@ class _ConfirmDetailsScreenState extends State<ConfirmDetailsScreen> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
-                      context.read<SelectionTourCubit>().selectionTour(
+                    onPressed: () async {
+                      await context.read<SelectionTourCubit>().selectionTour(
                         widget.tourId,
                       );
+                      final state = context.read<SelectionTourCubit>().state;
+                      if (state is SelectionTourSuccess) {
+                        showDialog(
+                          context: context,
+                          builder: (_) => const ConfirmationSuccessScreen(),
+                        );
+                      }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFE71A45),
+                      backgroundColor: ColorManager.primaryColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),

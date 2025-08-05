@@ -57,7 +57,7 @@ class _EditTripTimeState extends State<EditTripBox> {
     final tour = TourModel(
       // superVisorName: selectedSupervisor?.name ?? "",
       id: widget.tourId,
-      type: 'ذهاب',
+      type: 'go',
       driverName: selectedSupervisor?.name ?? "",
       leavesAt: fullDateTime,
       line: LineEntity(id: selectedLine!.id),
@@ -86,7 +86,7 @@ class _EditTripTimeState extends State<EditTripBox> {
     selectedDate = selectedTour.leavesAt;
     focusedDay = selectedTour.leavesAt;
     selectedLine = selectedTour.line;
-    // selectedSupervisor = UserEntity(name: selectedTour.supervisorName);
+
     type = selectedTour.type;
     hour = selectedTour.leavesAt.hour > 12
         ? selectedTour.leavesAt.hour - 12
@@ -149,54 +149,56 @@ class _EditTripTimeState extends State<EditTripBox> {
 
     return BlocListener<UpdateAddDeleteTourCubit, UpdateAddDeleteTourState>(
       listener: (context, state) {
+        print("=============================${state}====================");
         if (state is TourUpdated) {
+          print("Tour Updated Successfully");
+          Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message, style: TextStyles.white12Bold),
             ),
           );
-          print("STATE IS:${state}");
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text(
-                    'تم التأكيد',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 20),
-                  const Icon(
-                    Icons.check_circle,
-                    color: Colors.green,
-                    size: 100,
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      widget.onClose();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFE71A45),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      minimumSize: const Size.fromHeight(50),
-                    ),
-                    child: Text(
-                      'العودة الى الرئيسية',
-                      style: TextStyles.white14Bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
+          // showDialog(
+          //   context: context,
+          //   builder: (context) => AlertDialog(
+          //     shape: RoundedRectangleBorder(
+          //       borderRadius: BorderRadius.circular(16),
+          //     ),
+          //     content: Column(
+          //       mainAxisSize: MainAxisSize.min,
+          //       children: [
+          //         const Text(
+          //           'تم التأكيد',
+          //           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          //         ),
+          //         const SizedBox(height: 20),
+          //         const Icon(
+          //           Icons.check_circle,
+          //           color: Colors.green,
+          //           size: 100,
+          //         ),
+          //         const SizedBox(height: 20),
+          //         ElevatedButton(
+          //           onPressed: () {
+          //             Navigator.pop(context);
+          //             widget.onClose();
+          //           },
+          //           style: ElevatedButton.styleFrom(
+          //             backgroundColor: const Color(0xFFE71A45),
+          //             shape: RoundedRectangleBorder(
+          //               borderRadius: BorderRadius.circular(30),
+          //             ),
+          //             minimumSize: const Size.fromHeight(50),
+          //           ),
+          //           child: Text(
+          //             'العودة الى الرئيسية',
+          //             style: TextStyles.white14Bold,
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // );
         } else if (state is UpdateAddDeleteTourError) {
           ScaffoldMessenger.of(
             context,
