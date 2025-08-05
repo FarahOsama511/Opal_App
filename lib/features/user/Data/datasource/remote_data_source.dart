@@ -31,17 +31,18 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     print("=== login Response Body: ${response.body} ===");
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
-      final tokenUser = jsonResponse['token'];
       print(jsonResponse['user']['role']);
       await CacheNetwork.insertToCache(
         key: 'access_token',
         value: jsonResponse['token'],
       );
+      token = jsonResponse['token']; // ← تحديث المتغير العام
+      print('Token saved and updated: $token');
       await CacheNetwork.insertToCache(
         key: 'access_role',
         value: jsonResponse['user']['role'],
       );
-      return LoginModel.fromJson({...jsonResponse, 'token': tokenUser});
+      return LoginModel.fromJson({...jsonResponse, 'token': token});
     } else {
       print('===============${response.body}================');
       throw ServerException();
@@ -97,6 +98,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         key: 'access_token',
         value: jsonResponse['token'],
       );
+      token = jsonResponse['token']; // ← تحديث المتغير العام
+      print('Token saved and updated: $token');
       await CacheNetwork.insertToCache(
         key: 'access_role',
         value: jsonResponse['user']['role'],

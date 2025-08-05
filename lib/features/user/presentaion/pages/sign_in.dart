@@ -51,12 +51,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 } else if (selectedRole == 'مشرف') {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(
-                      builder: (_) => ShowToursBySuperVisor(
-                        supervisorId:
-                            context.read<GetAllUserCubit>().userId ?? "",
-                      ),
-                    ),
+                    MaterialPageRoute(builder: (_) => ShowToursBySuperVisor()),
                   );
                 } else if (selectedRole == 'مسؤول') {
                   Navigator.pushReplacement(
@@ -120,7 +115,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     isLoading: state is AuthLoading,
                     onPressed: (state is AuthLoading)
                         ? null
-                        : () {
+                        : () async {
                             setState(() {
                               phoneError = phoneController.text.isEmpty
                                   ? selectedRole == 'طالب'
@@ -149,7 +144,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
                             if (phoneError != null || IdError != null) return;
 
-                            context.read<AuthCubit>().login(
+                            await context.read<AuthCubit>().login(
                               phoneController.text,
                               universityCardId.text,
                               selectedRole.toString(),

@@ -22,8 +22,7 @@ class TourRemoteDataSourceImpl implements TourRemoteDataSource {
   Future<List<TourModel>> getAllTours() async {
     final response = await client.get(
       Uri.parse('${Base_Url}tours'),
-
-      headers: {'Authorization': 'Bearer ${token}'},
+      headers: {'Authorization': 'Bearer $token'},
     );
     if (response.statusCode == 200) {
       final List<dynamic> jsonResponse =
@@ -125,6 +124,10 @@ class TourRemoteDataSourceImpl implements TourRemoteDataSource {
 
   @override
   Future<TourModel> getTourById(String id) async {
+    if (token != null && token != "" && role == 'admin' ||
+        role == 'supervisor') {
+      tokenAdmin = CacheNetwork.getCacheData(key: 'access_token');
+    }
     final response = await client.get(
       Uri.parse('${Base_Url}tours/${id}'),
       headers: {'Authorization': 'Bearer $token'},

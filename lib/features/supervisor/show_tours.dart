@@ -21,12 +21,8 @@ import '../user/presentaion/bloc/user_state.dart';
 
 class ShowToursBySuperVisor extends StatefulWidget {
   final bool? isTripConfirmed;
-  String? supervisorId;
-  ShowToursBySuperVisor({
-    super.key,
-    this.isTripConfirmed = false,
-    this.supervisorId,
-  });
+
+  ShowToursBySuperVisor({super.key, this.isTripConfirmed = false});
 
   @override
   State<ShowToursBySuperVisor> createState() => _ShowToursBySuperVisorState();

@@ -1,6 +1,6 @@
 import 'dart:developer';
 import 'package:opal_app/features/user/Data/models/user_model.dart';
-
+import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
 import '../../Domain/entities/tour.dart';
 import 'line_model.dart';
 
@@ -8,16 +8,17 @@ class TourModel extends Tour {
   TourModel({
     String? id,
     required String type,
-    String? driverName, // <-- nullable هنا برضو
+    String? driverName,
     required DateTime leavesAt,
     required LineEntity line,
-    super.users,
+    List<UserEntity>? users,
   }) : super(
          id: id,
          type: type,
          driverName: driverName,
          leavesAt: leavesAt,
          line: line,
+         users: users,
        );
 
   factory TourModel.fromJson(Map<String, dynamic> json) {
@@ -29,7 +30,7 @@ class TourModel extends Tour {
     return TourModel(
       id: json['id'] as String?,
       type: json['type'] as String,
-      driverName: json['driverName'] as String?, // <-- nullable read
+      driverName: json['driverName'] as String?,
       leavesAt: DateTime.parse(json['leavesAt'] as String),
       line: lineJson != null
           ? LineModel.fromJson(lineJson as Map<String, dynamic>)

@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
 import 'package:opal_app/features/Admin/Data/models/tour_model.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_id.dart/get_tour_id_cubit.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_id.dart/get_tour_id_state.dart';
 import 'package:opal_app/features/user/presentaion/bloc/user_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/user_state.dart';
 import '../../core/network/local_network.dart' show CacheNetwork;
@@ -12,7 +14,6 @@ import '../Admin/presentaion/widgets/expandable_card.dart';
 
 class SupervisorScreen extends StatefulWidget {
   TourModel tour;
-  // String superVisorId;
   SupervisorScreen({super.key, required this.tour});
   @override
   State<SupervisorScreen> createState() => _SupervisorScreenState();
@@ -20,33 +21,26 @@ class SupervisorScreen extends StatefulWidget {
 
 class _SupervisorScreenState extends State<SupervisorScreen> {
   List<bool>? expandedList;
-  bool _inInit = true;
-
+  // bool _inInit = true;
+  // @override
   // void didChangeDependencies() {
   //   super.didChangeDependencies();
   //   if (_inInit) {
   //     BlocProvider.of<GetAllUserCubit>(
   //       context,
   //     ).getUserById(widget.superVisorId);
-  //     // BlocProvider.of<GetTourIdCubit>(context).getTourById(widget.tourId);
+  //     BlocProvider.of<GetTourIdCubit>(context).getTourById(widget.tourId);
   //     _inInit = false;
   //   }
   // }
   @override
   void initState() {
     super.initState();
-    if (expandedList == null ||
-        expandedList!.length != widget.tour.users!.length) {
-      final usersLength = widget.tour.users?.length ?? 0;
-      expandedList = List.generate(usersLength, (_) => false);
-      print("====${usersLength}====");
-    }
+    BlocProvider.of<GetTourIdCubit>(context).getTourById(widget.tour.id!);
   }
 
   @override
   Widget build(BuildContext context) {
-    print('Tour users: ${widget.tour.users}');
-    print('Users length: ${widget.tour.users?.length}');
     return Scaffold(
       backgroundColor: ColorManager.secondColor,
       body: SafeArea(
@@ -84,7 +78,7 @@ class _SupervisorScreenState extends State<SupervisorScreen> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                '!مرحباً ${CacheNetwork.getCacheData(key: 'Save_UserName')}',
+                                '!مرحباً ${CacheNetwork.getCacheData(key: "Save_UserName")}',
                                 style: TextStyles.black20Bold.copyWith(
                                   fontSize: 20.sp,
                                 ),
@@ -154,55 +148,85 @@ class _SupervisorScreenState extends State<SupervisorScreen> {
                   children: [
                     const SizedBox(height: 20),
                     Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'عدد الطلاب:',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                '${widget.tour.users?.length ?? "5"}',
+                      child: BlocBuilder<GetTourIdCubit, GetTourIdState>(
+                        builder: (context, state) {
+                          if (state is TourByIdLoaded) {
+                            final users = state.tour.users ?? [];
+                            if (expandedList == null ||
+                                expandedList!.length != users.length) {
+                              expandedList = List.generate(
+                                users.length,
+                                (_) => false,
+                              );
+                            }
 
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      'عدد الطلاب:',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      '${users.length}',
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 20),
-                          Expanded(
-                            child: ListView.builder(
-                              itemCount: widget.tour.users?.length ?? 0,
-                              itemBuilder: (context, index) {
-                                final user = widget.tour.users![index];
-                                return ExpandableCard(
-                                  name: user.name ?? '',
-                                  phone: user.phone ?? '',
-                                  university: user.university?.name ?? '',
+                                const SizedBox(height: 20),
+                                Expanded(
+                                  child: ListView.builder(
+                                    itemCount: users.length,
+                                    itemBuilder: (context, index) {
+                                      final user = users[index];
+                                      return ExpandableCard(
+                                        name: user.name ?? '',
+                                        phone: user.phone ?? '',
+                                        university: user.university?.name ?? '',
 
-                                  isSupervisor: false,
-                                  isExpanded: expandedList![index],
-                                  onToggle: () {
-                                    setState(() {
-                                      expandedList![index] =
-                                          !expandedList![index];
-                                    });
-                                  },
-                                );
-                              },
-                            ),
-                          ),
-                        ],
+                                        isSupervisor: false,
+                                        isExpanded: expandedList![index],
+                                        onToggle: () {
+                                          setState(() {
+                                            expandedList![index] =
+                                                !expandedList![index];
+                                          });
+                                        },
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
+                            );
+                          } else if (state is GetTourByIdLoading) {
+                            return const Center(
+                              child: CircularProgressIndicator(
+                                color: ColorManager.secondColor,
+                              ),
+                            );
+                          } else if (state is getTourByIdError) {
+                            return const Center(
+                              child: Text(
+                                'فشل تحميل البيانات',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            );
+                          } else {
+                            return const SizedBox();
+                          }
+                        },
                       ),
                     ),
                   ],
