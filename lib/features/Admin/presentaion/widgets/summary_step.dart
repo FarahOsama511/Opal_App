@@ -5,6 +5,7 @@ import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
 import '../../../../core/resources/text_styles.dart';
 
 class SummaryStep extends StatelessWidget {
+  final String? typeOfTrip;
   final LineEntity? selectedLine;
   final int hour;
   final int minute;
@@ -12,7 +13,8 @@ class SummaryStep extends StatelessWidget {
   final UserEntity? selectedSupervisor;
   final DateTime? selectedDate;
 
-  const SummaryStep({
+  SummaryStep({
+    required this.typeOfTrip,
     super.key,
     required this.selectedLine,
     required this.hour,
@@ -21,7 +23,10 @@ class SummaryStep extends StatelessWidget {
     required this.selectedSupervisor,
     required this.selectedDate,
   });
-
+  final Map<String, String> tripTypeMap = {
+    'go': 'ميعاد الذهاب',
+    'return': 'ميعاد العودة',
+  };
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -55,7 +60,10 @@ class SummaryStep extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('ميعاد الذهاب', style: TextStyles.black14Bold),
+                  Text(
+                    tripTypeMap[typeOfTrip] ?? '',
+                    style: TextStyles.black14Bold,
+                  ),
                   Text(
                     '$hour:${minute.toString().padLeft(2, '0')} $period',
                     style: TextStyles.black14Bold,

@@ -27,6 +27,7 @@ class AddAdminSupervisorDatasourceImpl implements AddAdminSupervisorDatasource {
       'password': user.password,
       'email': user.email,
       'role': user.role,
+      'lineId': user.lineId,
     };
     final response = await client.post(
       Uri.parse('${Base_Url}users'),

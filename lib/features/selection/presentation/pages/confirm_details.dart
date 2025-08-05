@@ -77,7 +77,7 @@ class _ConfirmDetailsScreenState extends State<ConfirmDetailsScreen> {
                           children: [
                             _RowInfo(label: 'الخط', value: tour.line.name!),
                             _RowInfo(
-                              label: 'ميعاد ${tour.type ?? "الذهاب"}',
+                              label: ' ${tour.typeDisplay}',
                               value:
                                   '${DateFormat('HH:mm').format(tour.leavesAt)} صباحاً',
                             ),
@@ -166,8 +166,8 @@ class _RowInfo extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(value, style: const TextStyle(fontWeight: FontWeight.w500)),
-          Text(label, style: const TextStyle(color: Colors.grey)),
+          Text(value, style: TextStyles.black14Bold),
+          Text(label, style: TextStyles.black14Bold),
         ],
       ),
     );

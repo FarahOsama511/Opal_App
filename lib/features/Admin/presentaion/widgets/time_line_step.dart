@@ -13,13 +13,16 @@ class TimeLineStep extends StatefulWidget {
   final int minute;
   final String period;
   final LineEntity? selectedLine;
-
+  final String? typeOfTrip;
   final ValueChanged<int> onHourChanged;
   final ValueChanged<int> onMinuteChanged;
   final ValueChanged<String> onPeriodChanged;
   final ValueChanged<LineEntity?> onLineChanged;
+  final ValueChanged<String?> onTypeOfTripChanged;
 
   const TimeLineStep({
+    required this.onTypeOfTripChanged,
+    required this.typeOfTrip,
     super.key,
     required this.hour,
     required this.minute,
@@ -67,6 +70,10 @@ class _TimeLineStepState extends State<TimeLineStep> {
     );
   }
 
+  final Map<String, String> tripTypeMap = {
+    'ميعاد الذهاب': 'go',
+    'ميعاد العودة': 'return',
+  };
   @override
   void initState() {
     super.initState();
@@ -78,7 +85,19 @@ class _TimeLineStepState extends State<TimeLineStep> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text('ميعاد الذهاب', style: TextStyles.black20Bold),
+        CustomDropdown<String>(
+          label: '   اختر نوع الرحلة',
+          value: tripTypeMap.values.contains(widget.typeOfTrip)
+              ? tripTypeMap.keys.firstWhere(
+                  (key) => tripTypeMap[key] == widget.typeOfTrip,
+                )
+              : null,
+          items: tripTypeMap.keys.toList(),
+          onChanged: (displayValue) {
+            final backendValue = tripTypeMap[displayValue];
+            widget.onTypeOfTripChanged(backendValue);
+          },
+        ),
         const SizedBox(height: 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,

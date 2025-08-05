@@ -16,8 +16,6 @@ import '../Admin/presentaion/bloc/get_tour_bloc/tour_cubit.dart';
 import '../Admin/presentaion/bloc/get_tour_bloc/tour_state.dart';
 import '../Admin/presentaion/widgets/bus_card.dart';
 import '../Admin/presentaion/widgets/custom_widgets.dart';
-import '../user/presentaion/bloc/user_cubit.dart';
-import '../user/presentaion/bloc/user_state.dart';
 
 class ShowToursBySuperVisor extends StatefulWidget {
   final bool? isTripConfirmed;
@@ -32,7 +30,7 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
   int? expandedCardIndex;
   LineEntity? selectedLine;
   late bool isTripConfirmed;
-  bool _inInit = true;
+  // bool _inInit = true;
 
   @override
   // void didChangeDependencies() {
@@ -75,38 +73,19 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
                   leadingWidget: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      BlocBuilder<GetAllUserCubit, UserState>(
-                        builder: (context, state) {
-                          String lineName = '...';
-                          if (state is UserByIdSuccess) {
-                            print('LINEName:${state.userById.line!.name}');
-                            lineName = state.userById.line?.name ?? 'غير معروف';
-                          } else if (state is UserError) {
-                            lineName = 'خط غير متاح';
-                          }
-
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                '!مرحباً ${CacheNetwork.getCacheData(key: 'Save_UserName')}',
-                                style: TextStyles.black20Bold.copyWith(
-                                  fontSize: 20.sp,
-                                ),
-                                textAlign: TextAlign.right,
-                              ),
-                              SizedBox(height: 4.h),
-                              Text(
-                                'مشرف الخط - $lineName',
-                                style: TextStyles.black20Bold.copyWith(
-                                  fontSize: 20.sp,
-                                ),
-                                textAlign: TextAlign.right,
-                              ),
-                            ],
-                          );
-                        },
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            ' مرحباً ${CacheNetwork.getCacheData(key: 'Save_UserName')}!',
+                            style: TextStyles.black20Bold.copyWith(
+                              fontSize: 20.sp,
+                            ),
+                            textAlign: TextAlign.right,
+                          ),
+                          SizedBox(height: 4.h),
+                        ],
                       ),
                     ],
                   ),
@@ -217,7 +196,8 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
                                           ),
                                         );
                                       },
-
+                                      typeOfTrip:
+                                          tours[index].typeDisplay ?? "",
                                       line: tours[index].line.name ?? "",
                                       supervisorName:
                                           tours[index].driverName ?? "غير معرف",

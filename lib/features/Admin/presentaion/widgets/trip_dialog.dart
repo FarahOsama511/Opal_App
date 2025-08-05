@@ -79,7 +79,7 @@ class _TripDetailsDialogState extends State<TripDetailsDialog> {
                           children: [
                             _buildRow('الخط', tour.line.name!),
                             _buildRow(
-                              'ميعاد الذهاب',
+                              tour.typeDisplay,
                               '${DateFormat('HH:mm').format(tour.leavesAt)} صباحاً',
                             ),
                             _buildRow(
@@ -172,7 +172,6 @@ class _TripDetailsDialogState extends State<TripDetailsDialog> {
                 ElevatedButton(
                   onPressed: () {
                     Navigator.pop(context);
-                    BlocProvider.of<TourCubit>(context).getAllTours();
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey,

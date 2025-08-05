@@ -36,7 +36,7 @@ class _EditTripTimeState extends State<EditTripBox> {
   UserEntity? selectedSupervisor;
   LineEntity? selectedLine;
   DateTime focusedDay = DateTime.now();
-  String? type;
+  String? typeOfTrip;
   void submitTour() {
     if (selectedDate == null ||
         selectedSupervisor == null ||
@@ -58,7 +58,7 @@ class _EditTripTimeState extends State<EditTripBox> {
     final tour = TourModel(
       // superVisorName: selectedSupervisor?.name ?? "",
       id: widget.tourId,
-      type: 'go',
+      type: typeOfTrip ?? "ذهاب",
       driverName: selectedSupervisor?.name ?? "",
       leavesAt: fullDateTime,
       line: LineEntity(id: selectedLine!.id),
@@ -88,7 +88,7 @@ class _EditTripTimeState extends State<EditTripBox> {
     focusedDay = selectedTour.leavesAt;
     selectedLine = selectedTour.line;
 
-    type = selectedTour.type;
+    typeOfTrip = selectedTour.type;
     hour = selectedTour.leavesAt.hour > 12
         ? selectedTour.leavesAt.hour - 12
         : selectedTour.leavesAt.hour;
@@ -117,6 +117,7 @@ class _EditTripTimeState extends State<EditTripBox> {
         break;
       case 1:
         stepContent = TimeLineStep(
+          typeOfTrip: typeOfTrip,
           hour: hour,
           minute: minute,
           period: period,
@@ -124,6 +125,7 @@ class _EditTripTimeState extends State<EditTripBox> {
           onHourChanged: (val) => setState(() => hour = val),
           onMinuteChanged: (val) => setState(() => minute = val),
           onPeriodChanged: (val) => setState(() => period = val),
+          onTypeOfTripChanged: (val) => setState(() => typeOfTrip = val),
           onLineChanged: (value) {
             setState(() => selectedLine = value);
           },
@@ -139,6 +141,7 @@ class _EditTripTimeState extends State<EditTripBox> {
         break;
       default:
         stepContent = SummaryStep(
+          typeOfTrip: typeOfTrip,
           selectedLine: selectedLine,
           hour: hour,
           minute: minute,

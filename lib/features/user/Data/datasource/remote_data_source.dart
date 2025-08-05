@@ -36,7 +36,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         key: 'access_token',
         value: jsonResponse['token'],
       );
-      token = jsonResponse['token']; // ← تحديث المتغير العام
+      token = jsonResponse['token'];
       print('Token saved and updated: $token');
       await CacheNetwork.insertToCache(
         key: 'access_role',

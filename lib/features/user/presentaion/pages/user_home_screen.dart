@@ -16,7 +16,6 @@ import '../../../Admin/presentaion/bloc/get_tour_bloc/tour_state.dart';
 import '../../../Admin/presentaion/pages/trip_details.dart';
 import '../../../Admin/presentaion/widgets/bus_card.dart';
 import '../../../Admin/presentaion/widgets/custom_widgets.dart';
-import '../../../user/presentaion/bloc/auth_cubit.dart';
 import '../../../user/presentaion/bloc/selection_tour/selection_tour_cubit.dart';
 
 class UserHomeScreen extends StatefulWidget {
@@ -73,7 +72,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            '!مرحباً ${CacheNetwork.getCacheData(key: 'Save_UserName')}',
+                            'مرحباً ${CacheNetwork.getCacheData(key: 'Save_UserName')}!',
                             style: TextStyles.black20Bold.copyWith(
                               fontSize: 20.sp,
                             ),
@@ -255,6 +254,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                                                 });
                                               }
                                             },
+                                      typeOfTrip: tours[index].typeDisplay,
                                       line: tours[index].line.name ?? "",
                                       supervisorName:
                                           tours[index].driverName ?? "غير معرف",

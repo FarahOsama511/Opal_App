@@ -31,6 +31,16 @@ class Tour extends Equatable {
     users,
     // supervisorName,
   ];
+  String get typeDisplay {
+    switch (type) {
+      case 'go':
+        return 'ميعاد الذهاب';
+      case 'return':
+        return 'ميعاد العودة';
+      default:
+        return 'نوع غير معروف';
+    }
+  }
 }
 
 class LineEntity extends Equatable {

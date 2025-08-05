@@ -11,8 +11,10 @@ class BusCard extends StatelessWidget {
   final String supervisorName;
   final String departureTime;
   final String date;
+  final String? typeOfTrip;
   const BusCard({
     super.key,
+    this.typeOfTrip,
     required this.isExpanded,
     this.onTap,
     this.onCancel,
@@ -60,7 +62,7 @@ class BusCard extends StatelessWidget {
                 children: [
                   _RowInfo(label: 'الخط', value: line),
                   _RowInfo(label: 'اسم المشرف', value: supervisorName),
-                  _RowInfo(label: 'ميعاد الذهاب', value: departureTime),
+                  _RowInfo(label: typeOfTrip!, value: departureTime),
                   _RowInfo(label: 'تاريخ اليوم', value: date),
 
                   const SizedBox(height: 10),

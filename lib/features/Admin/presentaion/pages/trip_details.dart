@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
-import 'package:opal_app/features/user/presentaion/pages/user_home_screen.dart';
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
 import '../../Data/models/tour_model.dart';
@@ -162,8 +161,8 @@ class _InfoRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(title, style: const TextStyle(color: Colors.black)),
-          Text(value, style: const TextStyle(fontWeight: FontWeight.w600)),
+          Text(title, style: TextStyles.black14Bold),
+          Text(value, style: TextStyles.black14Bold),
         ],
       ),
     );
@@ -180,7 +179,7 @@ class _ActionButtons extends StatelessWidget {
       children: [
         _MainButton(
           label: 'تغيير الرحلة',
-          backgroundColor: Colors.white,
+          backgroundColor: ColorManager.secondColor,
           textColor: ColorManager.primaryColor,
           onPressed: () {
             showDialog(
@@ -193,8 +192,8 @@ class _ActionButtons extends StatelessWidget {
         const SizedBox(height: 12),
         _MainButton(
           label: 'إلغاء الرحلة',
-          backgroundColor: Colors.grey,
-          textColor: Colors.white,
+          backgroundColor: ColorManager.greyColor,
+          textColor: ColorManager.secondColor,
           onPressed: () {
             showDialog(
               context: context,
@@ -240,7 +239,14 @@ class _MainButton extends StatelessWidget {
             width: backgroundColor == Colors.white ? 1.5 : 0,
           ),
         ),
-        child: Text(label, style: const TextStyle(fontSize: 16)),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: textColor,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
     );
   }

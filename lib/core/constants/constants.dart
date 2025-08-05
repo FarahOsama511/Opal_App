@@ -1,6 +1,4 @@
-import '../network/local_network.dart';
-
-String token = CacheNetwork.getCacheData(key: 'access_token');
+String? token;
 String? role;
 String? tour;
 String? lines;

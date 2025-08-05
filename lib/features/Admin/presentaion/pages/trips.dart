@@ -93,6 +93,7 @@ class _TripsScreenState extends State<TripsScreen> {
                           String tourId = state.tours[index].id ?? "";
                           final tour = state.tours[index];
                           return BusCard(
+                            typeOfTrip: state.tours[index].typeDisplay,
                             line: 'خط ${state.tours[index].line.name}',
                             supervisorName:
                                 state.tours[index].driverName ?? "غير معرف",
