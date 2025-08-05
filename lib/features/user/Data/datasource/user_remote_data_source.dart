@@ -22,14 +22,14 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
 
   @override
   Future<List<UserModel>> getAllUser() async {
-    if (token != null && token != "" && role == 'admin') {
-      tokenAdmin = CacheNetwork.getCacheData(key: 'access_token');
-    }
+    // if (token != null && token != "" && role == 'admin') {
+    //   tokenAdmin = CacheNetwork.getCacheData(key: 'access_token');
+    // }
     final response = await client.get(
       Uri.parse('${Base_Url}users'),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $tokenAdmin',
+        'Authorization': 'Bearer $token',
       },
     );
 
@@ -48,12 +48,12 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
 
   @override
   Future<UserModel> userIsActivate(String id, String status) async {
-    if (token != null && token != "" && role == 'admin') {
-      tokenAdmin = CacheNetwork.getCacheData(key: 'access_token');
-    }
+    // if (token != null && token != "" && role == 'admin') {
+    //   tokenAdmin = CacheNetwork.getCacheData(key: 'access_token');
+    // }
     final response = await client.post(
       Uri.parse('${Base_Url}users/${id}/activate'),
-      headers: {'Authorization': 'Bearer $tokenAdmin'},
+      headers: {'Authorization': 'Bearer $token'},
     );
 
     print("=== Get userisActivate Response Status: ${response.statusCode} ===");
