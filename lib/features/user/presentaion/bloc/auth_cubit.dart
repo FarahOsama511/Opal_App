@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:opal_app/core/network/local_network.dart';
 import 'package:opal_app/core/strings/failures.dart';
 import 'package:opal_app/features/user/Domain/entities/authentity.dart';
 import 'package:opal_app/features/user/Domain/entities/login_entity.dart';
@@ -24,9 +25,13 @@ class AuthCubit extends Cubit<AuthState> {
           emit(AuthFailure(_errorMessage(failure)));
           print("Login failed: ${failure.toString()}");
         },
-        (user) {
+        (user) async {
           emit(AuthSuccess());
           _user = user;
+          await CacheNetwork.insertToCache(
+            key: "Save_UserName",
+            value: user.user.name!,
+          );
           print("Login successful: ${_user!.token}");
         },
       );

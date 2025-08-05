@@ -11,12 +11,14 @@ class UserEntity extends Equatable {
   final String? universityId;
   final String? universityCardId;
   final LineEntity? line;
+  final String? lineId;
   final String? status;
   final UniversityEntity? university;
   final String? email;
   final String? password;
 
   UserEntity({
+    this.lineId,
     this.university,
     this.status,
     this.id,
@@ -32,6 +34,7 @@ class UserEntity extends Equatable {
 
   @override
   List<Object?> get props => [
+    lineId,
     id,
     name,
     phone,

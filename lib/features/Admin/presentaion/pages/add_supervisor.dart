@@ -76,13 +76,10 @@ class _AddSupervisorState extends State<AddSupervisor> {
                   builder: (context, state) {
                     if (state is LinesLoading) {
                       return CircularProgressIndicator(
-                        strokeWidth: 20,
-
-                        color: Color(0XFFE71A45),
+                        color: ColorManager.primaryColor,
                       );
                     } else if (state is LinesLoaded) {
-                      final allLines = state.Liness; // دي كافية
-
+                      final allLines = state.Liness;
                       return CustomDropdown<LineEntity>(
                         label: 'اختر الخط',
                         value: selectedLine,
@@ -146,7 +143,7 @@ class _AddSupervisorState extends State<AddSupervisor> {
                                   password: passwordController.text,
                                   email: emailController.text,
                                   role: "supervisor",
-                                  line: selectedLine,
+                                  lineId: selectedLine!.id,
                                 ),
                               );
                         }

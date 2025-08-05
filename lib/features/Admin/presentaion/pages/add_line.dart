@@ -9,6 +9,7 @@ import 'package:opal_app/features/Admin/presentaion/bloc/add_lines/add_line_stat
 import 'package:opal_app/features/Admin/presentaion/widgets/custom_widgets.dart';
 import 'package:opal_app/features/Admin/presentaion/widgets/text_field.dart';
 
+import '../../../../core/resources/text_styles.dart';
 import 'admin_home_screen.dart';
 
 class AddLine extends StatefulWidget {
@@ -51,7 +52,12 @@ class _AddLineState extends State<AddLine> {
                       ).showSnackBar(SnackBar(content: Text(state.message)));
                     } else if (state is AddLineSuccess) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('تمت الإضافة بنجاح')),
+                        SnackBar(
+                          content: Text(
+                            'تمت الإضافة بنجاح',
+                            style: TextStyles.white12Bold,
+                          ),
+                        ),
                       );
                       Navigator.pushReplacement(
                         context,
@@ -76,7 +82,11 @@ class _AddLineState extends State<AddLine> {
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           context.read<AddLineCubit>().AddLine(
-                            LineEntity(name: LineController.text),
+                            LineEntity(
+                              name: LineController.text,
+                              createdAt: DateTime.now(),
+                              updatedAt: DateTime.now(),
+                            ),
                           );
                         }
                       },

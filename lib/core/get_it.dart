@@ -16,6 +16,7 @@ import 'package:opal_app/features/Admin/Domain/usecase/add_admin_supervisor.dart
 import 'package:opal_app/features/Admin/Domain/usecase/add_line_use_case.dart';
 import 'package:opal_app/features/Admin/Domain/usecase/get_all_lines.dart';
 import 'package:opal_app/features/Admin/Domain/usecase/get_all_tours.dart';
+import 'package:opal_app/features/Admin/Domain/usecase/get_line_Id.dart';
 import 'package:opal_app/features/Admin/Domain/usecase/get_tour_id_use_case.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/add_lines/add_line_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_bloc/tour_cubit.dart';
@@ -92,6 +93,7 @@ Future<void> init() async {
   setUp.registerLazySingleton(() => GetAllUniveristiesUseCase(setUp()));
   setUp.registerLazySingleton(() => GetTourByIdUseCase(setUp()));
   setUp.registerLazySingleton(() => AddLineUseCase(setUp()));
+  setUp.registerLazySingleton(() => GetLineByIdUseCase(setUp()));
   setUp.registerLazySingleton(() => SelectionTourUseCase(setUp()));
   setUp.registerLazySingleton(() => UnconfirmTourUseCase(setUp()));
   setUp.registerLazySingleton(() => GetUserIdUseCase(setUp()));

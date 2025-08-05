@@ -25,7 +25,7 @@ class SelectionTourCubit extends Cubit<SelectionTourState> {
         (selectTour) {
           emit(SelectionTourSuccess(selectTour));
           tourCurrent = selectTour as TourModel;
-          ;
+
           print("Fetched tour successfully: ${selectTour}");
         },
       );

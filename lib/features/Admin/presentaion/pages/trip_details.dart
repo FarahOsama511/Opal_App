@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart' as intl;
-import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_id.dart/get_tour_id_cubit.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_id.dart/get_tour_id_state.dart';
 import 'package:opal_app/features/user/presentaion/pages/user_home_screen.dart';
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
@@ -58,12 +55,7 @@ class TripDetailsScreen extends StatelessWidget {
                             color: ColorManager.blackColor,
                           ),
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const UserHomeScreen(),
-                              ),
-                            );
+                            Navigator.pop(context);
                           },
                         ),
                       ],
@@ -91,7 +83,7 @@ class TripDetailsScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             const SizedBox(height: 40),
-                            _InfoCard(tourId: tour.id!),
+                            _InfoCard(tour: tour),
                             const SizedBox(height: 20),
                             _ActionButtons(tourId: tour.id!),
                           ],
@@ -110,8 +102,8 @@ class TripDetailsScreen extends StatelessWidget {
 }
 
 class _InfoCard extends StatefulWidget {
-  final String tourId;
-  const _InfoCard({required this.tourId});
+  final TourModel tour;
+  const _InfoCard({required this.tour});
 
   @override
   State<_InfoCard> createState() => _InfoCardState();
@@ -121,7 +113,6 @@ class _InfoCardState extends State<_InfoCard> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<GetTourIdCubit>(context).getTourById(widget.tourId);
   }
 
   @override
@@ -136,38 +127,23 @@ class _InfoCardState extends State<_InfoCard> {
       width: double.infinity,
       child: Directionality(
         textDirection: TextDirection.rtl,
-        child: BlocBuilder<GetTourIdCubit, GetTourIdState>(
-          builder: (context, state) {
-            if (state is GetTourByIdLoading) {
-              return Center(
-                child: CircularProgressIndicator(
-                  color: ColorManager.primaryColor,
-                ),
-              );
-            } else if (state is TourByIdLoaded) {
-              final tour = state.tour;
-              return Column(
-                children: [
-                  _InfoRow(
-                    title: 'اسم المشرف',
-                    value: tour.driverName ?? "غير معرف",
-                  ),
-                  _InfoRow(title: 'الخط', value: tour.line.name ?? ''),
-                  _InfoRow(
-                    title: 'ميعاد الذهاب',
-                    value:
-                        '${intl.DateFormat('HH:mm').format(tour.leavesAt)} صباحاً',
-                  ),
-                  _InfoRow(
-                    title: 'تاريخ اليوم',
-                    value: intl.DateFormat('yyyy-MM-dd').format(tour.leavesAt),
-                  ),
-                ],
-              );
-            } else {
-              return const Center(child: Text("حدث خطأ في جلب البيانات"));
-            }
-          },
+        child: Column(
+          children: [
+            _InfoRow(
+              title: 'اسم المشرف',
+              value: widget.tour.driverName ?? "غير معرف",
+            ),
+            _InfoRow(title: 'الخط', value: widget.tour.line.name ?? ''),
+            _InfoRow(
+              title: 'ميعاد الذهاب',
+              value:
+                  '${intl.DateFormat('HH:mm').format(widget.tour.leavesAt)} صباحاً',
+            ),
+            _InfoRow(
+              title: 'تاريخ اليوم',
+              value: intl.DateFormat('yyyy-MM-dd').format(widget.tour.leavesAt),
+            ),
+          ],
         ),
       ),
     );

@@ -11,6 +11,7 @@ import '../../../../core/errors/exceptions.dart';
 abstract class LineRemoteDataSource {
   Future<List<LineModel>> getAllLines();
   Future<Unit> AddLine(LineEntity line);
+  Future<LineModel> getLineById(String id);
 }
 
 class LineRemoteDataSourceImpl extends LineRemoteDataSource {
@@ -54,6 +55,25 @@ class LineRemoteDataSourceImpl extends LineRemoteDataSource {
     if (response.statusCode == 201) {
       return unit;
     } else {
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<LineModel> getLineById(String id) async {
+    final response = await client.get(
+      Uri.parse('${Base_Url}lines/${id}'),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+      print('the Line is: $jsonResponse');
+      final line = LineModel.fromJson(jsonResponse);
+
+      return line;
+    } else {
+      print("state code is ${response.statusCode}");
+      print("body:${response.body}");
       throw ServerException();
     }
   }

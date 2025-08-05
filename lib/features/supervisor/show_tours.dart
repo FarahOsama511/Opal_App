@@ -94,7 +94,7 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                '!مرحباً ${context.read<AuthCubit>().user?.user.name ?? ''}',
+                                '!مرحباً ${CacheNetwork.getCacheData(key: 'Save_UserName')}',
                                 style: TextStyles.black20Bold.copyWith(
                                   fontSize: 20.sp,
                                 ),

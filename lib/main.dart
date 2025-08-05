@@ -37,11 +37,10 @@ void main() async {
   role = CacheNetwork.getCacheData(key: 'access_role');
   lines = CacheNetwork.getCacheData(key: "SAVE_LINES");
   tour = CacheNetwork.getCacheData(key: "SAVE_TOURS");
-  print('LINES IS ${lines}');
-  print('TOUR IS ${tour}');
+  users = CacheNetwork.getCacheData(key: "SAVE_USERS");
+  universities = CacheNetwork.getCacheData(key: "SAVE_UNIVERSITIES");
   print('TOKEN IS ${token}');
   print('ROLE IS ${role}');
-  // await checkToken();
   await di.init();
   await initializeDateFormatting('ar', null);
   runApp(StudentBusApp());
@@ -59,9 +58,9 @@ class StudentBusApp extends StatelessWidget {
       builder: (_, child) {
         return MultiBlocProvider(
           providers: [
-            BlocProvider(create: (_) => di.setUp<TourCubit>()..getAllTours()),
-            BlocProvider(create: (_) => di.setUp<UpdateAddDeleteTourCubit>()),
             BlocProvider(create: (_) => di.setUp<AuthCubit>()),
+            BlocProvider(create: (_) => di.setUp<TourCubit>()),
+            BlocProvider(create: (_) => di.setUp<UpdateAddDeleteTourCubit>()),
             BlocProvider(create: (_) => di.setUp<GetAllUserCubit>()),
             BlocProvider(create: (_) => di.setUp<LinesCubit>()..getAllLiness()),
             BlocProvider(create: (_) => di.setUp<AddLineCubit>()),
@@ -104,12 +103,3 @@ class StudentBusApp extends StatelessWidget {
     );
   }
 }
-
-
-// (isLoggedIn == true)
-//                 ? ((isStudent == true)
-//                       ? '/home'
-//                       : (isAdmin == true)
-//                       ? '/adminScreen'
-//                       : '/students')
-//                 : '/signin'

@@ -2,10 +2,10 @@ import 'package:dartz/dartz.dart';
 import 'package:opal_app/core/errors/failure.dart';
 import 'package:opal_app/features/Admin/Data/dataSource/line_remote_data_source.dart';
 import 'package:opal_app/features/Admin/Data/models/line_model.dart';
-import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
 import 'package:opal_app/features/Admin/Domain/reporistires/line_repo.dart';
 import '../../../../core/errors/exceptions.dart';
 import '../../../../core/network/network_info.dart';
+import '../../Domain/entities/tour.dart';
 import '../dataSource/line_local_data_source.dart';
 
 class LineRepoImpl extends LineRepo {
@@ -64,9 +64,17 @@ class LineRepoImpl extends LineRepo {
   }
 
   @override
-  Future<Either<Failure, LineEntity>> getLineById(String id) {
-    // TODO: implement getLineById
-    throw UnimplementedError();
+  Future<Either<Failure, LineEntity>> getLineById(String id) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final line = await remoteDataSource.getLineById(id);
+        return Right(line);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NoInternetFailure());
+    }
   }
 
   @override

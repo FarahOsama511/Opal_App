@@ -8,7 +8,6 @@ import 'package:opal_app/features/user/presentaion/bloc/user_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/user_state.dart';
 import '../../core/network/local_network.dart' show CacheNetwork;
 import '../../core/resources/text_styles.dart';
-import '../user/presentaion/bloc/auth_cubit.dart';
 import '../Admin/presentaion/widgets/app_header.dart';
 import '../Admin/presentaion/widgets/expandable_card.dart';
 
@@ -78,7 +77,7 @@ class _SupervisorScreenState extends State<SupervisorScreen> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                '!مرحباً ${context.read<AuthCubit>().user?.user.name ?? ''}',
+                                '!مرحباً ${CacheNetwork.getCacheData(key: 'Save_UserName')}',
                                 style: TextStyles.black20Bold.copyWith(
                                   fontSize: 20.sp,
                                 ),

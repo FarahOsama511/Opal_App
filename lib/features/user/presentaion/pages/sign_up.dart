@@ -152,7 +152,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     id: "cmdxmfl6x0000otnp5m20ejbl",
                                   ),
                                   universityId: selectedUniversity!.id,
-                                  role: 'طالب',
+                                  role: 'student',
                                 ),
                               ),
                             );

@@ -6,6 +6,7 @@ import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
 import '../../../../core/resources/text_styles.dart';
 import '../../Data/models/tour_model.dart';
 import '../../Domain/entities/tour.dart';
+import '../bloc/get_tour_bloc/tour_cubit.dart';
 import '../widgets/calender_step.dart';
 import '../widgets/summary_step.dart';
 import '../widgets/supervisor_step.dart';
@@ -51,7 +52,7 @@ class _AddTripBoxState extends State<AddTripBox> {
       type: 'go',
       driverName: selectedSupervisor?.name ?? "",
       leavesAt: fullDateTime,
-      line: LineEntity(id: selectedLine!.id),
+      line: LineEntity(id: selectedLine!.id, name: selectedLine!.name),
     );
 
     context.read<UpdateAddDeleteTourCubit>().addTour(tour);
@@ -125,53 +126,54 @@ class _AddTripBoxState extends State<AddTripBox> {
       listener: (context, state) {
         if (state is TourAdded) {
           Navigator.pop(context);
+          context.read<TourCubit>().getAllTours();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message, style: TextStyles.white12Bold),
             ),
           );
           print("STATE IS:${state}");
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text(
-                    'تم التأكيد',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 20),
-                  const Icon(
-                    Icons.check_circle,
-                    color: Colors.green,
-                    size: 100,
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      widget.onClose();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFE71A45),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      minimumSize: const Size.fromHeight(50),
-                    ),
-                    child: Text(
-                      'العودة الى الرئيسية',
-                      style: TextStyles.white12Bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
+          // showDialog(
+          //   context: context,
+          //   builder: (context) => AlertDialog(
+          //     shape: RoundedRectangleBorder(
+          //       borderRadius: BorderRadius.circular(16),
+          //     ),
+          //     content: Column(
+          //       mainAxisSize: MainAxisSize.min,
+          //       children: [
+          //         const Text(
+          //           'تم التأكيد',
+          //           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          //         ),
+          //         const SizedBox(height: 20),
+          //         const Icon(
+          //           Icons.check_circle,
+          //           color: Colors.green,
+          //           size: 100,
+          //         ),
+          //         const SizedBox(height: 20),
+          //         ElevatedButton(
+          //           onPressed: () {
+          //
+          //             widget.onClose();
+          //           },
+          //           style: ElevatedButton.styleFrom(
+          //             backgroundColor: const Color(0xFFE71A45),
+          //             shape: RoundedRectangleBorder(
+          //               borderRadius: BorderRadius.circular(30),
+          //             ),
+          //             minimumSize: const Size.fromHeight(50),
+          //           ),
+          //           child: Text(
+          //             'العودة الى الرئيسية',
+          //             style: TextStyles.white12Bold,
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // );
         } else if (state is UpdateAddDeleteTourError) {
           ScaffoldMessenger.of(
             context,

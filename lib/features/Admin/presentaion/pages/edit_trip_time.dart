@@ -6,6 +6,7 @@ import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/
 import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
 import '../../Data/models/tour_model.dart';
 import '../../Domain/entities/tour.dart';
+import '../bloc/get_tour_bloc/tour_cubit.dart';
 import '../widgets/calender_step.dart';
 import '../widgets/summary_step.dart';
 import '../widgets/supervisor_step.dart';
@@ -153,6 +154,7 @@ class _EditTripTimeState extends State<EditTripBox> {
         if (state is TourUpdated) {
           print("Tour Updated Successfully");
           Navigator.pop(context);
+          context.read<TourCubit>().getAllTours();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message, style: TextStyles.white12Bold),
