@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
 import 'package:opal_app/features/user/presentaion/bloc/selection_tour/selection_tour_cubit.dart';
-
 import '../../../../core/resources/text_styles.dart';
 
 class CancelOREditTripDialog extends StatelessWidget {

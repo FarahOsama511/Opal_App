@@ -14,13 +14,10 @@ abstract class AddAdminSupervisorDatasource {
 
 class AddAdminSupervisorDatasourceImpl implements AddAdminSupervisorDatasource {
   final http.Client client;
-  String? tokenAdmin;
+
   AddAdminSupervisorDatasourceImpl({required this.client});
 
   Future<Unit> AddAdminOrSupervisor(AddAdminSupervisorModel user) async {
-    if (token != null && token != "" && role == 'admin') {
-      tokenAdmin = CacheNetwork.getCacheData(key: 'access_token');
-    }
     final body = {
       'name': user.name,
       'phone': user.phone,
@@ -33,7 +30,7 @@ class AddAdminSupervisorDatasourceImpl implements AddAdminSupervisorDatasource {
       Uri.parse('${Base_Url}users'),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${tokenAdmin}',
+        'Authorization': 'Bearer ${token}',
       },
       body: jsonEncode(body),
     );

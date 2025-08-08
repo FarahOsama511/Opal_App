@@ -102,6 +102,11 @@ class _StudentListState extends State<StudentList> {
                                       !_isExpandedStudents[index];
                                 });
                               },
+                              onLongPress: () {
+                                setState(() {
+                                  // Handle long press action here
+                                });
+                              },
                             );
                           } else {
                             return ExpandableCard(
@@ -115,6 +120,9 @@ class _StudentListState extends State<StudentList> {
                                   _isExpandedSupervisors[index] =
                                       !_isExpandedSupervisors[index];
                                 });
+                              },
+                              onLongPress: () {
+                                setState(() {});
                               },
                             );
                           }

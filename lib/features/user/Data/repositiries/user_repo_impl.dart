@@ -105,4 +105,18 @@ class UserRepoImpl extends UserRepo {
       }
     }
   }
+
+  @override
+  Future<Either<Failure, Unit>> deleteUser(String userId) async {
+    if (await networkInfo.isConnected) {
+      try {
+        await userRemoteDataSource.deleteUser(userId);
+        return Right(unit);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NoInternetFailure());
+    }
+  }
 }

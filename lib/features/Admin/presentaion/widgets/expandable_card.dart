@@ -11,8 +11,10 @@ class ExpandableCard extends StatelessWidget {
   final bool isSupervisor;
   final bool isExpanded;
   final VoidCallback onToggle;
+  final Function()? onLongPress;
 
   const ExpandableCard({
+    this.onLongPress,
     super.key,
     required this.name,
     required this.phone,
@@ -37,25 +39,28 @@ class ExpandableCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  name,
-                  textAlign: TextAlign.right,
-                  style: TextStyles.black14Bold,
+          InkWell(
+            onLongPress: onLongPress,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    name,
+                    textAlign: TextAlign.right,
+                    style: TextStyles.black14Bold,
+                  ),
                 ),
-              ),
-              IconButton(
-                icon: Icon(
-                  isExpanded
-                      ? Icons.keyboard_arrow_up
-                      : Icons.keyboard_arrow_down_rounded,
-                  color: Colors.black,
+                IconButton(
+                  icon: Icon(
+                    isExpanded
+                        ? Icons.keyboard_arrow_up
+                        : Icons.keyboard_arrow_down_rounded,
+                    color: Colors.black,
+                  ),
+                  onPressed: onToggle,
                 ),
-                onPressed: onToggle,
-              ),
-            ],
+              ],
+            ),
           ),
           if (isExpanded)
             Padding(

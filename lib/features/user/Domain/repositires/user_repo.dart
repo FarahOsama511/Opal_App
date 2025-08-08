@@ -11,4 +11,5 @@ abstract class UserRepo {
     String status,
   );
   Future<Either<Failure, UserEntity>> getUserById(String userId);
+  Future<Either<Failure, Unit>> deleteUser(String userId);
 }

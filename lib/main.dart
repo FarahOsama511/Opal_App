@@ -7,6 +7,7 @@ import 'package:opal_app/core/constants/constants.dart';
 import 'package:opal_app/core/get_it.dart' as di;
 import 'package:opal_app/core/network/local_network.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/add_lines/add_line_cubit.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/delete_user/delete_user_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_id.dart/get_tour_id_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/add_line.dart';
@@ -68,6 +69,7 @@ class StudentBusApp extends StatelessWidget {
             BlocProvider(create: (_) => di.setUp<GetAllUniversitiesCubit>()),
             BlocProvider(create: (_) => di.setUp<SelectionTourCubit>()),
             BlocProvider(create: (_) => di.setUp<GetTourIdCubit>()),
+            BlocProvider(create: (_) => di.setUp<DeleteUserCubit>()),
           ],
           child: MaterialApp(
             localizationsDelegates: const [

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
 import 'package:opal_app/core/constants/constants.dart';
 
@@ -12,6 +13,7 @@ abstract class UserRemoteDataSource {
   Future<UserModel> userIsActivate(String id, String status);
   Future<UserModel> userIsDeactivate(String id, String status);
   Future<UserModel> getUserById(String userId);
+  Future<Unit> deleteUser(String userId);
 }
 
 class UserRemoteDataSourceImpl implements UserRemoteDataSource {
@@ -107,6 +109,22 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
       final user = UserModel.fromJson(jsonResponse);
 
       return user;
+    } else {
+      print("state code is ${response.statusCode}");
+      print("body:${response.body}");
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<Unit> deleteUser(String userId) async {
+    final response = await client.delete(
+      Uri.parse('${Base_Url}users/${userId}'),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 204) {
+      return unit;
     } else {
       print("state code is ${response.statusCode}");
       print("body:${response.body}");

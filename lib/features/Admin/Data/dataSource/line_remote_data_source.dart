@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
 import 'package:opal_app/core/constants/constants.dart';
-import 'package:opal_app/core/network/local_network.dart';
 import 'package:opal_app/features/Admin/Data/models/line_model.dart';
 import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
 
@@ -16,7 +15,6 @@ abstract class LineRemoteDataSource {
 
 class LineRemoteDataSourceImpl extends LineRemoteDataSource {
   final http.Client client;
-  String? tokenAdmin;
 
   LineRemoteDataSourceImpl({required this.client});
 
@@ -39,15 +37,12 @@ class LineRemoteDataSourceImpl extends LineRemoteDataSource {
 
   @override
   Future<Unit> AddLine(LineEntity line) async {
-    if (token != null && token != "" && role == 'admin') {
-      tokenAdmin = CacheNetwork.getCacheData(key: 'access_token');
-    }
     final body = jsonEncode({'name': line.name});
     final response = await client.post(
       Uri.parse('${Base_Url}lines'),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $tokenAdmin',
+        'Authorization': 'Bearer $token',
       },
       body: body,
     );

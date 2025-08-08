@@ -38,7 +38,7 @@ class UpdateAddDeleteTourCubit extends Cubit<UpdateAddDeleteTourState> {
         emit(UpdateAddDeleteTourError(_errorMessage(failure)));
       },
       (_) {
-        emit(TourUpdated(ADDED_SUCCESS_MESSAGE));
+        emit(TourUpdated(UPDATED_SUCCESS_MESSAGE));
       },
     );
   }
@@ -52,7 +52,7 @@ class UpdateAddDeleteTourCubit extends Cubit<UpdateAddDeleteTourState> {
       },
       (_) {
         print("Deleting tour: $tourId");
-        emit(TourDeleted(TOUR_DELETED_SUCCESS_MESSAGE));
+        emit(TourDeleted(DELETED_SUCCESS_MESSAGE));
       },
     );
   }
