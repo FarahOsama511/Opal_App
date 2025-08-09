@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AppHeader extends StatelessWidget {
   final VoidCallback onLogout;
   final bool showAddButton;
   final VoidCallback? onAddPressed;
-  final Widget? trailingWidget; // الطرف الآخر (مثل لوجو)
-  final Widget? leadingWidget; // الأيقونات على الطرف الأيسر
+  final Widget? trailingWidget;
+  final Widget? leadingWidget;
   final String? title;
-  final Widget? titleWidget; // بديل للنص
+  final Widget? titleWidget;
   final MainAxisAlignment mainAxisAlignment;
   final CrossAxisAlignment crossAxisAlignment;
 
@@ -28,7 +29,7 @@ class AppHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.transparent,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
       child: Directionality(
         textDirection: TextDirection.rtl,
         child: Row(
@@ -36,27 +37,30 @@ class AppHeader extends StatelessWidget {
           crossAxisAlignment: crossAxisAlignment,
           children: [
             leadingWidget ??
-                IconButton(icon: const Icon(Icons.logout), onPressed: onLogout),
+                IconButton(
+                  icon: const Icon(Icons.logout),
+                  onPressed: onLogout,
+                  iconSize: 24.sp,
+                ),
 
             if (showAddButton && onAddPressed != null)
               IconButton(
-                icon: const Icon(Icons.add_circle_outline, color: Colors.black),
+                icon: Icon(Icons.add_circle_outline, color: Colors.black, size: 24.sp), // تعديل الحجم
                 onPressed: onAddPressed,
               ),
 
             Expanded(
               child: Center(
-                child:
-                    titleWidget ??
+                child: titleWidget ??
                     (title != null
                         ? Text(
-                            title!,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
-                            textAlign: TextAlign.right,
-                          )
+                      title!,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.sp,
+                      ),
+                      textAlign: TextAlign.right,
+                    )
                         : const SizedBox.shrink()),
               ),
             ),

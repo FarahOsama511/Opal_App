@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // تم إضافته هنا
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
 import '../../../user/presentaion/bloc/user_cubit.dart' show GetAllUserCubit;
@@ -61,7 +62,7 @@ class _StudentListState extends State<StudentList> {
                             filteredUsers.length) {
                           _isExpandedStudents = List.generate(
                             filteredUsers.length,
-                            (_) => false,
+                                (_) => false,
                           );
                         }
                       } else {
@@ -69,7 +70,7 @@ class _StudentListState extends State<StudentList> {
                             filteredUsers.length) {
                           _isExpandedSupervisors = List.generate(
                             filteredUsers.length,
-                            (_) => false,
+                                (_) => false,
                           );
                         }
                       }
@@ -78,13 +79,13 @@ class _StudentListState extends State<StudentList> {
                         return Center(
                           child: Text(
                             "لا يوجد مستخدمون",
-                            style: TextStyles.white20Bold,
+                            style: TextStyles.white20Bold.copyWith(fontSize: 20.sp),
                           ),
                         );
                       }
 
                       return ListView.builder(
-                        padding: const EdgeInsets.fromLTRB(16, 12, 16, 90),
+                        padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 90.h),
                         itemCount: filteredUsers.length,
                         itemBuilder: (context, index) {
                           final user = filteredUsers[index];
@@ -99,7 +100,7 @@ class _StudentListState extends State<StudentList> {
                               onToggle: () {
                                 setState(() {
                                   _isExpandedStudents[index] =
-                                      !_isExpandedStudents[index];
+                                  !_isExpandedStudents[index];
                                 });
                               },
                             );
@@ -113,7 +114,7 @@ class _StudentListState extends State<StudentList> {
                               onToggle: () {
                                 setState(() {
                                   _isExpandedSupervisors[index] =
-                                      !_isExpandedSupervisors[index];
+                                  !_isExpandedSupervisors[index];
                                 });
                               },
                             );
@@ -130,7 +131,7 @@ class _StudentListState extends State<StudentList> {
                       return Center(
                         child: Text(
                           "حدث خطأ أثناء تحميل البيانات.",
-                          style: TextStyles.white20Bold,
+                          style: TextStyles.white20Bold.copyWith(fontSize: 20.sp),
                         ),
                       );
                     }
@@ -146,7 +147,7 @@ class _StudentListState extends State<StudentList> {
 
   Widget _buildSwitchButtons() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       child: Row(
         children: [
           Expanded(
@@ -164,12 +165,13 @@ class _StudentListState extends State<StudentList> {
               child: Text(
                 'الطلاب',
                 style: TextStyle(
+                  fontSize: 16.sp,
                   color: isStudentsSelected ? Colors.white : Colors.black,
                 ),
               ),
             ),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12.w),
           Expanded(
             child: ElevatedButton(
               onPressed: () {
@@ -185,6 +187,7 @@ class _StudentListState extends State<StudentList> {
               child: Text(
                 'المشرفين',
                 style: TextStyle(
+                  fontSize: 16.sp,
                   color: isStudentsSelected
                       ? ColorManager.blackColor
                       : ColorManager.secondColor,

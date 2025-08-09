@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:opal_app/core/resources/text_styles.dart';
 
 class CustomTextField extends StatelessWidget {
@@ -18,30 +19,30 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
       child: TextFormField(
         controller: controller,
         textAlign: TextAlign.right,
         decoration: InputDecoration(
           hintText: hint,
           hintStyle: TextStyles.black16Regular,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 10,
-            vertical: 15,
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: 10.w,
+            vertical: 15.h,
           ),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Colors.black),
+            borderRadius: BorderRadius.circular(10.r),
+            borderSide: const BorderSide(color: Colors.black),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Colors.black),
+            borderRadius: BorderRadius.circular(10.r),
+            borderSide: const BorderSide(color: Colors.black),
           ),
           errorText: errorText,
-          errorStyle: const TextStyle(color: Colors.red, fontSize: 12),
+          errorStyle: TextStyle(color: Colors.red, fontSize: 12.sp),
         ),
         validator: (value) =>
-            value == null || value.isEmpty ? validatorMessage : null,
+        value == null || value.isEmpty ? validatorMessage : null,
       ),
     );
   }

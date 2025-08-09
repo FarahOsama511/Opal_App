@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class JoinRequestCard extends StatelessWidget {
   final String name;
@@ -25,10 +26,10 @@ class JoinRequestCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 6),
+      margin: EdgeInsets.symmetric(vertical: 6.h),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16.r),
       ),
       child: Column(
         children: [
@@ -36,30 +37,34 @@ class JoinRequestCard extends StatelessWidget {
             title: Text(
               name,
               textAlign: TextAlign.right,
-              style: const TextStyle(fontWeight: FontWeight.w600),
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 16.sp,
+              ),
             ),
             trailing: IconButton(
               icon: Icon(
                 isExpanded
                     ? Icons.keyboard_arrow_up
                     : Icons.keyboard_arrow_down,
+                size: 24.sp,
               ),
               onPressed: onToggle,
             ),
           ),
           if (isExpanded)
             Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 8,
+              padding: EdgeInsets.symmetric(
+                horizontal: 16.w,
+                vertical: 8.h,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   _buildInfoRow('رقم الهاتف', phone),
                   _buildInfoRow('الجامعة', university),
-                  //_buildInfoRow('الكلية', faculty),
-                  const SizedBox(height: 10),
+                  // _buildInfoRow('الكلية', faculty),
+                  SizedBox(height: 10.h),
                   Row(
                     children: [
                       Expanded(
@@ -67,23 +72,31 @@ class JoinRequestCard extends StatelessWidget {
                           onPressed: onReject,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.red,
+                            padding: EdgeInsets.symmetric(vertical: 12.h),
                           ),
-                          child: const Text('رفض الطلب'),
+                          child: Text(
+                            'رفض الطلب',
+                            style: TextStyle(fontSize: 14.sp),
+                          ),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12.w),
                       Expanded(
                         child: ElevatedButton(
                           onPressed: onAccept,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green,
+                            padding: EdgeInsets.symmetric(vertical: 12.h),
                           ),
-                          child: const Text('قبول الطلب'),
+                          child: Text(
+                            'قبول الطلب',
+                            style: TextStyle(fontSize: 14.sp),
+                          ),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8.h),
                 ],
               ),
             ),
@@ -94,12 +107,18 @@ class JoinRequestCard extends StatelessWidget {
 
   Widget _buildInfoRow(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
+      padding: EdgeInsets.symmetric(vertical: 2.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(value, style: const TextStyle(color: Colors.black87)),
-          Text(label, style: const TextStyle(color: Colors.grey)),
+          Text(
+            value,
+            style: TextStyle(color: Colors.black87, fontSize: 14.sp),
+          ),
+          Text(
+            label,
+            style: TextStyle(color: Colors.grey, fontSize: 14.sp),
+          ),
         ],
       ),
     );

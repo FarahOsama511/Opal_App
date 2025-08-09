@@ -21,13 +21,13 @@ class AddSupervisor extends StatefulWidget {
 }
 
 class _AddSupervisorState extends State<AddSupervisor> {
-  LineEntity? selectedLine;
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  final List<String> AllLines = [];
+  final nameController = TextEditingController();
+  final phoneController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  LineEntity? selectedLine;
+
   @override
   void initState() {
     super.initState();
@@ -35,21 +35,29 @@ class _AddSupervisorState extends State<AddSupervisor> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+  void dispose() {
+    nameController.dispose();
+    phoneController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorManager.secondColor,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
           child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                SizedBox(height: size.height * 0.05),
-                LogoCircle(),
-                const SizedBox(height: 37),
+                SizedBox(height: 50.h),
+                const LogoCircle(),
+                SizedBox(height: 37.h),
 
                 CustomTextField(
                   hint: 'الإسم',
@@ -72,11 +80,15 @@ class _AddSupervisorState extends State<AddSupervisor> {
                   validatorMessage: 'يرجى إدخال كلمة السر',
                 ),
 
+                SizedBox(height: 20.h),
+
                 BlocBuilder<LinesCubit, GetAllLinesState>(
                   builder: (context, state) {
                     if (state is LinesLoading) {
-                      return CircularProgressIndicator(
-                        color: ColorManager.primaryColor,
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: ColorManager.primaryColor,
+                        ),
                       );
                     } else if (state is LinesLoaded) {
                       final allLines = state.Liness;
@@ -89,23 +101,29 @@ class _AddSupervisorState extends State<AddSupervisor> {
                             selectedLine = line;
                           });
                         },
-                        displayString: (line) =>
-                            ' ${line.name ?? ''}', // هنا بيعرض الاسم
+                        displayString: (line) => line.name ?? '',
                       );
                     } else {
-                      return const Text('فشل في تحميل الخطوط');
+                      return Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10.h),
+                        child: const Text(
+                          'فشل في تحميل الخطوط',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      );
                     }
                   },
                 ),
 
-                const SizedBox(height: 10),
+                SizedBox(height: 20.h),
 
                 BlocConsumer<AddAdminSupervisorCubit, AddAdminSupervisorState>(
                   listener: (context, state) {
                     if (state is AddAdminSupervisorError) {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text(state.message)));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(state.message)),
+                      );
                     } else if (state is AddAdminSupervisorSuccess) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
@@ -124,7 +142,6 @@ class _AddSupervisorState extends State<AddSupervisor> {
                     }
                   },
                   builder: (context, state) {
-                    print('state is ${state}');
                     if (state is AddAdminSupervisorLoading) {
                       return const Center(child: CircularProgressIndicator());
                     }
@@ -133,62 +150,42 @@ class _AddSupervisorState extends State<AddSupervisor> {
                       text: 'إضافة مشرف',
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          print('selectedLine is $selectedLine');
-                          context
-                              .read<AddAdminSupervisorCubit>()
-                              .AddAdminORSupervisor(
-                                AddAdminSupervisorModel(
-                                  name: nameController.text,
-                                  phone: phoneController.text,
-                                  password: passwordController.text,
-                                  email: emailController.text,
-                                  role: "supervisor",
-                                  lineId: selectedLine!.id,
-                                ),
-                              );
+                          if (selectedLine == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('يرجى اختيار خط'),
+                              ),
+                            );
+                            return;
+                          }
+
+                          context.read<AddAdminSupervisorCubit>().AddAdminORSupervisor(
+                            AddAdminSupervisorModel(
+                              name: nameController.text,
+                              phone: phoneController.text,
+                              password: passwordController.text,
+                              email: emailController.text,
+                              role: "supervisor",
+                              lineId: selectedLine!.id,
+                            ),
+                          );
                         }
                       },
                     );
                   },
                 ),
+
                 SizedBox(height: 20.h),
+
                 PrimaryButton(
-                  text: 'إلفاء ',
-                  onPressed: () {
-                    setState(() {
-                      Navigator.pop(context);
-                    });
-                  },
+                  text: 'إلغاء',
+                  onPressed: () => Navigator.pop(context),
                   backgroundColor: ColorManager.greyColor,
                 ),
 
-                const SizedBox(height: 15),
+                SizedBox(height: 15.h),
               ],
             ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextField({required String hint, IconData? icon}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
-      child: TextField(
-        textAlign: TextAlign.right,
-        decoration: InputDecoration(
-          hintText: hint,
-          hintStyle: const TextStyle(fontSize: 14),
-          prefixIcon: icon != null ? Icon(icon, color: Colors.grey) : null,
-          filled: true,
-          fillColor: Colors.grey.shade200,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 18,
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide.none,
           ),
         ),
       ),

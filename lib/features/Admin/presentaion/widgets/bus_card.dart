@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/resources/text_styles.dart';
 
@@ -11,6 +12,7 @@ class BusCard extends StatelessWidget {
   final String supervisorName;
   final String departureTime;
   final String date;
+
   const BusCard({
     super.key,
     required this.isExpanded,
@@ -22,35 +24,35 @@ class BusCard extends StatelessWidget {
     required this.departureTime,
     required this.date,
   });
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
-        margin: const EdgeInsets.only(bottom: 15),
-        padding: const EdgeInsets.all(16),
+        margin: EdgeInsets.only(bottom: 15.h),
+        padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(16.r),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.1),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
+              blurRadius: 4.r,
+              offset: Offset(0, 2.h),
             ),
           ],
         ),
         child: Stack(
           children: [
             Positioned(
-              bottom: -40,
-              top: -40,
-              right: 240,
+              bottom: -40.h,
+              top: -40.h,
+              right: 240.w,
               child: Opacity(
                 opacity: 0.4,
-                child: Image.asset('assets/logos.png', width: 220, height: 240),
+                child: Image.asset('assets/logos.png', width: 220.w, height: 240.h),
               ),
             ),
             Directionality(
@@ -62,8 +64,7 @@ class BusCard extends StatelessWidget {
                   _RowInfo(label: 'اسم المشرف', value: supervisorName),
                   _RowInfo(label: 'ميعاد الذهاب', value: departureTime),
                   _RowInfo(label: 'تاريخ اليوم', value: date),
-
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10.h),
                 ],
               ),
             ),
@@ -78,24 +79,25 @@ class _RowInfo extends StatelessWidget {
   final String label;
   final String value;
   const _RowInfo({required this.label, required this.value});
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: EdgeInsets.symmetric(vertical: 4.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Flexible(
             child: Text(
               value,
-              style: TextStyles.black14Bold,
+              style: TextStyles.black14Bold.copyWith(fontSize: 14.sp),
               textAlign: TextAlign.left,
             ),
           ),
           Flexible(
             child: Text(
               label,
-              style: TextStyles.black14Bold,
+              style: TextStyles.black14Bold.copyWith(fontSize: 14.sp),
               textAlign: TextAlign.right,
             ),
           ),

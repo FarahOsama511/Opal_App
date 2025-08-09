@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:opal_app/core/network/local_network.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/student_list.dart';
@@ -8,7 +10,6 @@ import 'package:opal_app/features/user/presentaion/bloc/user_state.dart';
 import '../../../../core/resources/text_styles.dart';
 import '../widgets/add_menu.dart';
 import '../widgets/app_header.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/custom_bottom_nav.dart';
 import '../widgets/join_request_card.dart';
 import 'add_trip_time.dart';
@@ -40,11 +41,11 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
         child: Stack(
           children: [
             Positioned(
-              left: 240,
-              top: -80,
+              left: 240.w,
+              top: -80.h,
               child: Opacity(
                 opacity: 0.2,
-                child: Image.asset('assets/logos.png', width: 300, height: 300),
+                child: Image.asset('assets/logos.png', width: 300.w, height: 300.h),
               ),
             ),
             Column(
@@ -89,9 +90,9 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
               ),
             if (showAddTripBox)
               Positioned(
-                top: 150,
-                left: 20,
-                right: 20,
+                top: 150.h,
+                left: 20.w,
+                right: 20.w,
                 child: AddTripBox(
                   onClose: () => setState(() => showAddTripBox = false),
                 ),
@@ -106,14 +107,14 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     return Container(
       width: double.infinity,
       color: ColorManager.primaryColor,
-      padding: const EdgeInsets.only(top: 12, bottom: 90),
+      padding: EdgeInsets.only(top: 12.h, bottom: 90.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Align(
             alignment: Alignment.centerRight,
             child: Padding(
-              padding: EdgeInsets.only(right: 16, bottom: 12),
+              padding: EdgeInsets.only(right: 16.w, bottom: 12.h),
               child: Text('طلبات الانضمام', style: TextStyles.white20Bold),
             ),
           ),
@@ -121,15 +122,13 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
             child: BlocConsumer<GetAllUserCubit, UserState>(
               listener: (context, state) {
                 if (state is UserError) {
-                  print("ERROR:${state.message}");
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(SnackBar(content: Text(state.message)));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(state.message)),
+                  );
                 }
               },
               builder: (context, state) {
                 if (state is UserSuccess) {
-                  print("length:${state.user.length}");
                   final unactivatedUsers = state.user
                       .where((u) => u.status == 'pending')
                       .toList();
@@ -137,13 +136,12 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                     return Center(
                       child: Text(
                         "لا توجد طلبات انضمام حاليا",
-                        style: TextStyle(color: Colors.white, fontSize: 25),
+                        style: TextStyle(color: Colors.white, fontSize: 25.sp),
                       ),
                     );
                   }
-                  print("KEWFB${unactivatedUsers}");
                   return ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    padding: EdgeInsets.symmetric(horizontal: 12.w),
                     itemCount: unactivatedUsers.length,
                     itemBuilder: (context, index) {
                       final data = unactivatedUsers[index];
@@ -154,9 +152,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                         isExpanded: expandedIndex == index,
                         onToggle: () {
                           setState(() {
-                            expandedIndex = expandedIndex == index
-                                ? null
-                                : index;
+                            expandedIndex = expandedIndex == index ? null : index;
                           });
                         },
                         onAccept: () async {
@@ -164,11 +160,10 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                             data.id!,
                           );
                         },
-
                         onReject: () async {
-                          await context
-                              .read<GetAllUserCubit>()
-                              .userIsDeactivate(data.id!);
+                          await context.read<GetAllUserCubit>().userIsDeactivate(
+                            data.id!,
+                          );
                         },
                       );
                     },

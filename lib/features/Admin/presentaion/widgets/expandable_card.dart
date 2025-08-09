@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/resources/text_styles.dart';
 
@@ -6,7 +7,6 @@ class ExpandableCard extends StatelessWidget {
   final String name;
   final String phone;
   final String university;
-
   final String line;
   final bool isSupervisor;
   final bool isExpanded;
@@ -17,22 +17,26 @@ class ExpandableCard extends StatelessWidget {
     required this.name,
     required this.phone,
     this.university = '',
-
     this.line = '',
     required this.isSupervisor,
     required this.isExpanded,
     required this.onToggle,
   });
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 6),
-      padding: const EdgeInsets.all(14),
+      margin: EdgeInsets.symmetric(vertical: 6.h),
+      padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(color: Colors.black12, blurRadius: 3, offset: Offset(0, 2)),
+        borderRadius: BorderRadius.circular(16.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 3.r,
+            offset: Offset(0, 2.h),
+          ),
         ],
       ),
       child: Column(
@@ -43,7 +47,7 @@ class ExpandableCard extends StatelessWidget {
                 child: Text(
                   name,
                   textAlign: TextAlign.right,
-                  style: TextStyles.black14Bold,
+                  style: TextStyles.black14Bold.copyWith(fontSize: 14.sp),
                 ),
               ),
               IconButton(
@@ -52,6 +56,7 @@ class ExpandableCard extends StatelessWidget {
                       ? Icons.keyboard_arrow_up
                       : Icons.keyboard_arrow_down_rounded,
                   color: Colors.black,
+                  size: 24.sp,
                 ),
                 onPressed: onToggle,
               ),
@@ -59,16 +64,15 @@ class ExpandableCard extends StatelessWidget {
           ),
           if (isExpanded)
             Padding(
-              padding: const EdgeInsets.only(top: 12),
+              padding: EdgeInsets.only(top: 12.h),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   _buildInfoRow(phone, 'رقم الهاتف:'),
-                  if (!isSupervisor) ...[
-                    _buildInfoRow(university, 'الجامعة:'),
-                  ] else ...[
+                  if (!isSupervisor)
+                    _buildInfoRow(university, 'الجامعة:')
+                  else
                     _buildInfoRow(line, 'الخط:'),
-                  ],
                 ],
               ),
             ),
@@ -79,12 +83,12 @@ class ExpandableCard extends StatelessWidget {
 
   Widget _buildInfoRow(String title, String label) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 6),
+      padding: EdgeInsets.only(bottom: 6.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyles.black10Bold),
-          Text(title, style: TextStyles.black10Bold),
+          Text(label, style: TextStyles.black10Bold.copyWith(fontSize: 10.sp)),
+          Text(title, style: TextStyles.black10Bold.copyWith(fontSize: 10.sp)),
         ],
       ),
     );

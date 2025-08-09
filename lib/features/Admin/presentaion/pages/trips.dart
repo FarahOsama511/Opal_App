@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // موجودة بالفعل
 import 'package:intl/intl.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
 import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
@@ -41,20 +41,23 @@ class _TripsScreenState extends State<TripsScreen> {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h), // تعديل هنا
               child: Align(
                 alignment: Alignment.centerRight,
-                child: Text("مواعيد الرحلات", style: TextStyles.white20Bold),
+                child: Text(
+                  "مواعيد الرحلات",
+                  style: TextStyles.white20Bold.copyWith(fontSize: 20.sp), // تعديل هنا
+                ),
               ),
             ),
             Expanded(
               child: Container(
                 width: double.infinity,
-                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h), // تعديل هنا
                 decoration: BoxDecoration(
                   color: ColorManager.primaryColor,
                   borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(30.r),
+                    top: Radius.circular(30.r), // تعديل هنا
                   ),
                 ),
                 child: BlocConsumer<TourCubit, TourState>(
@@ -83,7 +86,7 @@ class _TripsScreenState extends State<TripsScreen> {
                         return Center(
                           child: Text(
                             "لا توجد رحلات حاليا",
-                            style: TextStyles.white14Bold,
+                            style: TextStyles.white14Bold.copyWith(fontSize: 14.sp), // تعديل هنا
                           ),
                         );
                       }
@@ -95,7 +98,7 @@ class _TripsScreenState extends State<TripsScreen> {
                           return BusCard(
                             line: 'خط ${state.tours[index].line.name}',
                             supervisorName:
-                                state.tours[index].driverName ?? "غير معرف",
+                            state.tours[index].driverName ?? "غير معرف",
                             departureTime: DateFormat(
                               'HH:mm',
                             ).format(state.tours[index].leavesAt),
@@ -116,7 +119,7 @@ class _TripsScreenState extends State<TripsScreen> {
                       return Center(
                         child: Text(
                           "حدث فشل في جلب البيانات",
-                          style: TextStyles.white14Bold,
+                          style: TextStyles.white14Bold.copyWith(fontSize: 14.sp), // تعديل هنا
                         ),
                       );
                     }

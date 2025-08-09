@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomBottomNav extends StatelessWidget {
   final int currentIndex;
@@ -13,13 +14,13 @@ class CustomBottomNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      left: 16,
-      right: 16,
-      bottom: 16,
+      left: 16.w,
+      right: 16.w,
+      bottom: 16.h,
       child: Container(
         decoration: BoxDecoration(
           color: const Color(0xFFE71A45),
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(24.r),
           boxShadow: const [
             BoxShadow(
               color: Colors.black26,
@@ -29,7 +30,7 @@ class CustomBottomNav extends StatelessWidget {
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(24.r),
           child: BottomNavigationBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
@@ -37,6 +38,10 @@ class CustomBottomNav extends StatelessWidget {
             selectedItemColor: Colors.white,
             unselectedItemColor: Colors.white70,
             onTap: onTap,
+            selectedLabelStyle: TextStyle(fontSize: 12.sp),
+            unselectedLabelStyle: TextStyle(fontSize: 11.sp),
+            selectedIconTheme: IconThemeData(size: 28.sp),
+            unselectedIconTheme: IconThemeData(size: 24.sp),
             items: const [
               BottomNavigationBarItem(
                 icon: Icon(Icons.home),

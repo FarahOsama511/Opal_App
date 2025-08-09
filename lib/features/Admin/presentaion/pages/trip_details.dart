@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // ✅ تمت الإضافة
 import 'package:opal_app/features/user/presentaion/pages/user_home_screen.dart';
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
@@ -20,14 +21,14 @@ class TripDetailsScreen extends StatelessWidget {
           child: Stack(
             children: [
               Positioned(
-                left: 210,
-                top: -100,
+                left: 210.w,
+                top: -100.h,
                 child: Opacity(
                   opacity: 0.2,
                   child: Image.asset(
                     'assets/logos.png',
-                    width: 300,
-                    height: 300,
+                    width: 300.w,
+                    height: 300.h,
                   ),
                 ),
               ),
@@ -36,9 +37,9 @@ class TripDetailsScreen extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20.h),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -46,7 +47,7 @@ class TripDetailsScreen extends StatelessWidget {
                           child: Text(
                             'رحلة آمنة\nصحبتك السلامة!',
                             textAlign: TextAlign.right,
-                            style: TextStyles.black20Bold,
+                            style: TextStyles.black20Bold.copyWith(fontSize: 20.sp),
                           ),
                         ),
                         IconButton(
@@ -62,29 +63,29 @@ class TripDetailsScreen extends StatelessWidget {
                     ),
                   ),
 
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20.h),
 
                   // الكارت والمعلومات
                   Expanded(
                     child: Container(
                       width: double.infinity,
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         color: ColorManager.primaryColor,
                         borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(32),
+                          top: Radius.circular(32.r),
                         ),
                       ),
                       child: SingleChildScrollView(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 20,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 20.h,
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            const SizedBox(height: 40),
+                            SizedBox(height: 40.h),
                             _InfoCard(tour: tour),
-                            const SizedBox(height: 20),
+                            SizedBox(height: 20.h),
                             _ActionButtons(tourId: tour.id!),
                           ],
                         ),
@@ -118,10 +119,10 @@ class _InfoCardState extends State<_InfoCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+      padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 16.w),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16.r),
         border: Border.all(color: Colors.black, width: 1),
       ),
       width: double.infinity,
@@ -137,7 +138,7 @@ class _InfoCardState extends State<_InfoCard> {
             _InfoRow(
               title: 'ميعاد الذهاب',
               value:
-                  '${intl.DateFormat('HH:mm').format(widget.tour.leavesAt)} صباحاً',
+              '${intl.DateFormat('HH:mm').format(widget.tour.leavesAt)} صباحاً',
             ),
             _InfoRow(
               title: 'تاريخ اليوم',
@@ -158,12 +159,12 @@ class _InfoRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: EdgeInsets.only(bottom: 12.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(title, style: const TextStyle(color: Colors.black)),
-          Text(value, style: const TextStyle(fontWeight: FontWeight.w600)),
+          Text(title, style: TextStyle(color: Colors.black, fontSize: 14.sp)),
+          Text(value, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14.sp)),
         ],
       ),
     );
@@ -190,7 +191,7 @@ class _ActionButtons extends StatelessWidget {
             );
           },
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12.h),
         _MainButton(
           label: 'إلغاء الرحلة',
           backgroundColor: Colors.grey,
@@ -225,14 +226,14 @@ class _MainButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 46,
+      height: 46.h,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: backgroundColor,
           foregroundColor: textColor,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(24.r),
           ),
           elevation: 0,
           side: BorderSide(
@@ -240,7 +241,7 @@ class _MainButton extends StatelessWidget {
             width: backgroundColor == Colors.white ? 1.5 : 0,
           ),
         ),
-        child: Text(label, style: const TextStyle(fontSize: 16)),
+        child: Text(label, style: TextStyle(fontSize: 16.sp)),
       ),
     );
   }
