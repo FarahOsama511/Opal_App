@@ -22,6 +22,7 @@ import 'package:opal_app/features/Admin/presentaion/bloc/add_lines/add_line_cubi
 import 'package:opal_app/features/Admin/presentaion/bloc/delete_user/delete_user_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_bloc/tour_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_id.dart/get_tour_id_cubit.dart';
+import 'package:opal_app/features/supervisor/bloc/get_university_by_id/get_university_by_id_cubit.dart';
 import 'package:opal_app/features/user/Data/datasource/select_tour_remote_data_source.dart';
 import 'package:opal_app/features/user/Data/datasource/university_data_source.dart';
 import 'package:opal_app/features/user/Data/datasource/university_local_data_source.dart';
@@ -36,6 +37,7 @@ import 'package:opal_app/features/user/Domain/repositires/user_repo.dart';
 import 'package:opal_app/features/user/Domain/usecases/delete_user_usecase.dart';
 import 'package:opal_app/features/user/Domain/usecases/get_all_univeristies.dart';
 import 'package:opal_app/features/user/Domain/usecases/get_all_user.dart';
+import 'package:opal_app/features/user/Domain/usecases/get_university_id_usecase.dart';
 import 'package:opal_app/features/user/Domain/usecases/get_user_id_use_case.dart';
 import 'package:opal_app/features/user/Domain/usecases/select_tour_use_case.dart';
 import 'package:opal_app/features/user/Domain/usecases/unconfirm_tour_use_case.dart';
@@ -80,6 +82,7 @@ Future<void> init() async {
   setUp.registerFactory(() => SelectionTourCubit(setUp(), setUp()));
   setUp.registerFactory(() => GetTourIdCubit(setUp()));
   setUp.registerFactory(() => DeleteUserCubit(setUp()));
+  setUp.registerFactory(() => GetUniversityByIdCubit(setUp()));
 
   //usecases
   setUp.registerLazySingleton(() => GetAllToursUseCase(setUp()));
@@ -95,6 +98,7 @@ Future<void> init() async {
   setUp.registerLazySingleton(() => DeleteUserUsecase(setUp()));
   setUp.registerLazySingleton(() => AddAdminSupervisorUseCase(setUp()));
   setUp.registerLazySingleton(() => GetAllUniveristiesUseCase(setUp()));
+  setUp.registerLazySingleton(() => GetUniversityIdUsecase(setUp()));
   setUp.registerLazySingleton(() => GetTourByIdUseCase(setUp()));
   setUp.registerLazySingleton(() => AddLineUseCase(setUp()));
   setUp.registerLazySingleton(() => GetLineByIdUseCase(setUp()));

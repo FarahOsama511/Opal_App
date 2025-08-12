@@ -5,4 +5,5 @@ import '../../../../core/errors/failure.dart';
 
 abstract class UniversityRepo {
   Future<Either<Failure, List<UniversityEntity>>> getAllUniversities();
+  Future<Either<Failure, UniversityEntity>> getUniversityById(String id);
 }

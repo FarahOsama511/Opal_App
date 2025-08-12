@@ -10,7 +10,7 @@ import '../../../../core/resources/text_styles.dart';
 import '../../../Admin/presentaion/pages/admin_home_screen.dart';
 import '../../../Admin/presentaion/widgets/custom_widgets.dart';
 import '../../../Admin/presentaion/widgets/text_field.dart';
-import '../../../supervisor/show_tours.dart';
+import '../../../supervisor/presentation/pages/show_tours.dart';
 import '../bloc/user_cubit.dart';
 
 class SignInScreen extends StatefulWidget {

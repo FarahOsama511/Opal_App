@@ -7,12 +7,10 @@ class Tour extends Equatable {
   final String type;
   final String? driverName; // <-- خليتها nullable
   final DateTime leavesAt;
-  //final String? supervisorName;
   final LineEntity line;
   final List<UserEntity>? users;
 
   Tour({
-    //  required this.supervisorName,
     this.users,
     this.id,
     required this.type,
@@ -22,15 +20,7 @@ class Tour extends Equatable {
   });
 
   @override
-  List<Object?> get props => [
-    id,
-    type,
-    driverName,
-    leavesAt,
-    line,
-    users,
-    // supervisorName,
-  ];
+  List<Object?> get props => [id, type, driverName, leavesAt, line, users];
   String get typeDisplay {
     switch (type) {
       case 'go':

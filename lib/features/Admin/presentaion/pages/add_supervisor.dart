@@ -144,6 +144,7 @@ class _AddSupervisorState extends State<AddSupervisor> {
                                   email: emailController.text,
                                   role: "supervisor",
                                   lineId: selectedLine!.id,
+                                  line: selectedLine,
                                 ),
                               );
                         }

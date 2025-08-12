@@ -46,4 +46,18 @@ class UniversityRepoImpl extends UniversityRepo {
       }
     }
   }
+
+  @override
+  Future<Either<Failure, UniversityEntity>> getUniversityById(String id) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final university = await universityDataSource.getUniversityById(id);
+        return Right(university);
+      } on ServerException {
+        throw ServerFailure();
+      }
+    } else {
+      return Left(NoInternetFailure());
+    }
+  }
 }

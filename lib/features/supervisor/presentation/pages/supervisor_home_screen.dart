@@ -7,10 +7,10 @@ import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_id.dart/get_to
 import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_id.dart/get_tour_id_state.dart';
 import 'package:opal_app/features/user/presentaion/bloc/user_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/user_state.dart';
-import '../../core/network/local_network.dart' show CacheNetwork;
-import '../../core/resources/text_styles.dart';
-import '../Admin/presentaion/widgets/app_header.dart';
-import '../Admin/presentaion/widgets/expandable_card.dart';
+import '../../../../core/network/local_network.dart' show CacheNetwork;
+import '../../../../core/resources/text_styles.dart';
+import '../../../Admin/presentaion/widgets/app_header.dart';
+import '../../../Admin/presentaion/widgets/expandable_card.dart';
 
 class SupervisorScreen extends StatefulWidget {
   TourModel tour;
@@ -21,18 +21,6 @@ class SupervisorScreen extends StatefulWidget {
 
 class _SupervisorScreenState extends State<SupervisorScreen> {
   List<bool>? expandedList;
-  // bool _inInit = true;
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   if (_inInit) {
-  //     BlocProvider.of<GetAllUserCubit>(
-  //       context,
-  //     ).getUserById(widget.superVisorId);
-  //     BlocProvider.of<GetTourIdCubit>(context).getTourById(widget.tourId);
-  //     _inInit = false;
-  //   }
-  // }
   @override
   void initState() {
     super.initState();
@@ -78,7 +66,7 @@ class _SupervisorScreenState extends State<SupervisorScreen> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                '!مرحباً ${CacheNetwork.getCacheData(key: "Save_UserName")}',
+                                'مرحباً ${CacheNetwork.getCacheData(key: "Save_UserName")}!',
                                 style: TextStyles.black20Bold.copyWith(
                                   fontSize: 20.sp,
                                 ),
@@ -190,12 +178,15 @@ class _SupervisorScreenState extends State<SupervisorScreen> {
                                   child: ListView.builder(
                                     itemCount: users.length,
                                     itemBuilder: (context, index) {
+                                      print(
+                                        "university of user is${users[index].universityId}",
+                                      );
                                       final user = users[index];
                                       return ExpandableCard(
                                         name: user.name ?? '',
                                         phone: user.phone ?? '',
-                                        university: user.university?.name ?? '',
-
+                                        // university: user.university!.name ?? '',
+                                        // universityId: user.universityId,
                                         isSupervisor: false,
                                         isExpanded: expandedList![index],
                                         onToggle: () {
@@ -217,10 +208,10 @@ class _SupervisorScreenState extends State<SupervisorScreen> {
                               ),
                             );
                           } else if (state is getTourByIdError) {
-                            return const Center(
+                            return Center(
                               child: Text(
-                                'فشل تحميل البيانات',
-                                style: TextStyle(color: Colors.white),
+                                state.message,
+                                style: TextStyles.white14Bold,
                               ),
                             );
                           } else {

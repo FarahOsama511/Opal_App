@@ -1,3 +1,4 @@
+import 'package:opal_app/features/Admin/Data/models/line_model.dart';
 import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
 
 class AddAdminSupervisorModel extends UserEntity {
@@ -9,6 +10,7 @@ class AddAdminSupervisorModel extends UserEntity {
     super.email,
     super.role,
     super.lineId,
+    super.line,
   });
   factory AddAdminSupervisorModel.fromJson(Map<String, dynamic> json) {
     return AddAdminSupervisorModel(
@@ -19,10 +21,12 @@ class AddAdminSupervisorModel extends UserEntity {
       password: json['password'],
       email: json['email'],
       role: json['role'],
+      line: json['line'] != null ? LineModel.fromJson(json['line']) : null,
     );
   }
   Map<String, dynamic> toJson() {
     return {
+      'line': line is LineModel ? (line as LineModel).toJson() : null,
       'lineId': lineId,
       'id': id,
       'name': name,

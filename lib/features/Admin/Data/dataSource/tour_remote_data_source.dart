@@ -124,10 +124,6 @@ class TourRemoteDataSourceImpl implements TourRemoteDataSource {
 
   @override
   Future<TourModel> getTourById(String id) async {
-    if (token != null && token != "" && role == 'admin' ||
-        role == 'supervisor') {
-      tokenAdmin = CacheNetwork.getCacheData(key: 'access_token');
-    }
     final response = await client.get(
       Uri.parse('${Base_Url}tours/${id}'),
       headers: {'Authorization': 'Bearer $token'},

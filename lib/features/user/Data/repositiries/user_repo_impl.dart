@@ -89,20 +89,16 @@ class UserRepoImpl extends UserRepo {
 
   @override
   Future<Either<Failure, UserEntity>> getUserById(String userId) async {
-    {
-      if (await networkInfo.isConnected) {
-        try {
-          final userIsDeactivate = await userRemoteDataSource.getUserById(
-            userId,
-          );
-          // userLocalDataSource.saveUsers(userIsActivate);
-          return Right(userIsDeactivate);
-        } on ServerException {
-          throw ServerFailure();
-        }
-      } else {
-        return Left(NoInternetFailure());
+    if (await networkInfo.isConnected) {
+      try {
+        final user = await userRemoteDataSource.getUserById(userId);
+        // userLocalDataSource.saveUsers(userIsActivate);
+        return Right(user);
+      } on ServerException {
+        throw ServerFailure();
       }
+    } else {
+      return Left(NoInternetFailure());
     }
   }
 

@@ -13,7 +13,7 @@ import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_id.dart/get_to
 import 'package:opal_app/features/Admin/presentaion/pages/add_line.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/admin_home_screen.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/trips.dart';
-import 'package:opal_app/features/supervisor/show_tours.dart';
+import 'package:opal_app/features/supervisor/presentation/pages/show_tours.dart';
 import 'package:opal_app/features/user/presentaion/bloc/get_all_universities/get_all_universities_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/selection_tour/selection_tour_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/user_cubit.dart';
@@ -23,6 +23,7 @@ import 'features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete
 import 'features/Admin/presentaion/pages/add_admin.dart';
 import 'features/Admin/presentaion/pages/add_supervisor.dart';
 import 'features/Admin/presentaion/pages/student_list.dart';
+import 'features/supervisor/bloc/get_university_by_id/get_university_by_id_cubit.dart';
 import 'features/user/presentaion/bloc/auth_cubit.dart';
 import 'features/user/presentaion/pages/sign_in.dart';
 import 'features/user/presentaion/pages/sign_up.dart';
@@ -70,6 +71,7 @@ class StudentBusApp extends StatelessWidget {
             BlocProvider(create: (_) => di.setUp<SelectionTourCubit>()),
             BlocProvider(create: (_) => di.setUp<GetTourIdCubit>()),
             BlocProvider(create: (_) => di.setUp<DeleteUserCubit>()),
+            BlocProvider(create: (_) => di.setUp<GetUniversityByIdCubit>()),
           ],
           child: MaterialApp(
             localizationsDelegates: const [

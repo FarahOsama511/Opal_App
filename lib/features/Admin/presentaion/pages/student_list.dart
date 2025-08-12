@@ -93,7 +93,8 @@ class _StudentListState extends State<StudentList> {
                             return ExpandableCard(
                               name: user.name!,
                               phone: user.phone!,
-                              university: user.university?.name ?? '',
+                              // university: user.university?.name ?? '',
+                              universityId: user.universityId,
                               isSupervisor: false,
                               isExpanded: _isExpandedStudents[index],
                               onToggle: () {
@@ -103,9 +104,7 @@ class _StudentListState extends State<StudentList> {
                                 });
                               },
                               onLongPress: () {
-                                setState(() {
-                                  // Handle long press action here
-                                });
+                                setState(() {});
                               },
                             );
                           } else {
@@ -113,6 +112,7 @@ class _StudentListState extends State<StudentList> {
                               name: user.name!,
                               phone: user.phone!,
                               line: user.line?.name ?? '',
+                              //  universityId: user.universityId,
                               isSupervisor: true,
                               isExpanded: _isExpandedSupervisors[index],
                               onToggle: () {

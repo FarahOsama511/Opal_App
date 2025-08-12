@@ -13,6 +13,7 @@ class GetAllUserCubit extends Cubit<UserState> {
   final UserIsDeactivatUseCase userIsDeactivatUseCase;
   final GetUserIdUseCase getUserIdUseCase;
   String? userId;
+  String? lineName;
   GetAllUserCubit(
     this.getUserIdUseCase,
     this.getAllUserUseCase,
@@ -87,6 +88,7 @@ class GetAllUserCubit extends Cubit<UserState> {
         (userById) async {
           emit(UserByIdSuccess(userById));
           userId = userById.id!;
+          lineName = userById.line!.name;
           print(" User successfully: ${userById}");
         },
       );
