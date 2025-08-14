@@ -13,15 +13,16 @@ class ExpandableCard extends StatefulWidget {
   final bool isExpanded;
   final VoidCallback onToggle;
   final Function()? onLongPress;
+  final Widget? deleteIcon;
 
   ExpandableCard({
     this.universityId,
     this.onLongPress,
+    this.deleteIcon,
     super.key,
     required this.name,
     required this.phone,
     this.university = '',
-
     this.line = '',
     required this.isSupervisor,
     required this.isExpanded,
@@ -60,7 +61,6 @@ class _ExpandableCardState extends State<ExpandableCard> {
       child: Column(
         children: [
           InkWell(
-            onTap: widget.onLongPress,
             child: Row(
               children: [
                 Expanded(
@@ -70,6 +70,8 @@ class _ExpandableCardState extends State<ExpandableCard> {
                     style: TextStyles.black14Bold,
                   ),
                 ),
+                if (widget.isExpanded && widget.deleteIcon != null)
+                  widget.deleteIcon!,
                 IconButton(
                   icon: Icon(
                     widget.isExpanded

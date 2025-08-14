@@ -9,6 +9,7 @@ import '../../../../core/resources/text_styles.dart';
 import '../bloc/get_tour_bloc/tour_state.dart';
 
 import '../widgets/bus_card.dart';
+import '../widgets/search_field.dart';
 import '../widgets/trip_dialog.dart';
 
 class TripsScreen extends StatefulWidget {
@@ -61,27 +62,15 @@ class _TripsScreenState extends State<TripsScreen> {
                 child: Text("مواعيد الرحلات", style: TextStyles.white20Bold),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: TextField(
-                onChanged: (value) {
-                  setState(() {
-                    _updateFilteredTours(value);
-                  });
-                },
-                decoration: InputDecoration(
-                  hintText: 'ابحث عن رحلة',
-                  hintStyle: TextStyles.grey14Regular,
-                  prefixIcon: const Icon(
-                    Icons.search,
-                    color: ColorManager.secondColor,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                    borderSide: BorderSide(color: ColorManager.secondColor),
-                  ),
-                ),
-              ),
+            SearchField(
+              hintText: 'ابحث عن رحلة',
+              fillColor: Colors.white,
+              iconColor: Colors.black,
+              onChanged: (value) {
+                setState(() {
+                  _updateFilteredTours(value);
+                });
+              },
             ),
             Expanded(
               child: Container(

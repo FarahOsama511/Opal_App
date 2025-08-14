@@ -8,6 +8,7 @@ import '../../../user/Domain/entities/user_entity.dart';
 import '../../../user/presentaion/bloc/user_cubit.dart' show GetAllUserCubit;
 import '../../../user/presentaion/bloc/user_state.dart';
 import '../widgets/expandable_card.dart';
+import '../widgets/search_field.dart';
 
 class StudentList extends StatefulWidget {
   const StudentList({super.key});
@@ -69,24 +70,16 @@ class _StudentListState extends State<StudentList> {
       body: SafeArea(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: TextField(
-                onChanged: (value) {
-                  setState(() {
-                    _searchQuery = value;
-                    _updateFilteredUsers();
-                  });
-                },
-                decoration: InputDecoration(
-                  hintText: 'ابحث عن مستخدم',
-                  prefixIcon: const Icon(Icons.search),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                    borderSide: BorderSide(color: ColorManager.greyColor),
-                  ),
-                ),
-              ),
+            SearchField(
+              hintText: 'ابحث عن مستخدم',
+              fillColor: Colors.white,
+              iconColor: Colors.red,
+              onChanged: (value) {
+                setState(() {
+                  _searchQuery = value;
+                  _updateFilteredUsers();
+                });
+              },
             ),
             _buildSwitchButtons(),
             Expanded(
@@ -133,8 +126,7 @@ class _StudentListState extends State<StudentList> {
                               isExpanded: _isExpandedStudents[index],
                               onToggle: () {
                                 setState(() {
-                                  _isExpandedStudents[index] =
-                                      !_isExpandedStudents[index];
+                                  _isExpandedStudents[index] = !_isExpandedStudents[index];
                                 });
                               },
                               onLongPress: () {
@@ -157,6 +149,24 @@ class _StudentListState extends State<StudentList> {
                                   );
                                 });
                               },
+                              deleteIcon: IconButton(icon: const Icon(Icons.delete, color: Colors.red),
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return DeleteDialog(
+                                        context: context,
+                                        title: "تأكيد الحذف",
+                                        content: "هل تريد حذف ${user.name}؟",
+                                        onConfirm: () {
+                                          BlocProvider.of<DeleteUserCubit>(context).deleteUser(user.id!);
+                                          Navigator.of(context).pop();
+                                        },
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
                             );
                           } else {
                             return ExpandableCard(
@@ -168,8 +178,7 @@ class _StudentListState extends State<StudentList> {
                               isExpanded: _isExpandedSupervisors[index],
                               onToggle: () {
                                 setState(() {
-                                  _isExpandedSupervisors[index] =
-                                      !_isExpandedSupervisors[index];
+                                  _isExpandedSupervisors[index] = !_isExpandedSupervisors[index];
                                 });
                               },
                               onLongPress: () {
@@ -192,6 +201,24 @@ class _StudentListState extends State<StudentList> {
                                   );
                                 });
                               },
+                              deleteIcon: IconButton(icon: const Icon(Icons.delete, color: Colors.red),
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return DeleteDialog(
+                                        context: context,
+                                        title: "تأكيد الحذف",
+                                        content: "هل تريد حذف ${user.name}؟",
+                                        onConfirm: () {
+                                          BlocProvider.of<DeleteUserCubit>(context).deleteUser(user.id!);
+                                          Navigator.of(context).pop();
+                                        },
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
                             );
                           }
                         },
@@ -214,12 +241,7 @@ class _StudentListState extends State<StudentList> {
                 ),
               ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-
+          ],),),);}
   Widget _buildSwitchButtons() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
