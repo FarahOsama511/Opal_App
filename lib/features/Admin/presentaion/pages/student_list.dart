@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/delete_user/delete_user_cubit.dart';
+import 'package:opal_app/features/Admin/presentaion/widgets/delete_dialog.dart';
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
+import '../../../user/Domain/entities/user_entity.dart';
 import '../../../user/presentaion/bloc/user_cubit.dart' show GetAllUserCubit;
 import '../../../user/presentaion/bloc/user_state.dart';
-
 import '../widgets/expandable_card.dart';
 
 class StudentList extends StatefulWidget {
@@ -17,6 +19,42 @@ class _StudentListState extends State<StudentList> {
   bool isStudentsSelected = true;
   List<bool> _isExpandedStudents = [];
   List<bool> _isExpandedSupervisors = [];
+  List<UserEntity> _users = [];
+  List<UserEntity> _filteredUsers = [];
+  String _searchQuery = '';
+
+  void _updateFilteredUsers() {
+    // Filter by role first
+    _filteredUsers = _users.where((user) {
+      return isStudentsSelected
+          ? user.role == "student"
+          : user.role == "supervisor";
+    }).toList();
+
+    // Then apply search filter if query is not empty
+    if (_searchQuery.isNotEmpty) {
+      _filteredUsers = _filteredUsers.where((user) {
+        return user.name!.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+            user.id!.contains(_searchQuery) ||
+            user.phone!.contains(_searchQuery);
+      }).toList();
+    }
+    if (isStudentsSelected) {
+      if (_isExpandedStudents.length != _filteredUsers.length) {
+        _isExpandedStudents = List.generate(
+          _filteredUsers.length,
+          (_) => false,
+        );
+      }
+    } else {
+      if (_isExpandedSupervisors.length != _filteredUsers.length) {
+        _isExpandedSupervisors = List.generate(
+          _filteredUsers.length,
+          (_) => false,
+        );
+      }
+    }
+  }
 
   @override
   void initState() {
@@ -27,10 +65,29 @@ class _StudentListState extends State<StudentList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: ColorManager.secondColor,
       body: SafeArea(
         child: Column(
           children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: TextField(
+                onChanged: (value) {
+                  setState(() {
+                    _searchQuery = value;
+                    _updateFilteredUsers();
+                  });
+                },
+                decoration: InputDecoration(
+                  hintText: 'ابحث عن مستخدم',
+                  prefixIcon: const Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                    borderSide: BorderSide(color: ColorManager.greyColor),
+                  ),
+                ),
+              ),
+            ),
             _buildSwitchButtons(),
             Expanded(
               child: Container(
@@ -46,35 +103,12 @@ class _StudentListState extends State<StudentList> {
                   },
                   builder: (context, state) {
                     if (state is UserSuccess) {
-                      final filteredUsers = state.user.where((u) {
-                        return (u.status == 'active' && isStudentsSelected
-                            ? u.role == "student"
-                            : u.role == "supervisor");
-                      }).toList();
+                      _users = state.user
+                          .where((u) => u.status == 'active')
+                          .toList();
+                      _updateFilteredUsers();
 
-                      print(
-                        "عدد المستخدمين المستلمين من السيرفر: ${state.user.length}",
-                      );
-
-                      if (isStudentsSelected) {
-                        if (_isExpandedStudents.length !=
-                            filteredUsers.length) {
-                          _isExpandedStudents = List.generate(
-                            filteredUsers.length,
-                            (_) => false,
-                          );
-                        }
-                      } else {
-                        if (_isExpandedSupervisors.length !=
-                            filteredUsers.length) {
-                          _isExpandedSupervisors = List.generate(
-                            filteredUsers.length,
-                            (_) => false,
-                          );
-                        }
-                      }
-
-                      if (filteredUsers.isEmpty) {
+                      if (_filteredUsers.isEmpty) {
                         return Center(
                           child: Text(
                             "لا يوجد مستخدمون",
@@ -85,10 +119,10 @@ class _StudentListState extends State<StudentList> {
 
                       return ListView.builder(
                         padding: const EdgeInsets.fromLTRB(16, 12, 16, 90),
-                        itemCount: filteredUsers.length,
+                        itemCount: _filteredUsers.length,
                         itemBuilder: (context, index) {
-                          final user = filteredUsers[index];
-                          print(user);
+                          final user = _filteredUsers[index];
+                          print("_filteredUsers${_filteredUsers.length}");
                           if (isStudentsSelected) {
                             return ExpandableCard(
                               name: user.name!,
@@ -104,7 +138,24 @@ class _StudentListState extends State<StudentList> {
                                 });
                               },
                               onLongPress: () {
-                                setState(() {});
+                                setState(() {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return DeleteDialog(
+                                        context: context,
+                                        title: "تأكيد الحذف",
+                                        content: "هل تريد حذف ${user.name}؟",
+                                        onConfirm: () {
+                                          BlocProvider.of<DeleteUserCubit>(
+                                            context,
+                                          ).deleteUser(user.id!);
+                                          Navigator.of(context).pop();
+                                        },
+                                      );
+                                    },
+                                  );
+                                });
                               },
                             );
                           } else {
@@ -122,7 +173,24 @@ class _StudentListState extends State<StudentList> {
                                 });
                               },
                               onLongPress: () {
-                                setState(() {});
+                                setState(() {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return DeleteDialog(
+                                        context: context,
+                                        title: "تأكيد الحذف",
+                                        content: "هل تريد حذف ${user.name}؟",
+                                        onConfirm: () {
+                                          BlocProvider.of<DeleteUserCubit>(
+                                            context,
+                                          ).deleteUser(user.id!);
+                                          Navigator.of(context).pop();
+                                        },
+                                      );
+                                    },
+                                  );
+                                });
                               },
                             );
                           }
@@ -160,9 +228,12 @@ class _StudentListState extends State<StudentList> {
           Expanded(
             child: ElevatedButton(
               onPressed: () {
-                setState(() {
-                  isStudentsSelected = true;
-                });
+                if (!isStudentsSelected) {
+                  setState(() {
+                    isStudentsSelected = true;
+                    _updateFilteredUsers();
+                  });
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: isStudentsSelected
@@ -181,9 +252,12 @@ class _StudentListState extends State<StudentList> {
           Expanded(
             child: ElevatedButton(
               onPressed: () {
-                setState(() {
-                  isStudentsSelected = false;
-                });
+                if (isStudentsSelected) {
+                  setState(() {
+                    isStudentsSelected = false;
+                    _updateFilteredUsers();
+                  });
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: isStudentsSelected

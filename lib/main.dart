@@ -7,6 +7,7 @@ import 'package:opal_app/core/constants/constants.dart';
 import 'package:opal_app/core/get_it.dart' as di;
 import 'package:opal_app/core/network/local_network.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/add_lines/add_line_cubit.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/add_university/add_university_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/delete_user/delete_user_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_id.dart/get_tour_id_cubit.dart';
@@ -22,6 +23,7 @@ import 'features/Admin/presentaion/bloc/get_tour_bloc/tour_cubit.dart';
 import 'features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_cubit.dart';
 import 'features/Admin/presentaion/pages/add_admin.dart';
 import 'features/Admin/presentaion/pages/add_supervisor.dart';
+import 'features/Admin/presentaion/pages/add_university.dart';
 import 'features/Admin/presentaion/pages/student_list.dart';
 import 'features/supervisor/bloc/get_university_by_id/get_university_by_id_cubit.dart';
 import 'features/user/presentaion/bloc/auth_cubit.dart';
@@ -72,6 +74,7 @@ class StudentBusApp extends StatelessWidget {
             BlocProvider(create: (_) => di.setUp<GetTourIdCubit>()),
             BlocProvider(create: (_) => di.setUp<DeleteUserCubit>()),
             BlocProvider(create: (_) => di.setUp<GetUniversityByIdCubit>()),
+            BlocProvider(create: (_) => di.setUp<AddUniversityCubit>()),
           ],
           child: MaterialApp(
             localizationsDelegates: const [
@@ -99,6 +102,7 @@ class StudentBusApp extends StatelessWidget {
               '/addAdmin': (context) => const AddAdmin(),
               '/addSupervisor': (context) => const AddSupervisor(),
               '/addLine': (context) => const AddLine(),
+              '/addUniversity': (context) => const AddUniversity(),
               '/trips': (context) => const TripsScreen(),
             },
           ),

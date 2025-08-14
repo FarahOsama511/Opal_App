@@ -2,7 +2,6 @@ import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
 import 'package:opal_app/core/constants/constants.dart';
 import 'package:opal_app/core/errors/exceptions.dart';
-import 'package:opal_app/core/network/local_network.dart';
 import '../models/tour_model.dart';
 import 'dart:convert';
 
@@ -38,9 +37,6 @@ class TourRemoteDataSourceImpl implements TourRemoteDataSource {
 
   @override
   Future<Unit> addTour(TourModel tour) async {
-    if (token != null && token != "" && role == 'admin') {
-      tokenAdmin = CacheNetwork.getCacheData(key: 'access_token');
-    }
     final body = {
       'type': tour.type,
       'driverName': tour.driverName,
@@ -52,7 +48,7 @@ class TourRemoteDataSourceImpl implements TourRemoteDataSource {
       Uri.parse('${Base_Url}tours'),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${tokenAdmin}',
+        'Authorization': 'Bearer ${token}',
       },
       body: jsonEncode(body),
     );
@@ -68,9 +64,9 @@ class TourRemoteDataSourceImpl implements TourRemoteDataSource {
 
   @override
   Future<Unit> updateTour(TourModel tour) async {
-    if (token != null && token != "" && role == 'admin') {
-      tokenAdmin = CacheNetwork.getCacheData(key: 'access_token');
-    }
+    // if (token != null && token != "" && role == 'admin') {
+    //   tokenAdmin = CacheNetwork.getCacheData(key: 'access_token');
+    // }
     final tourId = tour.id.toString();
     final body = {
       'type': tour.type,
@@ -82,7 +78,7 @@ class TourRemoteDataSourceImpl implements TourRemoteDataSource {
       Uri.parse('${Base_Url}tours/${tourId}'),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $tokenAdmin',
+        'Authorization': 'Bearer $token',
       },
       body: jsonEncode(body),
     );
@@ -102,15 +98,15 @@ class TourRemoteDataSourceImpl implements TourRemoteDataSource {
 
   @override
   Future<Unit> deleteTour(String id) async {
-    if (token != null && token != "" && role == 'admin') {
-      tokenAdmin = CacheNetwork.getCacheData(key: 'access_token');
-    }
-    if (token != null && token != "" && role == 'admin') {
-      tokenAdmin = CacheNetwork.getCacheData(key: 'access_token');
-    }
+    // if (token != null && token != "" && role == 'admin') {
+    //   tokenAdmin = CacheNetwork.getCacheData(key: 'access_token');
+    // }
+    // if (token != null && token != "" && role == 'admin') {
+    //   tokenAdmin = CacheNetwork.getCacheData(key: 'access_token');
+    // }
     final response = await client.delete(
       Uri.parse('${Base_Url}tours/${id.toString()}'),
-      headers: {'Authorization': 'Bearer $tokenAdmin'},
+      headers: {'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 204) {

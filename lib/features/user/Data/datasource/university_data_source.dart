@@ -8,6 +8,7 @@ import '../models/university_model.dart';
 abstract class UniversityDataSource {
   Future<List<UniversityModel>> getAllUniversity();
   Future<UniversityModel> getUniversityById(String id);
+  Future<UniversityModel> addUniversity(UniversityModel university);
 }
 
 class UniversityDataSourceImpl implements UniversityDataSource {
@@ -55,6 +56,32 @@ class UniversityDataSourceImpl implements UniversityDataSource {
       return university;
     } else {
       print("state code is ${response.statusCode}");
+      print("body:${response.body}");
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<UniversityModel> addUniversity(UniversityModel university) async {
+    final body = {
+      'id': university.id,
+      'name': university.name,
+      'location': university.location,
+    };
+    final response = await client.post(
+      Uri.parse('${Base_Url}universities'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${token}',
+      },
+      body: jsonEncode(body),
+    );
+    if (response.statusCode == 201) {
+      final jsonResponse = jsonDecode(response.body);
+      print('the added university is: $jsonResponse');
+      return UniversityModel.fromJson(jsonResponse);
+    } else {
+      print("status code is ${response.statusCode}");
       print("body:${response.body}");
       throw ServerException();
     }

@@ -49,6 +49,14 @@ class TextStyles {
     color: ColorManager.greyColor,
     fontWeight: FontWeight.w400,
   );
+
+  static TextStyle grey16Regular = TextStyle(
+    //الاقتراحات
+    fontSize: 16.sp,
+    fontFamily: 'Cairo',
+    color: const Color.fromARGB(255, 93, 92, 92),
+    fontWeight: FontWeight.w500,
+  );
   static TextStyle red10Bold = TextStyle(
     fontSize: 10.sp,
     fontFamily: 'Cairo',

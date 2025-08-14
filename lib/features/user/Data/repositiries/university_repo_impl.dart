@@ -6,6 +6,7 @@ import '../../../../core/errors/exceptions.dart';
 import '../../../../core/errors/failure.dart';
 import '../../../../core/network/network_info.dart';
 import '../../Domain/repositires/university_repo.dart';
+import '../models/university_model.dart';
 
 class UniversityRepoImpl extends UniversityRepo {
   final UniversityDataSource universityDataSource;
@@ -55,6 +56,27 @@ class UniversityRepoImpl extends UniversityRepo {
         return Right(university);
       } on ServerException {
         throw ServerFailure();
+      }
+    } else {
+      return Left(NoInternetFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> addUniversity(
+    UniversityEntity university,
+  ) async {
+    if (await networkInfo.isConnected) {
+      final UniversityModel universityModel = UniversityModel(
+        id: university.id,
+        name: university.name,
+        location: university.location,
+      );
+      try {
+        await universityDataSource.addUniversity(universityModel);
+        return Right(unit);
+      } on ServerException {
+        return Left(ServerFailure());
       }
     } else {
       return Left(NoInternetFailure());

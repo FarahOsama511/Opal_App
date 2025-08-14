@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../../../core/resources/text_styles.dart';
 import '../../../supervisor/bloc/get_university_by_id/get_university_by_id_cubit.dart';
 
@@ -61,7 +60,7 @@ class _ExpandableCardState extends State<ExpandableCard> {
       child: Column(
         children: [
           InkWell(
-            onLongPress: widget.onLongPress,
+            onTap: widget.onLongPress,
             child: Row(
               children: [
                 Expanded(
@@ -88,6 +87,7 @@ class _ExpandableCardState extends State<ExpandableCard> {
               padding: const EdgeInsets.only(top: 12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   _buildInfoRow(widget.phone, 'رقم الهاتف:'),
                   if (!widget.isSupervisor) ...[
@@ -116,96 +116,3 @@ class _ExpandableCardState extends State<ExpandableCard> {
     );
   }
 }
-// }
-// import 'package:flutter/material.dart';
-
-// import '../../../../core/resources/text_styles.dart';
-
-// class ExpandableCard extends StatelessWidget {
-//   final String name;
-//   final String phone;
-//   final String university;
-
-//   final String line;
-//   final bool isSupervisor;
-//   final bool isExpanded;
-//   final VoidCallback onToggle;
-
-//   const ExpandableCard({
-//     super.key,
-//     required this.name,
-//     required this.phone,
-//     this.university = '',
-
-//     this.line = '',
-//     required this.isSupervisor,
-//     required this.isExpanded,
-//     required this.onToggle,
-//   });
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       margin: const EdgeInsets.symmetric(vertical: 6),
-//       padding: const EdgeInsets.all(14),
-//       decoration: BoxDecoration(
-//         color: Colors.white,
-//         borderRadius: BorderRadius.circular(16),
-//         boxShadow: const [
-//           BoxShadow(color: Colors.black12, blurRadius: 3, offset: Offset(0, 2)),
-//         ],
-//       ),
-//       child: Column(
-//         children: [
-//           Row(
-//             children: [
-//               Expanded(
-//                 child: Text(
-//                   name,
-//                   textAlign: TextAlign.right,
-//                   style: TextStyles.black14Bold,
-//                 ),
-//               ),
-//               IconButton(
-//                 icon: Icon(
-//                   isExpanded
-//                       ? Icons.keyboard_arrow_up
-//                       : Icons.keyboard_arrow_down_rounded,
-//                   color: Colors.black,
-//                 ),
-//                 onPressed: onToggle,
-//               ),
-//             ],
-//           ),
-//           if (isExpanded)
-//             Padding(
-//               padding: const EdgeInsets.only(top: 12),
-//               child: Column(
-//                 crossAxisAlignment: CrossAxisAlignment.stretch,
-//                 children: [
-//                   _buildInfoRow(phone, 'رقم الهاتف:'),
-//                   if (!isSupervisor) ...[
-//                     _buildInfoRow(university, 'الجامعة:'),
-//                   ] else ...[
-//                     _buildInfoRow(line, 'الخط:'),
-//                   ],
-//                 ],
-//               ),
-//             ),
-//         ],
-//       ),
-//     );
-//   }
-
-//   Widget _buildInfoRow(String title, String label) {
-//     return Padding(
-//       padding: const EdgeInsets.only(bottom: 6),
-//       child: Row(
-//         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//         children: [
-//           Text(label, style: TextStyles.black10Bold),
-//           Text(title, style: TextStyles.black10Bold),
-//         ],
-//       ),
-//     );
-//   }
-// }

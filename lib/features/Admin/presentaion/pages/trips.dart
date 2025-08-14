@@ -27,6 +27,20 @@ class _TripsScreenState extends State<TripsScreen> {
     );
   }
 
+  List<Tour> _tours = [];
+  List<Tour> _filteredTours = [];
+  void _updateFilteredTours(String searchQuery) {
+    _filteredTours = _tours;
+    if (searchQuery.isNotEmpty) {
+      _filteredTours = _tours.where((tour) {
+        return tour.line.name!.toLowerCase().contains(
+              searchQuery.toLowerCase(),
+            ) ||
+            tour.driverName!.toLowerCase().contains(searchQuery.toLowerCase());
+      }).toList();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -45,6 +59,28 @@ class _TripsScreenState extends State<TripsScreen> {
               child: Align(
                 alignment: Alignment.centerRight,
                 child: Text("مواعيد الرحلات", style: TextStyles.white20Bold),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: TextField(
+                onChanged: (value) {
+                  setState(() {
+                    _updateFilteredTours(value);
+                  });
+                },
+                decoration: InputDecoration(
+                  hintText: 'ابحث عن رحلة',
+                  hintStyle: TextStyles.grey14Regular,
+                  prefixIcon: const Icon(
+                    Icons.search,
+                    color: ColorManager.secondColor,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                    borderSide: BorderSide(color: ColorManager.secondColor),
+                  ),
+                ),
               ),
             ),
             Expanded(
@@ -79,7 +115,10 @@ class _TripsScreenState extends State<TripsScreen> {
                         ),
                       );
                     } else if (state is TourLoaded) {
-                      if (state.tours.isEmpty) {
+                      _tours = state.tours;
+                      _filteredTours = _tours;
+
+                      if (_tours.isEmpty) {
                         return Center(
                           child: Text(
                             "لا توجد رحلات حاليا",
@@ -88,22 +127,19 @@ class _TripsScreenState extends State<TripsScreen> {
                         );
                       }
                       return ListView.builder(
-                        itemCount: state.tours.length,
+                        itemCount: _filteredTours.length,
                         itemBuilder: (context, index) {
-                          String tourId = state.tours[index].id ?? "";
-                          final tour = state.tours[index];
+                          String tourId = _filteredTours[index].id ?? "";
+                          final tour = _filteredTours[index];
                           return BusCard(
-                            typeOfTrip: state.tours[index].typeDisplay,
-                            line: 'خط ${state.tours[index].line.name}',
-                            supervisorName:
-                                state.tours[index].driverName ?? "غير معرف",
+                            typeOfTrip: tour.typeDisplay,
+                            line: 'خط ${tour.line.name}',
+                            supervisorName: tour.driverName ?? "غير معرف",
                             departureTime: DateFormat(
                               'HH:mm',
-                            ).format(state.tours[index].leavesAt),
+                            ).format(tour.leavesAt),
 
-                            date: DateFormat(
-                              'yyy/MM/dd',
-                            ).format(state.tours[index].leavesAt),
+                            date: DateFormat('yyy/MM/dd').format(tour.leavesAt),
                             isExpanded: expandedIndex == index,
                             onTap: () =>
                                 _showTripOptionsDialog(context, tourId, tour),

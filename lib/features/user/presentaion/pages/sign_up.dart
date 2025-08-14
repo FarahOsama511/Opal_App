@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
 import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_cubit.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_state.dart';
 import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
 import 'package:opal_app/features/user/presentaion/bloc/auth_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/auth_state.dart';
@@ -26,6 +28,7 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
   UniversityEntity? selectedUniversity;
+  LineEntity? selectedLine;
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController universityCardId = TextEditingController();
@@ -80,15 +83,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         controller: nameController,
                         validatorMessage: 'يرجى إدخال الاسم',
                       ),
-
-                      // رقم الهاتف
                       CustomTextField(
                         hint: 'رقم الهاتف',
                         controller: phoneController,
                         validatorMessage: 'يرجى إدخال رقم الهاتف',
                       ),
-
-                      // الرقم الجامعي
                       CustomTextField(
                         hint: 'الرقم الجامعي',
                         controller: universityCardId,
@@ -131,7 +130,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           controller: otherUniversityController,
                           validatorMessage: 'يرجى إدخال اسم الجامعة',
                         ),
-
+                      BlocBuilder<LinesCubit, GetAllLinesState>(
+                        builder: (context, state) {
+                          if (state is LinesLoading) {
+                            return const CircularProgressIndicator(
+                              color: ColorManager.primaryColor,
+                            );
+                          } else if (state is LinesLoaded) {
+                            final allLines = state.Liness;
+                            return CustomDropdown(
+                              label: 'الخط',
+                              value: selectedLine,
+                              items: allLines,
+                              onChanged: (value) {
+                                setState(() => selectedLine = value);
+                              },
+                              displayString: (u) => u.name!,
+                            );
+                          } else {
+                            return Text(
+                              'فشل في تحميل الخطوط',
+                              style: TextStyles.black14Bold,
+                            );
+                          }
+                        },
+                      ),
                       SizedBox(height: 20.h),
 
                       // زر التسجيل
@@ -145,12 +168,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   name: nameController.text,
                                   phone: phoneController.text,
                                   universityCardId: universityCardId.text,
-                                  university: UniversityEntity(
-                                    name: selectedUniversity!.name,
-                                  ),
-                                  line: LineEntity(
-                                    id: "cmdxmfl6x0000otnp5m20ejbl",
-                                  ),
+                                  university: selectedUniversity,
+                                  line: selectedLine,
                                   universityId: selectedUniversity!.id,
                                   role: 'student',
                                 ),

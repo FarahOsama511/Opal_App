@@ -38,6 +38,7 @@ class AddMenu extends StatelessWidget {
                 child: Text('إضافة ميعاد جديد', style: TextStyles.black10Bold),
               ),
               _buildAddOption(context, 'إضافة خط جديد', '/addLine'),
+              _buildAddOption(context, ' إضافة جامعة جديدة', '/addUniversity'),
             ],
           ),
         ),
