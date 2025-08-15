@@ -8,9 +8,7 @@ import 'package:opal_app/features/Admin/presentaion/bloc/add_lines/add_line_cubi
 import 'package:opal_app/features/Admin/presentaion/bloc/add_lines/add_line_state.dart';
 import 'package:opal_app/features/Admin/presentaion/widgets/custom_widgets.dart';
 import 'package:opal_app/features/Admin/presentaion/widgets/text_field.dart';
-
 import '../../../../core/resources/text_styles.dart';
-import 'admin_home_screen.dart';
 
 class AddLine extends StatefulWidget {
   const AddLine({super.key});
@@ -59,12 +57,7 @@ class _AddLineState extends State<AddLine> {
                           ),
                         ),
                       );
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const AdminHomeScreen(),
-                        ),
-                      );
+                      Navigator.pushReplacementNamed(context, '/adminScreen');
                     }
                   },
                   builder: (context, state) {
@@ -95,7 +88,7 @@ class _AddLineState extends State<AddLine> {
                 ),
                 SizedBox(height: 20.h),
                 PrimaryButton(
-                  text: 'إلفاء ',
+                  text: 'إلغاء ',
                   onPressed: () {
                     setState(() {
                       Navigator.pop(context);

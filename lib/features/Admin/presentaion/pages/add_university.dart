@@ -3,16 +3,12 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
-import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
-
 import 'package:opal_app/features/Admin/presentaion/widgets/custom_widgets.dart';
 import 'package:opal_app/features/Admin/presentaion/widgets/text_field.dart';
 import 'package:opal_app/features/user/Domain/entities/university_entity.dart';
-
 import '../../../../core/resources/text_styles.dart';
 import '../bloc/add_university/add_university_cubit.dart';
 import '../bloc/add_university/add_university_state.dart';
-import 'admin_home_screen.dart';
 
 class AddUniversity extends StatefulWidget {
   const AddUniversity({super.key});
@@ -67,12 +63,7 @@ class _AddUniversityState extends State<AddUniversity> {
                           ),
                         ),
                       );
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const AdminHomeScreen(),
-                        ),
-                      );
+                      Navigator.pushReplacementNamed(context, '/adminScreen');
                     }
                   },
                   builder: (context, state) {

@@ -30,7 +30,6 @@ class _TripsScreenState extends State<TripsScreen> {
   List<Tour> _tours = [];
   List<Tour> _filteredTours = [];
   void _updateFilteredTours(String searchQuery) {
-    _filteredTours = _tours;
     if (searchQuery.isNotEmpty) {
       _filteredTours = _tours.where((tour) {
         return tour.line.name!.toLowerCase().contains(
@@ -38,6 +37,8 @@ class _TripsScreenState extends State<TripsScreen> {
             ) ||
             tour.driverName!.toLowerCase().contains(searchQuery.toLowerCase());
       }).toList();
+    } else if (searchQuery.isEmpty) {
+      _filteredTours = _tours;
     }
   }
 
@@ -116,8 +117,10 @@ class _TripsScreenState extends State<TripsScreen> {
                       );
                     } else if (state is TourLoaded) {
                       _tours = state.tours;
-                      _filteredTours = _tours;
 
+                      if (_filteredTours.isEmpty) {
+                        _filteredTours = _tours;
+                      }
                       if (_tours.isEmpty) {
                         return Center(
                           child: Text(

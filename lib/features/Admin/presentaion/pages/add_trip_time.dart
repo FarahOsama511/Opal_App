@@ -129,7 +129,7 @@ class _AddTripBoxState extends State<AddTripBox> {
     return BlocListener<UpdateAddDeleteTourCubit, UpdateAddDeleteTourState>(
       listener: (context, state) {
         if (state is TourAdded) {
-          context.read<TourCubit>().getAllTours();
+          // context.read<TourCubit>().getAllTours();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message, style: TextStyles.white12Bold),
@@ -158,7 +158,7 @@ class _AddTripBoxState extends State<AddTripBox> {
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      Navigator.pushReplacementNamed(context, '/adminScreen');
                       widget.onClose();
                     },
                     style: ElevatedButton.styleFrom(
