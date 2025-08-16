@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:opal_app/core/network/local_network.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
+import 'package:opal_app/features/Admin/presentaion/pages/settings.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/student_list.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/trips.dart';
 import 'package:opal_app/features/user/presentaion/bloc/user_cubit.dart';
@@ -67,6 +68,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                           _buildJoinRequests(),
                           const TripsScreen(),
                           const StudentList(),
+                          const SettingsScreen(),
                         ],
                       ),
                       CustomBottomNav(

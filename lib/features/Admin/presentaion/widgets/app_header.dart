@@ -4,10 +4,10 @@ class AppHeader extends StatelessWidget {
   final VoidCallback onLogout;
   final bool showAddButton;
   final VoidCallback? onAddPressed;
-  final Widget? trailingWidget; // الطرف الآخر (مثل لوجو)
-  final Widget? leadingWidget; // الأيقونات على الطرف الأيسر
+  final Widget? trailingWidget;
+  final Widget? leadingWidget;
   final String? title;
-  final Widget? titleWidget; // بديل للنص
+  final Widget? titleWidget;
   final MainAxisAlignment mainAxisAlignment;
   final CrossAxisAlignment crossAxisAlignment;
 
