@@ -30,27 +30,37 @@ class CustomBottomNav extends StatelessWidget {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(24),
-          child: BottomNavigationBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            currentIndex: currentIndex,
-            selectedItemColor: Colors.white,
-            unselectedItemColor: Colors.white70,
-            onTap: onTap,
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'الرئيسية',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.alt_route),
-                label: 'الرحلات',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.list_outlined),
-                label: 'قائمة الطلاب',
-              ),
-            ],
+          child: Theme(
+            data: Theme.of(context).copyWith(
+              canvasColor: Colors.transparent,
+            ),
+            child: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              currentIndex: currentIndex,
+              selectedItemColor: Colors.white,
+              unselectedItemColor: Colors.white70,
+              onTap: onTap,
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: 'الرئيسية',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.alt_route),
+                  label: 'الرحلات',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.list_outlined),
+                  label: 'قائمة الطلاب',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.admin_panel_settings),
+                  label: 'الإعدادات',
+                ),
+              ],
+            ),
           ),
         ),
       ),
