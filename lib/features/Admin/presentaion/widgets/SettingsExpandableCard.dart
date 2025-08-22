@@ -1,54 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/constants/constants.dart' as university;
 import '../../../../core/resources/text_styles.dart';
-import '../../../supervisor/bloc/get_university_by_id/get_university_by_id_cubit.dart';
 
-class ExpandableCard extends StatefulWidget {
+class SettingsExpandableCard extends StatelessWidget {
   final String name;
-  final String? phone;
-  final String university;
-  final String? universityId;
-  final String line;
   final bool isSupervisor;
   final bool isExpanded;
   final VoidCallback onToggle;
-  final Function()? onLongPress;
-  final Widget? deleteIcon;
+  final String? location;
+  final int? usersCount;
+  final String? notes;
 
-  ExpandableCard({
-    this.universityId,
-    this.onLongPress,
-    this.deleteIcon,
+  const SettingsExpandableCard({
     super.key,
     required this.name,
-    this.phone,
-    this.university = '',
-    this.line = '',
     required this.isSupervisor,
     required this.isExpanded,
     required this.onToggle,
+    this.location,
+    this.usersCount,
+    this.notes,
   });
 
   @override
-  State<ExpandableCard> createState() => _ExpandableCardState();
-}
-
-class _ExpandableCardState extends State<ExpandableCard> {
-  @override
-  void initState() {
-    super.initState();
-    if (widget.universityId != null && widget.universityId!.isNotEmpty) {
-      BlocProvider.of<GetUniversityByIdCubit>(context)
-          .getUniversityById(widget.universityId!);
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final universityName = widget.universityId != null
-        ? context.read<GetUniversityByIdCubit>().nameOfUniversity ?? ""
-        : "";
-
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 6),
       padding: const EdgeInsets.all(14),
@@ -62,42 +37,42 @@ class _ExpandableCardState extends State<ExpandableCard> {
       child: Column(
         children: [
           InkWell(
-            onLongPress: widget.onLongPress,
+            onTap: onToggle,
             child: Row(
               children: [
                 Expanded(
                   child: Text(
-                    widget.name,
+                    name,
                     textAlign: TextAlign.right,
                     style: TextStyles.black14Bold,
                   ),
                 ),
-                if (widget.isExpanded && widget.deleteIcon != null)
-                  widget.deleteIcon!,
                 IconButton(
                   icon: Icon(
-                    widget.isExpanded
+                    isExpanded
                         ? Icons.keyboard_arrow_up
                         : Icons.keyboard_arrow_down_rounded,
                     color: Colors.black,
                   ),
-                  onPressed: widget.onToggle,
+                  onPressed: onToggle,
                 ),
               ],
             ),
           ),
-          if (widget.isExpanded)
+          if (isExpanded)
             Padding(
               padding: const EdgeInsets.only(top: 12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  _buildInfoRow(widget.phone ?? 'غير متوفر', 'رقم الهاتف:'),
-                  if (!widget.isSupervisor) ...[
-                    _buildInfoRow(universityName.isNotEmpty ? universityName : 'غير متوفر', 'الجامعة:'),
+                  if (!isSupervisor) ...[
+                    _buildInfoRow(location ?? 'غير متوفر', 'الموقع:'),
+                    _buildInfoRow(
+                      (university.users?.length ?? 0).toString(),
+                      'عدد المستخدمين:',
+                    ),
                   ] else ...[
-                    _buildInfoRow(widget.line.isNotEmpty ? widget.line : 'غير متوفر', 'الخط:'),
+                    _buildInfoRow(notes ?? 'غير متوفر', 'الملاحظات:'),
                   ],
                 ],
               ),
@@ -107,14 +82,14 @@ class _ExpandableCardState extends State<ExpandableCard> {
     );
   }
 
-  Widget _buildInfoRow(String title, String label) {
+  Widget _buildInfoRow(String value, String label) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 6),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(label, style: TextStyles.black14Bold),
-          Text(title, style: TextStyles.black14Bold),
+          Text(value, style: TextStyles.black14Bold),
         ],
       ),
     );
