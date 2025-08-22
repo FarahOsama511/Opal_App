@@ -49,7 +49,7 @@ class StepButtons extends StatelessWidget {
             ),
             onPressed: onNext,
             child: Text(
-              currentStep < 3 ? 'التالي' : 'تأكيد',
+              currentStep < 4 ? 'التالي' : 'تأكيد',
               style: TextStyles.white14Bold,
             ),
           ),

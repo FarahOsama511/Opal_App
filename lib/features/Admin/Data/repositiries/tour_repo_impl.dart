@@ -7,6 +7,7 @@ import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
 import 'package:opal_app/features/Admin/Domain/reporistires/tour_repo.dart';
 import '../dataSource/tour_local_data_source.dart';
 import '../dataSource/tour_remote_data_source.dart';
+import '../models/supervisor_model.dart';
 
 class TourRepoImpl extends ToursRepository {
   final LocalDataSource localDataSource;
@@ -50,9 +51,10 @@ class TourRepoImpl extends ToursRepository {
   @override
   Future<Either<Failure, Unit>> addTour(Tour tour) async {
     final TourModel tourModel = TourModel(
-      // superVisorName: tour.supervisorName ?? "",
+      supervisor: tour.supervisor,
+      startTime: tour.startTime,
+      endTime: tour.endTime,
       type: tour.type,
-      driverName: tour.driverName,
       leavesAt: tour.leavesAt,
       line: tour.line,
     );
@@ -85,10 +87,10 @@ class TourRepoImpl extends ToursRepository {
   @override
   Future<Either<Failure, Unit>> updateTour(Tour tour) async {
     final TourModel tourModel = TourModel(
-      //  superVisorName: tour.supervisorName ?? "",
-      id: tour.id,
+      supervisor: tour.supervisor,
+      startTime: tour.startTime,
+      endTime: tour.endTime,
       type: tour.type,
-      driverName: tour.driverName,
       leavesAt: tour.leavesAt,
       line: tour.line,
     );

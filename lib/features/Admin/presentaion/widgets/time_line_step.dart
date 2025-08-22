@@ -7,6 +7,7 @@ import 'package:opal_app/features/Admin/presentaion/widgets/custom_widgets.dart'
 
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
+import '../../Domain/entities/line_entity.dart';
 
 class TimeLineStep extends StatefulWidget {
   final int hour;

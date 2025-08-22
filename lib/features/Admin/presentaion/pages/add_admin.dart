@@ -23,6 +23,12 @@ class _AddAdminState extends State<AddAdmin> {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  String? valdiatorMessage(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'هذا الحقل مطلوب';
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,22 +51,22 @@ class _AddAdminState extends State<AddAdmin> {
                 CustomTextField(
                   hint: 'الإسم',
                   controller: nameController,
-                  validatorMessage: 'يرجي إدخال الإسم',
+                  validator: valdiatorMessage,
                 ),
                 CustomTextField(
                   hint: 'البريد الإكتروني',
                   controller: emailController,
-                  validatorMessage: 'يرجي إدخال البريد الإلكتروني',
+                  validator: valdiatorMessage,
                 ),
                 CustomTextField(
                   hint: 'رقم الهاتف',
                   controller: phoneController,
-                  validatorMessage: 'يرجي إدخال رقم الهاتف',
+                  validator: valdiatorMessage,
                 ),
                 CustomTextField(
                   hint: 'كلمة السر',
                   controller: passwordController,
-                  validatorMessage: 'يرجى إدخال كلمة السر',
+                  validator: valdiatorMessage,
                 ),
 
                 const SizedBox(height: 10),

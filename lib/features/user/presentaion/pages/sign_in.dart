@@ -11,7 +11,6 @@ import '../../../Admin/presentaion/pages/admin_home_screen.dart';
 import '../../../Admin/presentaion/widgets/custom_widgets.dart';
 import '../../../Admin/presentaion/widgets/text_field.dart';
 import '../../../supervisor/presentation/pages/show_tours.dart';
-import '../bloc/user_cubit.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -21,180 +20,196 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
+  final _formKey = GlobalKey<FormState>();
   String? selectedRole;
-  final TextEditingController phoneController = TextEditingController();
-  final TextEditingController universityCardId = TextEditingController();
+  final TextEditingController identifierController = TextEditingController();
+  final TextEditingController credentialController = TextEditingController();
 
-  String? phoneError;
-  String? IdError;
   @override
   void dispose() {
+    identifierController.dispose();
+    credentialController.dispose();
     super.dispose();
-    phoneController.dispose();
-    universityCardId.dispose();
+  }
+
+  String? _validateIdentifier(String? value) {
+    if (value == null || value.isEmpty) {
+      return selectedRole == 'طالب'
+          ? 'يرجى إدخال رقم الهاتف'
+          : 'يرجى إدخال الايميل';
+    }
+    return null;
+  }
+
+  String? _validateCredential(String? value) {
+    if (value == null || value.isEmpty) {
+      return selectedRole == 'طالب'
+          ? 'يرجى إدخال الرقم الجامعي'
+          : 'يرجى إدخال كلمة السر';
+    }
+    return null;
+  }
+
+  Future<void> _submitForm() async {
+    if (!_formKey.currentState!.validate()) return;
+    if (selectedRole == null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(_buildSnackBar('يرجى اختيار الدور أولاً'));
+      return;
+    }
+
+    await context.read<AuthCubit>().login(
+      identifierController.text,
+      credentialController.text,
+      selectedRole!,
+    );
+  }
+
+  SnackBar _buildSnackBar(String message) {
+    return SnackBar(
+      backgroundColor: ColorManager.greyColor,
+      content: Text(message, style: TextStyles.white12Bold),
+    );
+  }
+
+  void _handleAuthState(BuildContext context, AuthState state) {
+    if (state is AuthFailure) {
+      ScaffoldMessenger.of(context).showSnackBar(_buildSnackBar(state.error));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: BlocConsumer<AuthCubit, AuthState>(
-            listener: (context, state) {
-              if (state is AuthSuccess) {
-                if (selectedRole == 'طالب') {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (_) => const UserHomeScreen()),
-                  );
-                } else if (selectedRole == 'مشرف') {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (_) => ShowToursBySuperVisor()),
-                  );
-                } else if (selectedRole == 'مسؤول') {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (_) => const AdminHomeScreen()),
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: BlocConsumer<AuthCubit, AuthState>(
+              listener: (context, state) {
+                if (state is AuthSuccess) {
+                  _navigateBasedOnRole(
+                    context.read<AuthCubit>().user?.user.role,
                   );
                 }
-              } else if (state is AuthFailure) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    backgroundColor: ColorManager.greyColor,
-                    content: Text(state.error, style: TextStyles.white12Bold),
-                  ),
+                _handleAuthState(context, state);
+              },
+              builder: (context, state) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    SizedBox(height: 80.h),
+                    const LogoCircle(),
+                    SizedBox(height: 37.h),
+
+                    CustomDropdown(
+                      label: 'اختر الدور',
+                      value: selectedRole,
+                      items: const ['طالب', 'مشرف', 'مسؤول'],
+                      onChanged: (value) =>
+                          setState(() => selectedRole = value),
+                    ),
+
+                    SizedBox(height: 20.h),
+
+                    CustomTextField(
+                      controller: identifierController,
+                      hint: selectedRole == 'طالب' ? 'رقم الهاتف' : 'ايميل',
+                      validator: _validateIdentifier,
+                      keyboardType: selectedRole == 'طالب'
+                          ? TextInputType.phone
+                          : TextInputType.emailAddress,
+                    ),
+
+                    SizedBox(height: 15.h),
+
+                    CustomTextField(
+                      controller: credentialController,
+                      hint: selectedRole == 'طالب'
+                          ? 'الرقم الجامعي'
+                          : 'كلمة السر',
+                      validator: _validateCredential,
+                      obscureText: selectedRole != 'طالب',
+                    ),
+
+                    SizedBox(height: 25.h),
+
+                    PrimaryButton(
+                      backgroundColor: ColorManager.primaryColor,
+                      text: 'تسجيل الدخول',
+                      isLoading: state is AuthLoading,
+                      onPressed: state is AuthLoading ? null : _submitForm,
+                    ),
+
+                    SizedBox(height: 15.h),
+
+                    _buildSignUpLink(),
+                    SizedBox(height: 40.h),
+                    _buildTermsAndConditions(),
+                    SizedBox(height: 20.h),
+                  ],
                 );
-              }
-            },
-            builder: (context, state) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  SizedBox(height: 80.h),
-                  const LogoCircle(),
-                  SizedBox(height: 37.h),
-
-                  CustomDropdown(
-                    label: 'اختر الدور',
-                    value: selectedRole,
-                    items: const ['طالب', 'مشرف', 'مسؤول'],
-                    onChanged: (value) {
-                      setState(() {
-                        selectedRole = value;
-                      });
-                    },
-                  ),
-
-                  SizedBox(height: 10.h),
-
-                  CustomTextField(
-                    controller: phoneController,
-                    hint: selectedRole == 'طالب' ? 'رقم الهاتف' : 'ايميل',
-                    validatorMessage: selectedRole == 'طالب'
-                        ? 'يرجى إدخال رقم الهاتف'
-                        : 'يرجى إدخال الايميل',
-                    errorText: phoneError,
-                  ),
-                  CustomTextField(
-                    controller: universityCardId,
-                    hint: selectedRole == 'طالب'
-                        ? ' الرقم الجامعي'
-                        : 'كلمه السر',
-                    validatorMessage: selectedRole == 'طالب'
-                        ? 'يرجى إدخال الرقم الجامعي'
-                        : 'يرجى إدخال كلمه السر',
-                    errorText: IdError,
-                  ),
-
-                  SizedBox(height: 20.h),
-                  PrimaryButton(
-                    backgroundColor: ColorManager.primaryColor,
-                    text: 'تسجيل الدخول',
-                    isLoading: state is AuthLoading,
-                    onPressed: (state is AuthLoading)
-                        ? null
-                        : () async {
-                            setState(() {
-                              phoneError = phoneController.text.isEmpty
-                                  ? selectedRole == 'طالب'
-                                        ? 'يرجى إدخال رقم الهاتف'
-                                        : 'يرجى إدخال الايميل'
-                                  : null;
-                              IdError = universityCardId.text.isEmpty
-                                  ? selectedRole == 'طالب'
-                                        ? 'يرجى إدخال الرقم الجامعي'
-                                        : 'يرجى إدخال كلمه السر'
-                                  : null;
-                            });
-
-                            if (selectedRole == null) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  backgroundColor: ColorManager.greyColor,
-                                  content: Text(
-                                    'يرجى اختيار الدور أولاً',
-                                    style: TextStyles.white12Bold,
-                                  ),
-                                ),
-                              );
-                              return;
-                            }
-
-                            if (phoneError != null || IdError != null) return;
-
-                            await context.read<AuthCubit>().login(
-                              phoneController.text,
-                              universityCardId.text,
-                              selectedRole.toString(),
-                            );
-                          },
-                  ),
-
-                  SizedBox(height: 15.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('ليس لديك حساب؟', style: TextStyles.grey14Regular),
-                      SizedBox(width: 3.w),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const SignUpScreen(),
-                            ),
-                          );
-                        },
-                        child: Text('قدم طلب', style: TextStyles.red12Bold),
-                      ),
-                    ],
-                  ),
-
-                  SizedBox(height: 100.h),
-                  Column(
-                    children: [
-                      Text(
-                        'بتسجيلك فإنك توافق على',
-                        style: TextStyles.black10Bold,
-                      ),
-                      SizedBox(height: 4.h),
-                      Text(
-                        'شروط الخدمة وسياسة الخصوصية واستخدام الكوكيز',
-                        style: TextStyles.red10Bold,
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-
-                  SizedBox(height: 20.h),
-                ],
-              );
-            },
+              },
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  void _navigateBasedOnRole(String? role) {
+    switch (role) {
+      case 'student':
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const UserHomeScreen()),
+        );
+        break;
+      case 'supervisor':
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => ShowToursBySuperVisor()),
+        );
+        break;
+      case 'admin':
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const AdminHomeScreen()),
+        );
+        break;
+    }
+  }
+
+  Widget _buildSignUpLink() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text('ليس لديك حساب؟', style: TextStyles.grey14Regular),
+        SizedBox(width: 3.w),
+        GestureDetector(
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const SignUpScreen()),
+          ),
+          child: Text('قدم طلب', style: TextStyles.red12Bold),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTermsAndConditions() {
+    return Column(
+      children: [
+        Text('بتسجيلك فإنك توافق على', style: TextStyles.black10Bold),
+        SizedBox(height: 4.h),
+        Text(
+          'شروط الخدمة وسياسة الخصوصية واستخدام الكوكيز',
+          style: TextStyles.red10Bold,
+          textAlign: TextAlign.center,
+        ),
+      ],
     );
   }
 }

@@ -1,7 +1,6 @@
 import 'package:dartz/dartz.dart';
-
 import '../../../../core/errors/failure.dart';
-import '../entities/tour.dart';
+import '../entities/line_entity.dart';
 import '../reporistires/line_repo.dart';
 
 class AddLineUseCase {

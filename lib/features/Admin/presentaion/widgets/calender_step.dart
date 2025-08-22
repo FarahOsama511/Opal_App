@@ -6,9 +6,11 @@ import 'package:table_calendar/table_calendar.dart';
 class CalendarStep extends StatelessWidget {
   final DateTime focusedDay;
   final DateTime? selectedDate;
+  final String text;
   final void Function(DateTime selectedDay, DateTime focusedDay) onDaySelected;
   const CalendarStep({
     super.key,
+    required this.text,
     required this.focusedDay,
     required this.selectedDate,
     required this.onDaySelected,
@@ -19,7 +21,7 @@ class CalendarStep extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text('إضافة ميعاد جديد', style: TextStyles.black20Bold),
+        Text(text, style: TextStyles.black20Bold),
         // SizedBox(height: 2),
         SizedBox(
           height: screenHeight * 0.4,

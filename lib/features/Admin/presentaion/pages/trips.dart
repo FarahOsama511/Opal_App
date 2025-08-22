@@ -118,15 +118,17 @@ class _TripsScreenState extends State<TripsScreen> {
                           ),
                         );
                       }
+
                       return ListView.builder(
                         itemCount: _filteredTours.length,
                         itemBuilder: (context, index) {
                           String tourId = _filteredTours[index].id ?? "";
                           final tour = _filteredTours[index];
+                          print("supervior is ${tour.supervisor.name ?? ""}");
                           return BusCard(
                             typeOfTrip: tour.typeDisplay,
                             line: 'خط ${tour.line.name}',
-                            supervisorName: tour.driverName ?? "غير معرف",
+                            supervisorName: tour.supervisor.name ?? "غير معرف",
                             departureTime: DateFormat(
                               'HH:mm',
                             ).format(tour.leavesAt),

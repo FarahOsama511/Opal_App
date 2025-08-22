@@ -9,6 +9,7 @@ import 'package:opal_app/features/user/Domain/entities/login_entity.dart';
 import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
 import 'package:opal_app/features/user/Domain/repositires/auth_repo.dart';
 import '../../../../core/errors/exceptions.dart';
+import '../../../Admin/Domain/entities/line_entity.dart';
 
 class AuthRepoImpl extends AuthRepository {
   final AuthRemoteDataSource authremoteDataSource;
@@ -67,11 +68,12 @@ class AuthRepoImpl extends AuthRepository {
   Future<Either<Failure, LoginEntity>> loginAdmin(
     String email,
     String password,
+    String role,
   ) async {
     if (await networkInfo.isConnected) {
       try {
         final adminOrSupervisors = await authremoteDataSource
-            .loginAdminOrSuperVisor(email, password);
+            .loginAdminOrSuperVisor(email, password, role);
         return Right(adminOrSupervisors);
       } on WrongDataException {
         return Left(WrongDataFailure());

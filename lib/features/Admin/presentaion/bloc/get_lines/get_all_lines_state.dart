@@ -1,4 +1,4 @@
-import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
+import '../../../Domain/entities/line_entity.dart';
 
 abstract class GetAllLinesState {}
 

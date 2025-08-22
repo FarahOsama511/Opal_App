@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
+import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
 import 'package:opal_app/features/user/presentaion/bloc/selection_tour/selection_tour_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/selection_tour/selection_tour_state.dart';
 import '../../../../core/resources/text_styles.dart';
 import 'confirmation_success.dart';
 
 class ConfirmDetailsScreen extends StatefulWidget {
-  final String tourId;
-  const ConfirmDetailsScreen({super.key, required this.tourId});
+  final Tour tour;
+  const ConfirmDetailsScreen({super.key, required this.tour});
 
   @override
   State<ConfirmDetailsScreen> createState() => _ConfirmDetailsScreenState();
@@ -19,7 +20,7 @@ class _ConfirmDetailsScreenState extends State<ConfirmDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<SelectionTourCubit>(context).selectionTour(widget.tourId);
+    //  BlocProvider.of<SelectionTourCubit>(context).selectionTour(widget.tourId);
   }
 
   @override
@@ -62,54 +63,35 @@ class _ConfirmDetailsScreenState extends State<ConfirmDetailsScreen> {
                     border: Border.all(color: ColorManager.blackColor),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: BlocBuilder<SelectionTourCubit, SelectionTourState>(
-                    builder: (context, state) {
-                      if (state is SelectionTourLoading) {
-                        return Center(
-                          child: CircularProgressIndicator(
-                            color: ColorManager.primaryColor,
-                          ),
-                        );
-                      } else if (state is SelectionTourSuccess) {
-                        final tour = state.tour;
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            _RowInfo(label: 'الخط', value: tour.line.name!),
-                            _RowInfo(
-                              label: ' ${tour.typeDisplay}',
-                              value:
-                                  '${DateFormat('HH:mm').format(tour.leavesAt)} صباحاً',
-                            ),
-                            _RowInfo(
-                              label: 'اسم المشرف',
-                              value: tour.driverName ?? "غير معرف",
-                            ),
-                            _RowInfo(
-                              label: 'تاريخ اليوم',
-                              value:
-                                  '${DateFormat('yyyy-MM-dd').format(tour.leavesAt)}',
-                            ),
-                          ],
-                        );
-                      } else {
-                        return Center(
-                          child: Text(
-                            "فشل في جلب البيانات",
-                            style: TextStyles.black14Bold,
-                          ),
-                        );
-                      }
-                    },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      _RowInfo(label: 'الخط', value: widget.tour.line.name!),
+                      _RowInfo(
+                        label: ' ${widget.tour.typeDisplay}',
+                        value:
+                            '${DateFormat('HH:mm').format(widget.tour.leavesAt)} صباحاً',
+                      ),
+                      _RowInfo(
+                        label: 'اسم المشرف',
+                        value: widget.tour.driverName ?? "غير معرف",
+                      ),
+                      _RowInfo(
+                        label: 'تاريخ اليوم',
+                        value:
+                            '${DateFormat('yyyy-MM-dd').format(widget.tour.leavesAt)}',
+                      ),
+                    ],
                   ),
                 ),
+
                 const SizedBox(height: 20),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () async {
                       await context.read<SelectionTourCubit>().selectionTour(
-                        widget.tourId,
+                        widget.tour.id!,
                       );
                       final state = context.read<SelectionTourCubit>().state;
                       if (state is SelectionTourSuccess) {

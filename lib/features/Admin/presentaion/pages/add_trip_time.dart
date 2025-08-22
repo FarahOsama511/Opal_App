@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:opal_app/features/Admin/Data/models/supervisor_model.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_state.dart';
-import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
 import '../../../../core/resources/text_styles.dart';
 import '../../Data/models/tour_model.dart';
+import '../../Domain/entities/line_entity.dart';
 import '../../Domain/entities/tour.dart';
-import '../bloc/get_tour_bloc/tour_cubit.dart';
 import '../widgets/calender_step.dart';
+import '../widgets/start_end_time_step.dart';
 import '../widgets/summary_step.dart';
 import '../widgets/supervisor_step.dart';
 import '../widgets/time_line_step.dart';
@@ -22,16 +23,31 @@ class AddTripBox extends StatefulWidget {
 
 class _AddTripBoxState extends State<AddTripBox> {
   int currentStep = 0;
+
+  DateTime? startDate;
+  DateTime? endDate;
   DateTime? selectedDate;
-  int hour = 10;
-  int minute = 0;
-  String period = 'صباحًا';
-  UserEntity? selectedSupervisor;
+  int leavesAtHour = 10;
+  int leavesAtMinute = 0;
+
+  String leavesAtPeriod = 'صباحًا';
+  int startHour = 7;
+  int startMinute = 0;
+  String startPeriod = 'صباحًا';
+
+  int endHour = 12;
+  int endMinute = 0;
+  String endPeriod = 'مساءً';
+
+  SuperVisorEntity? selectedSupervisor;
   LineEntity? selectedLine;
   String? typeOfTrip;
+
   DateTime focusedDay = DateTime.now();
   void submitTour() {
-    if (selectedDate == null ||
+    if (startDate == null ||
+        endDate == null ||
+        selectedDate == null ||
         selectedSupervisor == null ||
         selectedLine == null) {
       ScaffoldMessenger.of(
@@ -40,19 +56,46 @@ class _AddTripBoxState extends State<AddTripBox> {
       return;
     }
 
-    final DateTime fullDateTime = DateTime(
+    final DateTime fullStartTime = DateTime(
+      startDate!.year,
+      startDate!.month,
+      startDate!.day,
+      startPeriod == 'صباحًا' ? startHour : startHour + 12,
+      startMinute,
+    );
+
+    final DateTime fullEndTime = DateTime(
+      endDate!.year,
+      endDate!.month,
+      endDate!.day,
+      endPeriod == 'صباحًا' ? endHour : endHour + 12,
+      endMinute,
+    );
+
+    if (fullEndTime.isBefore(fullStartTime)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("وقت الانتهاء يجب أن يكون بعد وقت البداية")),
+      );
+      return;
+    }
+    final DateTime fullLeavesAt = DateTime(
       selectedDate!.year,
       selectedDate!.month,
       selectedDate!.day,
-      period == 'صباحًا' ? hour : hour + 12,
-      minute,
+      leavesAtPeriod == 'صباحًا' ? leavesAtHour : leavesAtHour + 12,
+      leavesAtMinute,
     );
 
     final tour = TourModel(
-      //  superVisorName: selectedSupervisor?.name ?? "",
+      supervisor: SuperVisorEntity(
+        id: selectedSupervisor!.id,
+        name: selectedSupervisor!.name,
+        // phone: selectedSupervisor!.phone,
+      ),
+      startTime: fullStartTime, // بداية الحجز
+      endTime: fullEndTime, // نهاية الحجز
+      leavesAt: fullLeavesAt, // ميعاد المغادرة
       type: typeOfTrip ?? "ذهاب",
-      driverName: selectedSupervisor?.name ?? "",
-      leavesAt: fullDateTime,
       line: LineEntity(id: selectedLine!.id, name: selectedLine!.name),
     );
 
@@ -60,9 +103,9 @@ class _AddTripBoxState extends State<AddTripBox> {
   }
 
   void nextStep() {
-    if (currentStep < 3) {
+    if (currentStep < 4) {
       setState(() => currentStep++);
-    } else if (currentStep == 3) {
+    } else if (currentStep == 4) {
       submitTour();
     }
   }
@@ -80,6 +123,7 @@ class _AddTripBoxState extends State<AddTripBox> {
     switch (currentStep) {
       case 0:
         stepContent = CalendarStep(
+          text: 'إضافة ميعاد جديد',
           focusedDay: focusedDay,
           selectedDate: selectedDate,
           onDaySelected: (selected, focused) {
@@ -94,20 +138,26 @@ class _AddTripBoxState extends State<AddTripBox> {
         stepContent = TimeLineStep(
           typeOfTrip: typeOfTrip,
           onTypeOfTripChanged: (value) => setState(() => typeOfTrip = value),
-          hour: hour,
-          minute: minute,
-          period: period,
+          hour: leavesAtHour,
+          minute: leavesAtMinute,
+          period: leavesAtPeriod,
           selectedLine: selectedLine,
-          onHourChanged: (val) => setState(() => hour = val),
-          onMinuteChanged: (val) => setState(() => minute = val),
-          onPeriodChanged: (val) => setState(() => period = val),
+          onHourChanged: (val) => setState(() => leavesAtHour = val),
+          onMinuteChanged: (val) => setState(() => leavesAtMinute = val),
+          onPeriodChanged: (val) => setState(() => leavesAtPeriod = val),
           onLineChanged: (value) {
-            setState(() => selectedLine = value);
+            setState(() => selectedLine = value as LineEntity);
           },
         );
-
-        break;
       case 2:
+        stepContent = StartEndTimeStep(
+          startDate: startDate,
+          endDate: endDate,
+          onStartDateChanged: (val) => setState(() => startDate = val),
+          onEndDateChanged: (val) => setState(() => endDate = val),
+        );
+        break;
+      case 3:
         stepContent = SupervisorStep(
           selectedSupervisor: selectedSupervisor,
           onSupervisorChanged: (val) =>
@@ -118,9 +168,9 @@ class _AddTripBoxState extends State<AddTripBox> {
         stepContent = SummaryStep(
           typeOfTrip: typeOfTrip,
           selectedLine: selectedLine,
-          hour: hour,
-          minute: minute,
-          period: period,
+          hour: leavesAtHour,
+          minute: leavesAtMinute,
+          period: leavesAtPeriod,
           selectedSupervisor: selectedSupervisor,
           selectedDate: selectedDate,
         );

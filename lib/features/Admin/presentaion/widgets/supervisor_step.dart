@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
 import 'package:opal_app/features/Admin/presentaion/widgets/custom_widgets.dart';
-import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
 import 'package:opal_app/features/user/presentaion/bloc/user_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/user_state.dart';
 
@@ -9,8 +9,8 @@ import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
 
 class SupervisorStep extends StatefulWidget {
-  final UserEntity? selectedSupervisor;
-  final ValueChanged<UserEntity?> onSupervisorChanged;
+  final SuperVisorEntity? selectedSupervisor;
+  final ValueChanged<SuperVisorEntity?> onSupervisorChanged;
 
   const SupervisorStep({
     super.key,
@@ -49,10 +49,19 @@ class _SupervisorStepState extends State<SupervisorStep> {
             } else if (state is UserSuccess) {
               final allSupervisors = state.user
                   .where((u) => u.role == "supervisor")
+                  .map(
+                    (u) => SuperVisorEntity(
+                      id: u.id,
+                      name: u.name,
+                      email: u.email,
+                      phone: u.phone,
+                      role: u.role,
+                    ),
+                  )
                   .toList();
 
               print("${state.user.length}");
-              return CustomDropdown(
+              return CustomDropdown<SuperVisorEntity>(
                 label: 'اختر مشرف',
                 value: widget.selectedSupervisor,
                 items: allSupervisors,

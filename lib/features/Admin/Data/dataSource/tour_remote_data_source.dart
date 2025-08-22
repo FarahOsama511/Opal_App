@@ -38,8 +38,10 @@ class TourRemoteDataSourceImpl implements TourRemoteDataSource {
   @override
   Future<Unit> addTour(TourModel tour) async {
     final body = {
+      'supervisorId': tour.supervisor.id,
+      'startTime': tour.startTime.toUtc().toIso8601String(),
+      'endTime': tour.endTime.toUtc().toIso8601String(),
       'type': tour.type,
-      'driverName': tour.driverName,
       'leavesAt': tour.leavesAt.toUtc().toIso8601String(),
       'lineId': tour.line.id,
     };
@@ -64,13 +66,12 @@ class TourRemoteDataSourceImpl implements TourRemoteDataSource {
 
   @override
   Future<Unit> updateTour(TourModel tour) async {
-    // if (token != null && token != "" && role == 'admin') {
-    //   tokenAdmin = CacheNetwork.getCacheData(key: 'access_token');
-    // }
     final tourId = tour.id.toString();
     final body = {
       'type': tour.type,
-      'driverName': tour.driverName,
+      'supervisorId': tour.supervisor.id,
+      'startTime': tour.startTime.toUtc().toIso8601String(),
+      'endTime': tour.endTime.toUtc().toIso8601String(),
       'leavesAt': tour.leavesAt.toUtc().toIso8601String(),
       'lineId': tour.line.id,
     };
@@ -98,12 +99,6 @@ class TourRemoteDataSourceImpl implements TourRemoteDataSource {
 
   @override
   Future<Unit> deleteTour(String id) async {
-    // if (token != null && token != "" && role == 'admin') {
-    //   tokenAdmin = CacheNetwork.getCacheData(key: 'access_token');
-    // }
-    // if (token != null && token != "" && role == 'admin') {
-    //   tokenAdmin = CacheNetwork.getCacheData(key: 'access_token');
-    // }
     final response = await client.delete(
       Uri.parse('${Base_Url}tours/${id.toString()}'),
       headers: {'Authorization': 'Bearer $token'},

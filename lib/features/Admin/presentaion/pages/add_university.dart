@@ -17,6 +17,13 @@ class AddUniversity extends StatefulWidget {
   State<AddUniversity> createState() => _AddUniversityState();
 }
 
+String? validation(String? value) {
+  if (value == null || value.isEmpty) {
+    return 'هذا الحقل مطلوب';
+  }
+  return null;
+}
+
 class _AddUniversityState extends State<AddUniversity> {
   @override
   Widget build(BuildContext context) {
@@ -39,12 +46,12 @@ class _AddUniversityState extends State<AddUniversity> {
                 CustomTextField(
                   hint: 'اسم الجامعة',
                   controller: universityController,
-                  validatorMessage: 'يرجي إدخال اسم الجامعة',
+                  validator: validation,
                 ),
                 CustomTextField(
                   hint: 'اسم المدينة',
                   controller: countryController,
-                  validatorMessage: 'يرجي إدخال اسم المدينة',
+                  validator: validation,
                 ),
                 SizedBox(height: 20.h),
 

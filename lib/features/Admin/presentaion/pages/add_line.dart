@@ -9,12 +9,20 @@ import 'package:opal_app/features/Admin/presentaion/bloc/add_lines/add_line_stat
 import 'package:opal_app/features/Admin/presentaion/widgets/custom_widgets.dart';
 import 'package:opal_app/features/Admin/presentaion/widgets/text_field.dart';
 import '../../../../core/resources/text_styles.dart';
+import '../../Domain/entities/line_entity.dart';
 
 class AddLine extends StatefulWidget {
   const AddLine({super.key});
 
   @override
   State<AddLine> createState() => _AddLineState();
+}
+
+String? validatorMessage(String? value) {
+  if (value == null || value.isEmpty) {
+    return 'يرجي إدخال اسم الخط';
+  }
+  return null;
 }
 
 class _AddLineState extends State<AddLine> {
@@ -38,7 +46,7 @@ class _AddLineState extends State<AddLine> {
                 CustomTextField(
                   hint: 'اسم الخط',
                   controller: LineController,
-                  validatorMessage: 'يرجي إدخال اسم الخط',
+                  validator: validatorMessage,
                 ),
                 SizedBox(height: 20.h),
 

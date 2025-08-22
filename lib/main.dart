@@ -38,13 +38,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await CacheNetwork.cacheInitialization();
   token = CacheNetwork.getCacheData(key: 'access_token');
-  role = CacheNetwork.getCacheData(key: 'access_role');
   lines = CacheNetwork.getCacheData(key: "SAVE_LINES");
   tour = CacheNetwork.getCacheData(key: "SAVE_TOURS");
   users = CacheNetwork.getCacheData(key: "SAVE_USERS");
   universities = CacheNetwork.getCacheData(key: "SAVE_UNIVERSITIES");
-  print('TOKEN IS ${token}');
-  print('ROLE IS ${role}');
   await di.init();
   await initializeDateFormatting('ar', null);
   runApp(StudentBusApp());

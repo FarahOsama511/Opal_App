@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:opal_app/core/errors/failure.dart';
-import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
+
+import '../entities/line_entity.dart';
 
 abstract class LineRepo {
   Future<Either<Failure, List<LineEntity>>> getAllLines();

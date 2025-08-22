@@ -28,7 +28,7 @@ class TourLocalDataSourceImpl implements LocalDataSource {
   @override
   Future<Unit> saveTours(List<TourModel> tours) async {
     final tourModelToJson = tours
-        .map<Map<String, dynamic>>((tour) => ToJson(tour))
+        .map<Map<String, dynamic>>((tour) => tour.ToJson(tour))
         .toList();
     await CacheNetwork.insertToCache(
       key: "SAVE_TOURS",

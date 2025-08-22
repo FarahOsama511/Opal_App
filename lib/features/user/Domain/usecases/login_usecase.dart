@@ -14,7 +14,7 @@ class LoginUsecase {
     String credential,
     String role,
   ) {
-    if (role == 'طالب') {
+    if (role == 'student') {
       return authRepository.loginStudent(
         identifier,
         credential,
@@ -23,6 +23,7 @@ class LoginUsecase {
       return authRepository.loginAdmin(
         identifier,
         credential,
+        role,
       ); // email, password
     }
   }

@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
 
+import '../../../Admin/Domain/entities/line_entity.dart';
 import 'university_entity.dart';
 
 class UserEntity extends Equatable {

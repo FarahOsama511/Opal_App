@@ -5,6 +5,7 @@ import 'package:opal_app/features/Admin/Data/models/line_model.dart';
 import 'package:opal_app/features/Admin/Domain/reporistires/line_repo.dart';
 import '../../../../core/errors/exceptions.dart';
 import '../../../../core/network/network_info.dart';
+import '../../Domain/entities/line_entity.dart';
 import '../../Domain/entities/tour.dart';
 import '../dataSource/line_local_data_source.dart';
 

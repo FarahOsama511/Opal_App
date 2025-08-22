@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
-import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
 
 import '../../../../core/resources/text_styles.dart';
+import '../../Domain/entities/line_entity.dart';
 
 class SummaryStep extends StatelessWidget {
   final String? typeOfTrip;
@@ -10,7 +10,7 @@ class SummaryStep extends StatelessWidget {
   final int hour;
   final int minute;
   final String period;
-  final UserEntity? selectedSupervisor;
+  final SuperVisorEntity? selectedSupervisor;
   final DateTime? selectedDate;
 
   SummaryStep({
@@ -49,7 +49,11 @@ class SummaryStep extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('الخط', style: TextStyles.black14Bold),
+                  Text(
+                    'الخط',
+                    style: TextStyles.black14Bold,
+                    overflow: TextOverflow.clip,
+                  ),
                   Text(
                     '${selectedLine!.name ?? ''}',
                     style: TextStyles.black14Bold,
@@ -76,7 +80,7 @@ class SummaryStep extends StatelessWidget {
                 children: [
                   Text('اسم المشرف', style: TextStyles.black14Bold),
                   Text(
-                    selectedSupervisor!.name ?? '',
+                    selectedSupervisor?.name ?? '',
                     style: TextStyles.black14Bold,
                   ),
                 ],

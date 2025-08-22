@@ -10,7 +10,11 @@ import '../../Domain/entities/authentity.dart';
 
 abstract class AuthRemoteDataSource {
   Future<LoginModel> loginStudent(String phone, String universityCardId);
-  Future<LoginModel> loginAdminOrSuperVisor(String email, String password);
+  Future<LoginModel> loginAdminOrSuperVisor(
+    String email,
+    String password,
+    String role,
+  );
   Future<RegisterEntity> register(RegisterModel authModel);
 }
 
@@ -81,8 +85,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<LoginModel> loginAdminOrSuperVisor(
     String email,
     String password,
+    String role,
   ) async {
-    final body = {'email': email, 'password': password};
+    final body = {'email': email, 'password': password, 'role': role};
 
     final response = await client.post(
       Uri.parse('${Base_Url}auth/login'),

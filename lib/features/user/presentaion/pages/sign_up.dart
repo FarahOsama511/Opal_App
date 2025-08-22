@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
-import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_state.dart';
 import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
@@ -13,6 +12,7 @@ import 'package:opal_app/features/user/presentaion/bloc/get_all_universities/get
 import 'package:opal_app/features/user/presentaion/pages/sign_in.dart';
 import 'package:opal_app/features/user/presentaion/pages/waiting_screen.dart';
 import '../../../../core/resources/text_styles.dart';
+import '../../../Admin/Domain/entities/line_entity.dart';
 import '../../../Admin/presentaion/widgets/custom_widgets.dart';
 import '../../../Admin/presentaion/widgets/text_field.dart';
 import '../../Domain/entities/authentity.dart';
@@ -34,6 +34,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController universityCardId = TextEditingController();
   final TextEditingController otherUniversityController =
       TextEditingController();
+
+  String? validation(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'هذا الحقل مطلوب';
+    }
+    return null;
+  }
 
   @override
   void initState() {
@@ -81,17 +88,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       CustomTextField(
                         hint: 'الاسم',
                         controller: nameController,
-                        validatorMessage: 'يرجى إدخال الاسم',
+                        validator: validation,
                       ),
                       CustomTextField(
                         hint: 'رقم الهاتف',
                         controller: phoneController,
-                        validatorMessage: 'يرجى إدخال رقم الهاتف',
+                        validator: validation,
                       ),
                       CustomTextField(
                         hint: 'الرقم الجامعي',
                         controller: universityCardId,
-                        validatorMessage: 'يرجى إدخال الرقم الجامعي',
+                        validator: validation,
                       ),
                       SizedBox(height: 16.h),
                       BlocBuilder<
@@ -128,7 +135,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         CustomTextField(
                           hint: 'اكتب اسم الجامعة',
                           controller: otherUniversityController,
-                          validatorMessage: 'يرجى إدخال اسم الجامعة',
+                          validator: validation,
                         ),
                       BlocBuilder<LinesCubit, GetAllLinesState>(
                         builder: (context, state) {

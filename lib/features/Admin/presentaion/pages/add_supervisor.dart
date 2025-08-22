@@ -5,6 +5,7 @@ import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
 import '../../Data/models/add_admin_supervisor_model.dart';
+import '../../Domain/entities/line_entity.dart';
 import '../bloc/create_admin_supervisors.dart/add_admin_supervisor_cubit.dart';
 import '../bloc/create_admin_supervisors.dart/add_admin_supervisor_state.dart';
 import '../bloc/get_lines/get_all_lines_cubit.dart';
@@ -28,6 +29,13 @@ class _AddSupervisorState extends State<AddSupervisor> {
   final TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final List<String> AllLines = [];
+  String? validation(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'هذا الحقل مطلوب';
+    }
+    return null;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -54,22 +62,22 @@ class _AddSupervisorState extends State<AddSupervisor> {
                 CustomTextField(
                   hint: 'الإسم',
                   controller: nameController,
-                  validatorMessage: 'يرجي إدخال الإسم',
+                  validator: validation,
                 ),
                 CustomTextField(
                   hint: 'البريد الإكتروني',
                   controller: emailController,
-                  validatorMessage: 'يرجي إدخال البريد الإلكتروني',
+                  validator: validation,
                 ),
                 CustomTextField(
                   hint: 'رقم الهاتف',
                   controller: phoneController,
-                  validatorMessage: 'يرجي إدخال رقم الهاتف',
+                  validator: validation,
                 ),
                 CustomTextField(
                   hint: 'كلمة السر',
                   controller: passwordController,
-                  validatorMessage: 'يرجى إدخال كلمة السر',
+                  validator: validation,
                 ),
 
                 BlocBuilder<LinesCubit, GetAllLinesState>(

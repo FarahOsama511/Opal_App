@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
 import 'package:opal_app/features/Admin/Domain/usecase/add_line_use_case.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/add_lines/add_line_state.dart';
 
 import '../../../../../core/errors/failure.dart';
 import '../../../../../core/strings/failures.dart';
+import '../../../Domain/entities/line_entity.dart';
 
 class AddLineCubit extends Cubit<AddLineState> {
   final AddLineUseCase addLineUseCase;

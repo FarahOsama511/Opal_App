@@ -5,8 +5,8 @@ import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/
 import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_state.dart';
 import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
 import '../../Data/models/tour_model.dart';
+import '../../Domain/entities/line_entity.dart';
 import '../../Domain/entities/tour.dart';
-import '../bloc/get_tour_bloc/tour_cubit.dart';
 import '../widgets/calender_step.dart';
 import '../widgets/summary_step.dart';
 import '../widgets/supervisor_step.dart';
@@ -29,17 +29,31 @@ class EditTripBox extends StatefulWidget {
 
 class _EditTripTimeState extends State<EditTripBox> {
   int currentStep = 0;
+
+  DateTime? startDate;
+  DateTime? endDate;
   DateTime? selectedDate;
-  int hour = 10;
-  int minute = 0;
-  String period = 'صباحًا';
-  String? driverName;
-  UserEntity? selectedSupervisor;
+  int leavesAtHour = 10;
+  int leavesAtMinute = 0;
+
+  String leavesAtPeriod = 'صباحًا';
+  int startHour = 7;
+  int startMinute = 0;
+  String startPeriod = 'صباحًا';
+
+  int endHour = 12;
+  int endMinute = 0;
+  String endPeriod = 'مساءً';
+
+  SuperVisorEntity? selectedSupervisor;
   LineEntity? selectedLine;
-  DateTime focusedDay = DateTime.now();
   String? typeOfTrip;
+
+  DateTime focusedDay = DateTime.now();
   void submitTour() {
-    if (selectedDate == null ||
+    if (startDate == null ||
+        endDate == null ||
+        selectedDate == null ||
         selectedSupervisor == null ||
         selectedLine == null) {
       ScaffoldMessenger.of(
@@ -48,20 +62,46 @@ class _EditTripTimeState extends State<EditTripBox> {
       return;
     }
 
-    final DateTime fullDateTime = DateTime(
+    final DateTime fullStartTime = DateTime(
+      startDate!.year,
+      startDate!.month,
+      startDate!.day,
+      startPeriod == 'صباحًا' ? startHour : startHour + 12,
+      startMinute,
+    );
+
+    final DateTime fullEndTime = DateTime(
+      endDate!.year,
+      endDate!.month,
+      endDate!.day,
+      endPeriod == 'صباحًا' ? endHour : endHour + 12,
+      endMinute,
+    );
+
+    if (fullEndTime.isBefore(fullStartTime)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("وقت الانتهاء يجب أن يكون بعد وقت البداية")),
+      );
+      return;
+    }
+    final DateTime fullLeavesAt = DateTime(
       selectedDate!.year,
       selectedDate!.month,
       selectedDate!.day,
-      period == 'صباحًا' ? hour : hour + 12,
-      minute,
+      leavesAtPeriod == 'صباحًا' ? leavesAtHour : leavesAtHour + 12,
+      leavesAtMinute,
     );
 
     final tour = TourModel(
-      id: widget.tourId,
+      supervisor: SuperVisorEntity(
+        id: selectedSupervisor!.id,
+        name: selectedSupervisor!.name,
+      ),
+      startTime: fullStartTime, // بداية الحجز
+      endTime: fullEndTime, // نهاية الحجز
+      leavesAt: fullLeavesAt, // ميعاد المغادرة
       type: typeOfTrip ?? "ذهاب",
-      driverName: selectedSupervisor?.name ?? "",
-      leavesAt: fullDateTime,
-      line: LineEntity(id: selectedLine!.id),
+      line: LineEntity(id: selectedLine!.id, name: selectedLine!.name),
     );
 
     context.read<UpdateAddDeleteTourCubit>().updateTour(tour);
@@ -81,21 +121,35 @@ class _EditTripTimeState extends State<EditTripBox> {
 
   @override
   void initState() {
-    print("✅ Tour ID: ${widget.tour.id}");
     super.initState();
 
     final selectedTour = widget.tour;
-    //driverName = selectedTour.driverName;
+
+    selectedSupervisor = selectedTour.supervisor;
+    selectedLine = selectedTour.line;
+    typeOfTrip = selectedTour.type;
+
     selectedDate = selectedTour.leavesAt;
     focusedDay = selectedTour.leavesAt;
-    selectedLine = selectedTour.line;
-
-    typeOfTrip = selectedTour.type;
-    hour = selectedTour.leavesAt.hour > 12
+    leavesAtHour = selectedTour.leavesAt.hour > 12
         ? selectedTour.leavesAt.hour - 12
         : selectedTour.leavesAt.hour;
-    minute = selectedTour.leavesAt.minute;
-    period = selectedTour.leavesAt.hour >= 12 ? 'مساءً' : 'صباحًا';
+    leavesAtMinute = selectedTour.leavesAt.minute;
+    leavesAtPeriod = selectedTour.leavesAt.hour >= 12 ? 'مساءً' : 'صباحًا';
+
+    startDate = selectedTour.startTime;
+    startHour = selectedTour.startTime.hour > 12
+        ? selectedTour.startTime.hour - 12
+        : selectedTour.startTime.hour;
+    startMinute = selectedTour.startTime.minute;
+    startPeriod = selectedTour.startTime.hour >= 12 ? 'مساءً' : 'صباحًا';
+
+    endDate = selectedTour.endTime;
+    endHour = selectedTour.endTime.hour > 12
+        ? selectedTour.endTime.hour - 12
+        : selectedTour.endTime.hour;
+    endMinute = selectedTour.endTime.minute;
+    endPeriod = selectedTour.endTime.hour >= 12 ? 'مساءً' : 'صباحًا';
   }
 
   @override
@@ -107,6 +161,7 @@ class _EditTripTimeState extends State<EditTripBox> {
     switch (currentStep) {
       case 0:
         stepContent = CalendarStep(
+          text: "تعديل ميعاد الرحلة",
           focusedDay: focusedDay,
           selectedDate: selectedDate,
           onDaySelected: (selected, focused) {
@@ -120,13 +175,13 @@ class _EditTripTimeState extends State<EditTripBox> {
       case 1:
         stepContent = TimeLineStep(
           typeOfTrip: typeOfTrip,
-          hour: hour,
-          minute: minute,
-          period: period,
+          hour: leavesAtHour,
+          minute: leavesAtMinute,
+          period: leavesAtPeriod,
           selectedLine: selectedLine,
-          onHourChanged: (val) => setState(() => hour = val),
-          onMinuteChanged: (val) => setState(() => minute = val),
-          onPeriodChanged: (val) => setState(() => period = val),
+          onHourChanged: (val) => setState(() => leavesAtHour = val),
+          onMinuteChanged: (val) => setState(() => leavesAtMinute = val),
+          onPeriodChanged: (val) => setState(() => leavesAtPeriod = val),
           onTypeOfTripChanged: (val) => setState(() => typeOfTrip = val),
           onLineChanged: (value) {
             setState(() => selectedLine = value);
@@ -145,9 +200,9 @@ class _EditTripTimeState extends State<EditTripBox> {
         stepContent = SummaryStep(
           typeOfTrip: typeOfTrip,
           selectedLine: selectedLine,
-          hour: hour,
-          minute: minute,
-          period: period,
+          hour: leavesAtHour,
+          minute: leavesAtMinute,
+          period: leavesAtPeriod,
           selectedSupervisor: selectedSupervisor,
           selectedDate: selectedDate,
         );
@@ -158,7 +213,7 @@ class _EditTripTimeState extends State<EditTripBox> {
         print("=============================${state}====================");
         if (state is TourUpdated) {
           print("Tour Updated Successfully");
-          context.read<TourCubit>().getAllTours();
+          // context.read<TourCubit>().getAllTours();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message, style: TextStyles.white12Bold),

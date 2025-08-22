@@ -10,7 +10,7 @@ import 'package:opal_app/features/supervisor/presentation/pages/supervisor_home_
 import '../../../../../../core/resources/color_manager.dart';
 import '../../../../../../core/resources/text_styles.dart';
 import '../../../Admin/Data/models/tour_model.dart';
-import '../../../Admin/Domain/entities/tour.dart';
+import '../../../Admin/Domain/entities/line_entity.dart';
 import '../../../Admin/presentaion/bloc/get_lines/get_all_lines_state.dart';
 import '../../../Admin/presentaion/bloc/get_tour_bloc/tour_cubit.dart';
 import '../../../Admin/presentaion/bloc/get_tour_bloc/tour_state.dart';
