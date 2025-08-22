@@ -1,58 +1,61 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/delete_user/delete_user_cubit.dart';
-import 'package:opal_app/features/Admin/presentaion/widgets/delete_dialog.dart';
+import 'package:opal_app/features/Admin/Domain/entities/line_entity.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_cubit.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_state.dart';
+import 'package:opal_app/features/user/Domain/entities/university_entity.dart';
+import 'package:opal_app/features/user/presentaion/bloc/get_all_universities/get_all_universities_cubit.dart';
+import 'package:opal_app/features/user/presentaion/bloc/get_all_universities/get_all_universities_state.dart';
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
-import '../../../user/Domain/entities/user_entity.dart';
-import '../../../user/presentaion/bloc/user_cubit.dart' show GetAllUserCubit;
-import '../../../user/presentaion/bloc/user_state.dart';
 import '../widgets/expandable_card.dart';
 import '../widgets/search_field.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
+
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  bool isStudentsSelected = true;
-  List<bool> _isExpandedStudents = [];
-  List<bool> _isExpandedSupervisors = [];
-  List<UserEntity> _users = [];
-  List<UserEntity> _filteredUsers = [];
+  bool isUniversitySelected = true;
+  List<bool> _isExpandedUniversity = [];
+  List<bool> _isExpandedLines = [];
+  List<UniversityEntity> _universities = [];
+  List<UniversityEntity> _filteredUniversities = [];
+  List<LineEntity> _lines = [];
+  List<LineEntity> _filteredLines = [];
   String _searchQuery = '';
 
-  void _updateFilteredUsers() {
-    // Filter by role first
-    _filteredUsers = _users.where((user) {
-      return isStudentsSelected
-          ? user.role == "student"
-          : user.role == "supervisor";
-    }).toList();
-
-    // Then apply search filter if query is not empty
-    if (_searchQuery.isNotEmpty) {
-      _filteredUsers = _filteredUsers.where((user) {
-        return user.name!.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-            user.id!.contains(_searchQuery) ||
-            user.phone!.contains(_searchQuery);
+  void _updateFiltered() {
+    _filteredUniversities = _universities;
+    _filteredLines = _lines;
+    if (isUniversitySelected) {
+      _filteredUniversities = _universities.where((u) {
+        return _searchQuery.isEmpty ||
+            u.name?.toLowerCase().contains(_searchQuery.toLowerCase()) ==
+                true ||
+            u.location?.toLowerCase().contains(_searchQuery.toLowerCase()) ==
+                true;
       }).toList();
-    }
-    if (isStudentsSelected) {
-      if (_isExpandedStudents.length != _filteredUsers.length) {
-        _isExpandedStudents = List.generate(
-          _filteredUsers.length,
-              (_) => false,
+
+      if (_isExpandedUniversity.length != _filteredUniversities.length) {
+        _isExpandedUniversity = List.generate(
+          _filteredUniversities.length,
+          (_) => false,
         );
       }
     } else {
-      if (_isExpandedSupervisors.length != _filteredUsers.length) {
-        _isExpandedSupervisors = List.generate(
-          _filteredUsers.length,
-              (_) => false,
-        );
+      _filteredLines = _lines.where((l) {
+        return _searchQuery.isEmpty ||
+            l.name?.toLowerCase().contains(_searchQuery.toLowerCase()) ==
+                true ||
+            l.notes?.toLowerCase().contains(_searchQuery) == true;
+      }).toList();
+
+      if (_isExpandedLines.length != _filteredLines.length) {
+        _isExpandedLines = List.generate(_filteredLines.length, (_) => false);
       }
     }
   }
@@ -60,7 +63,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<GetAllUserCubit>(context).fetchAllUsers();
+    BlocProvider.of<GetAllUniversitiesCubit>(context).getAllUniveristies();
+    BlocProvider.of<LinesCubit>(context).getAllLiness();
   }
 
   @override
@@ -71,13 +75,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: Column(
           children: [
             SearchField(
-              hintText: 'ابحث',
-              fillColor: Colors.white,
-              iconColor: Colors.red,
+              hintText: isUniversitySelected ? 'ابحث عن جامعة' : 'ابحث عن خط',
+              fillColor: ColorManager.secondColor,
+              iconColor: ColorManager.primaryColor,
               onChanged: (value) {
                 setState(() {
                   _searchQuery = value;
-                  _updateFilteredUsers();
+                  _updateFiltered();
                 });
               },
             ),
@@ -86,162 +90,132 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: Container(
                 width: double.infinity,
                 decoration: const BoxDecoration(color: Color(0xFFE71A45)),
-                child: BlocConsumer<GetAllUserCubit, UserState>(
-                  listener: (context, state) {
-                    if (state is UserError) {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text(state.message)));
-                    }
-                  },
-                  builder: (context, state) {
-                    if (state is UserSuccess) {
-                      _users = state.user
-                          .where((u) => u.status == 'active')
-                          .toList();
-                      _updateFilteredUsers();
-
-                      if (_filteredUsers.isEmpty) {
-                        return Center(
-                          child: Text(
-                            "لا يوجد مستخدمون",
-                            style: TextStyles.white20Bold,
-                          ),
-                        );
-                      }
-
-                      return ListView.builder(
-                        padding: const EdgeInsets.fromLTRB(16, 12, 16, 90),
-                        itemCount: _filteredUsers.length,
-                        itemBuilder: (context, index) {
-                          final user = _filteredUsers[index];
-                          print("_filteredUsers${_filteredUsers.length}");
-                          if (isStudentsSelected) {
-                            return ExpandableCard(
-                              name: user.name!,
-                              phone: user.phone!,
-                              // university: user.university?.name ?? '',
-                              universityId: user.universityId,
-                              isSupervisor: false,
-                              isExpanded: _isExpandedStudents[index],
-                              onToggle: () {
-                                setState(() {
-                                  _isExpandedStudents[index] = !_isExpandedStudents[index];
-                                });
-                              },
-                              onLongPress: () {
-                                setState(() {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return DeleteDialog(
-                                        context: context,
-                                        title: "تأكيد الحذف",
-                                        content: "هل تريد حذف ${user.name}؟",
-                                        onConfirm: () {
-                                          BlocProvider.of<DeleteUserCubit>(
-                                            context,
-                                          ).deleteUser(user.id!);
-                                          Navigator.of(context).pop();
-                                        },
-                                      );
-                                    },
-                                  );
-                                });
-                              },
-                              deleteIcon: IconButton(icon: const Icon(Icons.delete, color: Colors.red),
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return DeleteDialog(
-                                        context: context,
-                                        title: "تأكيد الحذف",
-                                        content: "هل تريد حذف ${user.name}؟",
-                                        onConfirm: () {
-                                          BlocProvider.of<DeleteUserCubit>(context).deleteUser(user.id!);
-                                          Navigator.of(context).pop();
-                                        },
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
-                            );
-                          } else {
-                            return ExpandableCard(
-                              name: user.name!,
-                              phone: user.phone!,
-                              line: user.line?.name ?? '',
-                              //  universityId: user.universityId,
-                              isSupervisor: true,
-                              isExpanded: _isExpandedSupervisors[index],
-                              onToggle: () {
-                                setState(() {
-                                  _isExpandedSupervisors[index] = !_isExpandedSupervisors[index];
-                                });
-                              },
-                              onLongPress: () {
-                                setState(() {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return DeleteDialog(
-                                        context: context,
-                                        title: "تأكيد الحذف",
-                                        content: "هل تريد حذف ${user.name}؟",
-                                        onConfirm: () {
-                                          BlocProvider.of<DeleteUserCubit>(
-                                            context,
-                                          ).deleteUser(user.id!);
-                                          Navigator.of(context).pop();
-                                        },
-                                      );
-                                    },
-                                  );
-                                });
-                              },
-                              deleteIcon: IconButton(icon: const Icon(Icons.delete, color: Colors.red),
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return DeleteDialog(
-                                        context: context,
-                                        title: "تأكيد الحذف",
-                                        content: "هل تريد حذف ${user.name}؟",
-                                        onConfirm: () {
-                                          BlocProvider.of<DeleteUserCubit>(context).deleteUser(user.id!);
-                                          Navigator.of(context).pop();
-                                        },
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
-                            );
-                          }
-                        },
-                      );
-                    } else if (state is UserLoading) {
-                      return const Center(
-                        child: CircularProgressIndicator(
-                          color: ColorManager.secondColor,
-                        ),
-                      );
-                    } else {
-                      return Center(
-                        child: Text(
-                          "حدث خطأ أثناء تحميل البيانات.",
-                          style: TextStyles.white20Bold,
-                        ),
-                      );
-                    }
-                  },
-                ),
+                child: isUniversitySelected
+                    ? _buildUniversitiesList()
+                    : _buildLinesList(),
               ),
             ),
-          ],),),);}
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUniversitiesList() {
+    return BlocConsumer<GetAllUniversitiesCubit, GetAllUniversitiesState>(
+      listener: (context, state) {
+        if (state is GetAllUniversitiesError) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
+        }
+      },
+      builder: (context, state) {
+        if (state is GetAllUniversitiesSuccess) {
+          _universities = state.GetAllUniversities;
+          _updateFiltered();
+
+          if (_filteredUniversities.isEmpty) {
+            return Center(
+              child: Text("لا يوجد جامعات", style: TextStyles.white20Bold),
+            );
+          }
+
+          return ListView.builder(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 90),
+            itemCount: _filteredUniversities.length,
+            itemBuilder: (context, index) {
+              final university = _filteredUniversities[index];
+              return ExpandableCard(
+                name: university.name ?? 'لا يوجد اسم',
+                isSupervisor: false,
+                isExpanded: _isExpandedUniversity[index],
+                onToggle: () {
+                  setState(() {
+                    _isExpandedUniversity[index] =
+                        !_isExpandedUniversity[index];
+                  });
+                },
+              );
+            },
+          );
+        } else if (state is GetAllUniversitiesLoading) {
+          return const Center(
+            child: CircularProgressIndicator(color: ColorManager.secondColor),
+          );
+        } else if (state is GetAllUniversitiesError) {
+          return Center(
+            child: Text(state.message, style: TextStyles.white20Bold),
+          );
+        } else {
+          return Center(
+            child: Text(
+              "حدث خطأ أثناء تحميل البيانات.",
+              style: TextStyles.white20Bold,
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  Widget _buildLinesList() {
+    return BlocConsumer<LinesCubit, GetAllLinesState>(
+      listener: (context, state) {
+        if (state is LinesError) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
+        }
+      },
+      builder: (context, state) {
+        if (state is LinesLoaded) {
+          _lines = state.Liness;
+          _updateFiltered();
+
+          if (_filteredLines.isEmpty) {
+            return Center(
+              child: Text("لا يوجد خطوط", style: TextStyles.white20Bold),
+            );
+          }
+
+          return ListView.builder(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 90),
+            itemCount: _filteredLines.length,
+            itemBuilder: (context, index) {
+              final line = _filteredLines[index];
+              return ExpandableCard(
+                name: line.name ?? 'لا يوجد اسم',
+                isSupervisor: true,
+                isExpanded: _isExpandedLines[index],
+                onToggle: () {
+                  setState(() {
+                    _isExpandedLines[index] = !_isExpandedLines[index];
+                  });
+                },
+              );
+            },
+          );
+        } else if (state is LinesLoading) {
+          return const Center(
+            child: CircularProgressIndicator(color: ColorManager.secondColor),
+          );
+        } else if (state is LinesError) {
+          return Center(
+            child: Text(state.message, style: TextStyles.white20Bold),
+          );
+        } else {
+          return Center(
+            child: Text(
+              "حدث خطأ أثناء تحميل البيانات.",
+              style: TextStyles.white20Bold,
+            ),
+          );
+        }
+      },
+    );
+  }
+
   Widget _buildSwitchButtons() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -250,22 +224,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Expanded(
             child: ElevatedButton(
               onPressed: () {
-                if (!isStudentsSelected) {
+                if (!isUniversitySelected) {
                   setState(() {
-                    isStudentsSelected = true;
-                    _updateFilteredUsers();
+                    isUniversitySelected = true;
+                    _updateFiltered();
                   });
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: isStudentsSelected
+                backgroundColor: isUniversitySelected
                     ? const Color(0xFFE71A45)
                     : Colors.grey.shade300,
               ),
               child: Text(
                 'الجامعات',
                 style: TextStyle(
-                  color: isStudentsSelected ? Colors.white : Colors.black,
+                  color: isUniversitySelected ? Colors.white : Colors.black,
                 ),
               ),
             ),
@@ -274,22 +248,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Expanded(
             child: ElevatedButton(
               onPressed: () {
-                if (isStudentsSelected) {
+                if (isUniversitySelected) {
                   setState(() {
-                    isStudentsSelected = false;
-                    _updateFilteredUsers();
+                    isUniversitySelected = false;
+                    _updateFiltered();
                   });
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: isStudentsSelected
+                backgroundColor: isUniversitySelected
                     ? Colors.grey.shade300
                     : ColorManager.primaryColor,
               ),
               child: Text(
                 'الخطوط',
                 style: TextStyle(
-                  color: isStudentsSelected
+                  color: isUniversitySelected
                       ? ColorManager.blackColor
                       : ColorManager.secondColor,
                 ),

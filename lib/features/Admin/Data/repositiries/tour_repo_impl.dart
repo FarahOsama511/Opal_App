@@ -7,7 +7,6 @@ import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
 import 'package:opal_app/features/Admin/Domain/reporistires/tour_repo.dart';
 import '../dataSource/tour_local_data_source.dart';
 import '../dataSource/tour_remote_data_source.dart';
-import '../models/supervisor_model.dart';
 
 class TourRepoImpl extends ToursRepository {
   final LocalDataSource localDataSource;

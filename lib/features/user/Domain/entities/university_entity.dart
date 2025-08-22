@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
 
 class UniversityEntity extends Equatable {
   final String? id;
@@ -6,8 +7,10 @@ class UniversityEntity extends Equatable {
   final String? location;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+  final List<UserEntity>? users;
 
   UniversityEntity({
+    this.users,
     this.id,
     this.name,
     this.location,
@@ -16,5 +19,5 @@ class UniversityEntity extends Equatable {
   });
 
   @override
-  List<Object?> get props => [id, name, location, createdAt, updatedAt];
+  List<Object?> get props => [id, name, location, createdAt, updatedAt, users];
 }

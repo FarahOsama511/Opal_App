@@ -5,7 +5,7 @@ import '../../../supervisor/bloc/get_university_by_id/get_university_by_id_cubit
 
 class ExpandableCard extends StatefulWidget {
   final String name;
-  final String phone;
+  final String? phone;
   final String university;
   final String? universityId;
   final String line;
@@ -21,7 +21,7 @@ class ExpandableCard extends StatefulWidget {
     this.deleteIcon,
     super.key,
     required this.name,
-    required this.phone,
+    this.phone,
     this.university = '',
     this.line = '',
     required this.isSupervisor,
@@ -91,7 +91,7 @@ class _ExpandableCardState extends State<ExpandableCard> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  _buildInfoRow(widget.phone, 'رقم الهاتف:'),
+                  _buildInfoRow(widget.phone!, 'رقم الهاتف:'),
                   if (!widget.isSupervisor) ...[
                     _buildInfoRow(universityName, 'الجامعة:'),
                   ] else ...[

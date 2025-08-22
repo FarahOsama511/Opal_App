@@ -17,10 +17,7 @@ class UniversityDataSourceImpl implements UniversityDataSource {
 
   @override
   Future<List<UniversityModel>> getAllUniversity() async {
-    final response = await client.get(
-      Uri.parse('${Base_Url}universities'),
-      //headers: {'Authorization': 'Bearer $universityToken'},
-    );
+    final response = await client.get(Uri.parse('${Base_Url}universities'));
 
     print(
       "=== Get All universities Response Status: ${response.statusCode} ===",
