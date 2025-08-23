@@ -11,6 +11,7 @@ abstract class LineRemoteDataSource {
   Future<List<LineModel>> getAllLines();
   Future<Unit> AddLine(LineEntity line);
   Future<LineModel> getLineById(String id);
+  Future<Unit> deleteLine(String id);
 }
 
 class LineRemoteDataSourceImpl extends LineRemoteDataSource {
@@ -66,6 +67,21 @@ class LineRemoteDataSourceImpl extends LineRemoteDataSource {
       final line = LineModel.fromJson(jsonResponse);
 
       return line;
+    } else {
+      print("state code is ${response.statusCode}");
+      print("body:${response.body}");
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<Unit> deleteLine(String id) async {
+    final response = await client.delete(
+      Uri.parse('${Base_Url}lines/${id}'),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+    if (response.statusCode == 204) {
+      return unit;
     } else {
       print("state code is ${response.statusCode}");
       print("body:${response.body}");

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:opal_app/core/resources/color_manager.dart';
+
+import '../../../../core/resources/text_styles.dart';
 
 class JoinRequestCard extends StatelessWidget {
   final String name;
   final String phone;
   final String university;
-  String? faculty;
+  final String? downTown;
   final bool isExpanded;
   final VoidCallback onToggle;
   final VoidCallback onAccept;
@@ -15,7 +18,7 @@ class JoinRequestCard extends StatelessWidget {
     required this.name,
     required this.phone,
     required this.university,
-    this.faculty,
+    this.downTown,
     required this.isExpanded,
     required this.onToggle,
     required this.onAccept,
@@ -58,7 +61,7 @@ class JoinRequestCard extends StatelessWidget {
                 children: [
                   _buildInfoRow('رقم الهاتف', phone),
                   _buildInfoRow('الجامعة', university),
-                  //_buildInfoRow('الكلية', faculty),
+                  _buildInfoRow('المدينة', downTown!),
                   const SizedBox(height: 10),
                   Row(
                     children: [
@@ -66,9 +69,12 @@ class JoinRequestCard extends StatelessWidget {
                         child: ElevatedButton(
                           onPressed: onReject,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
+                            backgroundColor: ColorManager.primaryColor,
                           ),
-                          child: const Text('رفض الطلب'),
+                          child: Text(
+                            'رفض الطلب',
+                            style: TextStyles.white12Bold,
+                          ),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -78,7 +84,10 @@ class JoinRequestCard extends StatelessWidget {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green,
                           ),
-                          child: const Text('قبول الطلب'),
+                          child: Text(
+                            'قبول الطلب',
+                            style: TextStyles.white12Bold,
+                          ),
                         ),
                       ),
                     ],
@@ -98,8 +107,8 @@ class JoinRequestCard extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(value, style: const TextStyle(color: Colors.black87)),
-          Text(label, style: const TextStyle(color: Colors.grey)),
+          Text(value, style: TextStyles.black14Bold),
+          Text(label, style: TextStyles.black14Bold),
         ],
       ),
     );

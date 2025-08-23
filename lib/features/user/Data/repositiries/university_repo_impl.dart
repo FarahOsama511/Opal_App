@@ -82,4 +82,18 @@ class UniversityRepoImpl extends UniversityRepo {
       return Left(NoInternetFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, Unit>> DeleteUniversity(String id) async {
+    if (await networkInfo.isConnected) {
+      try {
+        await universityDataSource.deleteUniversity(id);
+        return Right(unit);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NoInternetFailure());
+    }
+  }
 }

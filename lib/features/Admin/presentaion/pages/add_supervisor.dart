@@ -10,6 +10,7 @@ import '../bloc/create_admin_supervisors.dart/add_admin_supervisor_cubit.dart';
 import '../bloc/create_admin_supervisors.dart/add_admin_supervisor_state.dart';
 import '../bloc/get_lines/get_all_lines_cubit.dart';
 import '../bloc/get_lines/get_all_lines_state.dart';
+import '../widgets/Universities_Multi_Dropdown .dart';
 import '../widgets/custom_widgets.dart';
 import '../widgets/text_field.dart';
 import 'admin_home_screen.dart';
@@ -107,7 +108,8 @@ class _AddSupervisorState extends State<AddSupervisor> {
                 ),
 
                 const SizedBox(height: 10),
-
+                UniversitiesMultiDropdown(),
+                const SizedBox(height: 10),
                 BlocConsumer<AddAdminSupervisorCubit, AddAdminSupervisorState>(
                   listener: (context, state) {
                     if (state is AddAdminSupervisorError) {

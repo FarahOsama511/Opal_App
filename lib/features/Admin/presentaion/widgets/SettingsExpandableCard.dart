@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/constants.dart' as university;
 import '../../../../core/resources/text_styles.dart';
+import 'delete_dialog.dart';
 
 class SettingsExpandableCard extends StatelessWidget {
   final String name;
@@ -10,8 +11,10 @@ class SettingsExpandableCard extends StatelessWidget {
   final String? location;
   final int? usersCount;
   final String? notes;
+  final Widget? deleteIcon;
 
   const SettingsExpandableCard({
+    required this.deleteIcon,
     super.key,
     required this.name,
     required this.isSupervisor,
@@ -47,6 +50,7 @@ class SettingsExpandableCard extends StatelessWidget {
                     style: TextStyles.black14Bold,
                   ),
                 ),
+                if (isExpanded && deleteIcon != null) deleteIcon!,
                 IconButton(
                   icon: Icon(
                     isExpanded
@@ -67,10 +71,7 @@ class SettingsExpandableCard extends StatelessWidget {
                 children: [
                   if (!isSupervisor) ...[
                     _buildInfoRow(location ?? 'غير متوفر', 'الموقع:'),
-                    _buildInfoRow(
-                      (university.users?.length ?? 0).toString(),
-                      'عدد المستخدمين:',
-                    ),
+                    _buildInfoRow((usersCount).toString(), 'عدد الطلبة:'),
                   ] else ...[
                     _buildInfoRow(notes ?? 'غير متوفر', 'الملاحظات:'),
                   ],

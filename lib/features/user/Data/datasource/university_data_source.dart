@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
 import 'package:opal_app/core/constants/constants.dart';
 import '../../../../core/errors/exceptions.dart';
@@ -9,6 +10,7 @@ abstract class UniversityDataSource {
   Future<List<UniversityModel>> getAllUniversity();
   Future<UniversityModel> getUniversityById(String id);
   Future<UniversityModel> addUniversity(UniversityModel university);
+  Future<Unit> deleteUniversity(String id);
 }
 
 class UniversityDataSourceImpl implements UniversityDataSource {
@@ -77,6 +79,24 @@ class UniversityDataSourceImpl implements UniversityDataSource {
       final jsonResponse = jsonDecode(response.body);
       print('the added university is: $jsonResponse');
       return UniversityModel.fromJson(jsonResponse);
+    } else {
+      print("status code is ${response.statusCode}");
+      print("body:${response.body}");
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<Unit> deleteUniversity(String id) async {
+    final response = await client.delete(
+      Uri.parse('${Base_Url}universities/${id}'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${token}',
+      },
+    );
+    if (response == 204) {
+      return unit;
     } else {
       print("status code is ${response.statusCode}");
       print("body:${response.body}");

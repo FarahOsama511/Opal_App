@@ -1,23 +1,25 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/add_lines/add_line_state.dart';
 
 import '../../../../../core/errors/failure.dart';
 import '../../../../../core/strings/failures.dart';
-import '../../../Domain/entities/line_entity.dart';
+import '../../../../../core/strings/messages.dart';
 import '../../../Domain/usecase/add_update_delete_line.dart.dart';
+import 'delete_line_state.dart';
 
-class AddLineCubit extends Cubit<AddLineState> {
-  final AddLineUseCase addLineUseCase;
-  AddLineCubit(this.addLineUseCase) : super(AddLineInitial());
-  Future<void> AddLine(LineEntity Line) async {
-    emit(AddLineLoading());
-    final result = await addLineUseCase(Line);
+class DeleteLineCubit extends Cubit<DeleteLineState> {
+  final DeleteLineUseCase deleteLineUsecase;
+  DeleteLineCubit(this.deleteLineUsecase) : super(DeleteLineInitial());
+
+  Future<void> deleteLine(String LineId) async {
+    emit(DeleteLineLoading());
+    final result = await deleteLineUsecase(LineId);
     result.fold(
       (failure) {
-        emit(AddLineError(_errorMessage(failure)));
+        emit(DeleteLineError(_errorMessage(failure)));
       },
       (_) {
-        emit(AddLineSuccess());
+        print("Deleting line: $LineId");
+        emit(DeleteLineLoaded(DELETED_SUCCESS_MESSAGE));
       },
     );
   }

@@ -56,6 +56,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<RegisterEntity> register(RegisterModel authModel) async {
     final body = {
+      'downTownId': authModel.user.downTown?.id,
       'name': authModel.user.name,
       'phone': authModel.user.phone,
       'universityCardId': authModel.user.universityCardId,

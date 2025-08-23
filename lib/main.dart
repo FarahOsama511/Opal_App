@@ -8,6 +8,8 @@ import 'package:opal_app/core/get_it.dart' as di;
 import 'package:opal_app/core/network/local_network.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/add_lines/add_line_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/add_university/add_university_cubit.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/delete_line/delete_line_cubit.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/delete_university/delete_university_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/delete_user/delete_user_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_id.dart/get_tour_id_cubit.dart';
@@ -15,6 +17,7 @@ import 'package:opal_app/features/Admin/presentaion/pages/add_line.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/admin_home_screen.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/trips.dart';
 import 'package:opal_app/features/supervisor/presentation/pages/show_tours.dart';
+import 'package:opal_app/features/user/presentaion/bloc/get_all_downtowns/get_all_down_town_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/get_all_universities/get_all_universities_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/selection_tour/selection_tour_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/user_cubit.dart';
@@ -72,6 +75,9 @@ class StudentBusApp extends StatelessWidget {
             BlocProvider(create: (_) => di.setUp<DeleteUserCubit>()),
             BlocProvider(create: (_) => di.setUp<GetUniversityByIdCubit>()),
             BlocProvider(create: (_) => di.setUp<AddUniversityCubit>()),
+            BlocProvider(create: (_) => di.setUp<DeleteUniversityCubit>()),
+            BlocProvider(create: (_) => di.setUp<DeleteLineCubit>()),
+            BlocProvider(create: (_) => di.setUp<GetAllDownTownCubit>()),
           ],
           child: MaterialApp(
             localizationsDelegates: const [

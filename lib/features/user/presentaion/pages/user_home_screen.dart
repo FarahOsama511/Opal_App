@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:opal_app/core/network/local_network.dart';
+import 'package:opal_app/features/Admin/Data/models/tour_model.dart';
 import 'package:opal_app/features/selection/presentation/pages/confirm_details.dart';
 import 'package:opal_app/features/user/Domain/entities/university_entity.dart';
 import '../../../../core/resources/color_manager.dart';
@@ -212,13 +213,15 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
             return Center(child: CircularProgressIndicator());
           } else if (state is TourLoaded) {
             List<Tour> tours = state.tours;
-
-            departureTimes = tours
+            List<Tour> openTours = tours
+                .where((tour) => tour.isBookingOpen)
+                .toList();
+            departureTimes = openTours
                 .map((tour) => DateFormat('HH:mm').format(tour.leavesAt))
                 .toSet()
                 .toList();
 
-            filteredTours = tours
+            filteredTours = openTours
                 .where(
                   (tour) =>
                       DateFormat('HH:mm').format(tour.leavesAt) == selectedTime,

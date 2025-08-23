@@ -1,3 +1,4 @@
+import 'package:opal_app/features/Admin/Data/models/down_town_model.dart';
 import 'package:opal_app/features/user/Data/models/university_model.dart';
 import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
 import '../../../Admin/Data/models/line_model.dart';
@@ -15,6 +16,7 @@ class UserModel extends UserEntity {
     super.university,
     super.password,
     super.line,
+    super.downTown,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -33,11 +35,17 @@ class UserModel extends UserEntity {
           ? UniversityModel.fromJson(json['university'])
           : null,
       line: json['line'] != null ? LineModel.fromJson(json['line']) : null,
+      downTown: json['downTown'] != null
+          ? DownTownModel.fromJson(json['downTown'])
+          : null,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      'downTown': downTown != null
+          ? (downTown as DownTownModel).toJson()
+          : null,
       'id': id,
       'name': name,
       'phone': phone,

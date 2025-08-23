@@ -82,3 +82,10 @@ class TourModel extends Tour {
     };
   }
 }
+
+extension BookingStatus on Tour {
+  bool get isBookingOpen {
+    final now = DateTime.now();
+    return now.isAfter(startTime) && now.isBefore(endTime);
+  }
+}

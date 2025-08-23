@@ -3,23 +3,30 @@ import 'package:http/http.dart' as http;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:opal_app/core/network/network_info.dart';
 import 'package:opal_app/features/Admin/Data/dataSource/add_admin_supervisor_datasource.dart';
+import 'package:opal_app/features/Admin/Data/dataSource/down_town_local_data.dart';
 import 'package:opal_app/features/Admin/Data/dataSource/line_local_data_source.dart';
 import 'package:opal_app/features/Admin/Data/dataSource/line_remote_data_source.dart';
 import 'package:opal_app/features/Admin/Data/dataSource/tour_local_data_source.dart';
 import 'package:opal_app/features/Admin/Data/dataSource/tour_remote_data_source.dart';
 import 'package:opal_app/features/Admin/Data/repositiries/add_admin_supervisor_repo_impl.dart';
+import 'package:opal_app/features/Admin/Data/repositiries/down_town_repo_impl.dart';
 import 'package:opal_app/features/Admin/Data/repositiries/line_repo_impl.dart';
 import 'package:opal_app/features/Admin/Data/repositiries/tour_repo_impl.dart';
 import 'package:opal_app/features/Admin/Domain/reporistires/add_admin_supervisor.dart';
+import 'package:opal_app/features/Admin/Domain/reporistires/down_town_repo.dart';
 import 'package:opal_app/features/Admin/Domain/reporistires/line_repo.dart';
 import 'package:opal_app/features/Admin/Domain/usecase/add_admin_supervisor.dart';
-import 'package:opal_app/features/Admin/Domain/usecase/add_line_use_case.dart';
+import 'package:opal_app/features/Admin/Domain/usecase/add_down_town_usecase.dart';
+import 'package:opal_app/features/Admin/Domain/usecase/add_update_delete_line.dart.dart';
+import 'package:opal_app/features/Admin/Domain/usecase/delete_down_town_usecase.dart';
+import 'package:opal_app/features/Admin/Domain/usecase/get_all_down_town_usecase.dart';
 import 'package:opal_app/features/Admin/Domain/usecase/get_all_lines.dart';
 import 'package:opal_app/features/Admin/Domain/usecase/get_all_tours.dart';
 import 'package:opal_app/features/Admin/Domain/usecase/get_line_Id.dart';
 import 'package:opal_app/features/Admin/Domain/usecase/get_tour_id_use_case.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/add_lines/add_line_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/add_university/add_university_cubit.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/delete_line/delete_line_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/delete_user/delete_user_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_bloc/tour_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_id.dart/get_tour_id_cubit.dart';
@@ -36,6 +43,7 @@ import 'package:opal_app/features/user/Domain/repositires/select_tour_repo.dart'
 import 'package:opal_app/features/user/Domain/repositires/university_repo.dart';
 import 'package:opal_app/features/user/Domain/repositires/user_repo.dart';
 import 'package:opal_app/features/user/Domain/usecases/add_university_usecase.dart';
+import 'package:opal_app/features/user/Domain/usecases/delete_university_use_case.dart';
 import 'package:opal_app/features/user/Domain/usecases/delete_user_usecase.dart';
 import 'package:opal_app/features/user/Domain/usecases/get_all_univeristies.dart';
 import 'package:opal_app/features/user/Domain/usecases/get_all_user.dart';
@@ -44,16 +52,18 @@ import 'package:opal_app/features/user/Domain/usecases/get_user_id_use_case.dart
 import 'package:opal_app/features/user/Domain/usecases/select_tour_use_case.dart';
 import 'package:opal_app/features/user/Domain/usecases/unconfirm_tour_use_case.dart';
 import 'package:opal_app/features/user/presentaion/bloc/auth_cubit.dart';
+import 'package:opal_app/features/user/presentaion/bloc/get_all_downtowns/get_all_down_town_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/get_all_universities/get_all_universities_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/selection_tour/selection_tour_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/user_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import '../features/Admin/Data/dataSource/down_town_remote_data_source.dart';
 import '../features/Admin/Domain/reporistires/tour_repo.dart';
 import '../features/Admin/Domain/usecase/add_tour.dart';
 import '../features/Admin/Domain/usecase/delete_tour.dart';
 import '../features/Admin/Domain/usecase/update_tour.dart';
 import '../features/Admin/presentaion/bloc/create_admin_supervisors.dart/add_admin_supervisor_cubit.dart';
+import '../features/Admin/presentaion/bloc/delete_university/delete_university_cubit.dart';
 import '../features/Admin/presentaion/bloc/get_lines/get_all_lines_cubit.dart';
 import '../features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_cubit.dart';
 import '../features/user/Data/datasource/remote_data_source.dart';
@@ -86,6 +96,9 @@ Future<void> init() async {
   setUp.registerFactory(() => DeleteUserCubit(setUp()));
   setUp.registerFactory(() => GetUniversityByIdCubit(setUp()));
   setUp.registerFactory(() => AddUniversityCubit(setUp()));
+  setUp.registerFactory(() => DeleteUniversityCubit(setUp()));
+  setUp.registerFactory(() => DeleteLineCubit(setUp()));
+  setUp.registerFactory(() => GetAllDownTownCubit(setUp()));
 
   //usecases
   setUp.registerLazySingleton(() => GetAllToursUseCase(setUp()));
@@ -104,11 +117,16 @@ Future<void> init() async {
   setUp.registerLazySingleton(() => GetUniversityIdUsecase(setUp()));
   setUp.registerLazySingleton(() => AddUniversityUsecase(setUp()));
   setUp.registerLazySingleton(() => GetTourByIdUseCase(setUp()));
-  setUp.registerLazySingleton(() => AddLineUseCase(setUp()));
   setUp.registerLazySingleton(() => GetLineByIdUseCase(setUp()));
   setUp.registerLazySingleton(() => SelectionTourUseCase(setUp()));
   setUp.registerLazySingleton(() => UnconfirmTourUseCase(setUp()));
   setUp.registerLazySingleton(() => GetUserIdUseCase(setUp()));
+  setUp.registerLazySingleton(() => DeleteUniversityUseCase(setUp()));
+  setUp.registerLazySingleton(() => AddLineUseCase(setUp()));
+  setUp.registerLazySingleton(() => DeleteLineUseCase(setUp()));
+  setUp.registerLazySingleton(() => DeleteDownTownUsecase(setUp()));
+  setUp.registerLazySingleton(() => AddDownTownUsecase(setUp()));
+  setUp.registerLazySingleton(() => GetAllDownTownUsecase(setUp()));
 
   //repositories
   setUp.registerLazySingleton<ToursRepository>(
@@ -151,6 +169,13 @@ Future<void> init() async {
       networkInfo: setUp(),
     ),
   );
+  setUp.registerLazySingleton<DownTownRepo>(
+    () => DownTownRepoImpl(
+      setUp(),
+      downTownRemoteDataSource: setUp(),
+      localDataSource: setUp(),
+    ),
+  );
 
   //data sources
   setUp.registerLazySingleton<TourRemoteDataSource>(
@@ -186,6 +211,12 @@ Future<void> init() async {
   );
   setUp.registerLazySingleton<SelectTourRemoteDataSource>(
     () => SelectTourRemoteDataSourceImpl(client: setUp()),
+  );
+  setUp.registerLazySingleton<DownTownLocalDataSource>(
+    () => DownTownLocalDataImpl(),
+  );
+  setUp.registerLazySingleton<DownTownRemoteDataSource>(
+    () => DownTownRemoteDataSourceImpl(client: setUp()),
   );
 
   //external dependencies

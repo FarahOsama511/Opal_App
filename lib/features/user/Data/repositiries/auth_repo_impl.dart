@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:opal_app/core/errors/failure.dart';
 import 'package:opal_app/core/network/network_info.dart';
+import 'package:opal_app/features/Admin/Domain/entities/down_town_entity.dart';
 import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
 import 'package:opal_app/features/user/Data/datasource/remote_data_source.dart';
 import 'package:opal_app/features/user/Data/models/register_model.dart';
@@ -43,6 +44,9 @@ class AuthRepoImpl extends AuthRepository {
   ) async {
     final registerModel = RegisterModel(
       user: UserEntity(
+        downTown: authEntity.user.downTown != null
+            ? DownTownEntity(id: authEntity.user.downTown!.id)
+            : null,
         name: authEntity.user.name,
         phone: authEntity.user.phone,
         universityCardId: authEntity.user.universityCardId,

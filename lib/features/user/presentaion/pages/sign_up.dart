@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
+import 'package:opal_app/features/Admin/Domain/entities/down_town_entity.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_state.dart';
 import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
 import 'package:opal_app/features/user/presentaion/bloc/auth_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/auth_state.dart';
+import 'package:opal_app/features/user/presentaion/bloc/get_all_downtowns/get_all_down_town_cubit.dart';
+import 'package:opal_app/features/user/presentaion/bloc/get_all_downtowns/get_all_down_town_state.dart';
 import 'package:opal_app/features/user/presentaion/bloc/get_all_universities/get_all_universities_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/get_all_universities/get_all_universities_state.dart';
 import 'package:opal_app/features/user/presentaion/pages/sign_in.dart';
@@ -29,6 +32,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
   UniversityEntity? selectedUniversity;
   LineEntity? selectedLine;
+  DownTownEntity? selectedDownTown;
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController universityCardId = TextEditingController();
@@ -46,6 +50,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   void initState() {
     super.initState();
     BlocProvider.of<GetAllUniversitiesCubit>(context).fetchAlluniversities();
+    BlocProvider.of<LinesCubit>(context).getAllLiness();
+    BlocProvider.of<GetAllDownTownCubit>(context).fetchAllDownTowns();
   }
 
   @override
@@ -162,8 +168,33 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           }
                         },
                       ),
+                      // SizedBox(height: 20.h),
+                      BlocBuilder<GetAllDownTownCubit, GetAllDownTownState>(
+                        builder: (context, state) {
+                          if (state is GetAllDownTownsLoading) {
+                            return const CircularProgressIndicator(
+                              color: ColorManager.primaryColor,
+                            );
+                          } else if (state is GetAllDownTownsSuccess) {
+                            final allDownTowns = state.getAllDownTowns;
+                            return CustomDropdown(
+                              label: 'المدينة',
+                              value: selectedDownTown,
+                              items: allDownTowns,
+                              onChanged: (value) {
+                                setState(() => selectedDownTown = value);
+                              },
+                              displayString: (u) => u.name!,
+                            );
+                          } else {
+                            return Text(
+                              'فشل في تحميل المدن',
+                              style: TextStyles.black14Bold,
+                            );
+                          }
+                        },
+                      ),
                       SizedBox(height: 20.h),
-
                       // زر التسجيل
                       PrimaryButton(
                         backgroundColor: ColorManager.primaryColor,
@@ -178,6 +209,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   university: selectedUniversity,
                                   line: selectedLine,
                                   universityId: selectedUniversity!.id,
+                                  downTown: selectedDownTown,
                                   role: 'student',
                                 ),
                               ),

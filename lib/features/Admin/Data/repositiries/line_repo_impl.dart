@@ -59,9 +59,17 @@ class LineRepoImpl extends LineRepo {
   }
 
   @override
-  Future<Either<Failure, Unit>> deleteLine(String id) {
-    // TODO: implement deleteLine
-    throw UnimplementedError();
+  Future<Either<Failure, Unit>> deleteLine(String id) async {
+    if (await networkInfo.isConnected) {
+      try {
+        await remoteDataSource.deleteLine(id);
+        return Right(unit);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NoInternetFailure());
+    }
   }
 
   @override
@@ -80,7 +88,6 @@ class LineRepoImpl extends LineRepo {
 
   @override
   Future<Either<Failure, Unit>> updateLine(LineEntity lineEntity) {
-    // TODO: implement updateLine
     throw UnimplementedError();
   }
 }

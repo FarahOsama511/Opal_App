@@ -7,6 +7,8 @@ class LoginModel extends LoginEntity {
     final userJson = json['user'] ?? {};
     return LoginModel(
       user: UserEntity(
+        downTownId: userJson['downTownId'],
+        lineId: userJson['lineId'],
         id: userJson['id'] ?? "",
         name: userJson['name'] ?? "",
         phone: userJson['phone'] ?? "",
@@ -20,6 +22,8 @@ class LoginModel extends LoginEntity {
   Map<String, dynamic> toJson() {
     return {
       'user': {
+        'downTownId': user.downTownId,
+        'lineId': user.lineId,
         'id': user.id,
         'name': user.name,
         'phone': user.phone,

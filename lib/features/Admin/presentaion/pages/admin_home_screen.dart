@@ -149,10 +149,12 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                     itemCount: unactivatedUsers.length,
                     itemBuilder: (context, index) {
                       final data = unactivatedUsers[index];
+                      print("DATA IS ${data}");
                       return JoinRequestCard(
                         name: data.name!,
                         phone: data.phone!,
                         university: data.university?.name ?? "",
+                        downTown: data.downTown?.name ?? "",
                         isExpanded: expandedIndex == index,
                         onToggle: () {
                           setState(() {
