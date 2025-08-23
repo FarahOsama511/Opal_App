@@ -8,7 +8,7 @@ import 'package:opal_app/features/user/presentaion/bloc/get_all_universities/get
 import 'package:opal_app/features/user/presentaion/bloc/get_all_universities/get_all_universities_state.dart';
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
-import '../widgets/expandable_card.dart';
+import '../widgets/SettingsExpandableCard.dart';
 import '../widgets/search_field.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -34,28 +34,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (isUniversitySelected) {
       _filteredUniversities = _universities.where((u) {
         return _searchQuery.isEmpty ||
-            u.name?.toLowerCase().contains(_searchQuery.toLowerCase()) ==
-                true ||
-            u.location?.toLowerCase().contains(_searchQuery.toLowerCase()) ==
-                true;
+            u.name?.toLowerCase().contains(_searchQuery.toLowerCase()) == true ||
+            u.location?.toLowerCase().contains(_searchQuery.toLowerCase()) == true;
       }).toList();
 
       if (_isExpandedUniversity.length != _filteredUniversities.length) {
-        _isExpandedUniversity = List.generate(
-          _filteredUniversities.length,
-          (_) => false,
-        );
+        _isExpandedUniversity = List.filled(_filteredUniversities.length, false);
       }
     } else {
       _filteredLines = _lines.where((l) {
         return _searchQuery.isEmpty ||
-            l.name?.toLowerCase().contains(_searchQuery.toLowerCase()) ==
-                true ||
+            l.name?.toLowerCase().contains(_searchQuery.toLowerCase()) == true ||
             l.notes?.toLowerCase().contains(_searchQuery) == true;
       }).toList();
 
       if (_isExpandedLines.length != _filteredLines.length) {
-        _isExpandedLines = List.generate(_filteredLines.length, (_) => false);
+        _isExpandedLines = List.filled(_filteredLines.length, false);
       }
     }
   }
@@ -90,9 +84,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: Container(
                 width: double.infinity,
                 decoration: const BoxDecoration(color: Color(0xFFE71A45)),
-                child: isUniversitySelected
-                    ? _buildUniversitiesList()
-                    : _buildLinesList(),
+                child: isUniversitySelected ? _buildUniversitiesList() : _buildLinesList(),
               ),
             ),
           ],
@@ -100,21 +92,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
     );
   }
-
   Widget _buildUniversitiesList() {
     return BlocConsumer<GetAllUniversitiesCubit, GetAllUniversitiesState>(
       listener: (context, state) {
         if (state is GetAllUniversitiesError) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(state.message)));
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(state.message)));
         }
       },
       builder: (context, state) {
         print("state is$state");
         if (state is GetAllUniversitiesSuccess) {
-          _universities = state.GetAllUniversities;
-          _updateFiltered();
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            setState(() {
+              _universities = state.GetAllUniversities;
+              _updateFiltered();
+            });
+          });
 
           if (_filteredUniversities.isEmpty) {
             return Center(
@@ -123,18 +117,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
           }
 
           return ListView.builder(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 90),
+            padding: const EdgeInsets.all(16),
             itemCount: _filteredUniversities.length,
             itemBuilder: (context, index) {
               final university = _filteredUniversities[index];
-              return ExpandableCard(
+              return SettingsExpandableCard(
                 name: university.name ?? 'لا يوجد اسم',
                 isSupervisor: false,
                 isExpanded: _isExpandedUniversity[index],
+                location: university.location ?? 'غير متوفر',
+                usersCount: university.users?.length ?? 0,
                 onToggle: () {
                   setState(() {
-                    _isExpandedUniversity[index] =
-                        !_isExpandedUniversity[index];
+                    _isExpandedUniversity[index] = !_isExpandedUniversity[index];
                   });
                 },
               );
@@ -144,14 +139,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
           return const Center(
             child: CircularProgressIndicator(color: ColorManager.secondColor),
           );
-        } else if (state is GetAllUniversitiesError) {
-          return Center(
-            child: Text(state.message, style: TextStyles.white20Bold),
-          );
         } else {
           return Center(
             child: Text(
-              "حدث خطأ أثناء تحميل البيانات.",
+              state is GetAllUniversitiesError ? state.message : "حدث خطأ أثناء التحميل",
               style: TextStyles.white20Bold,
             ),
           );
@@ -159,20 +150,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
       },
     );
   }
-
   Widget _buildLinesList() {
     return BlocConsumer<LinesCubit, GetAllLinesState>(
       listener: (context, state) {
         if (state is LinesError) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(state.message)));
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(state.message)));
         }
       },
       builder: (context, state) {
         if (state is LinesLoaded) {
-          _lines = state.Liness;
-          _updateFiltered();
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            setState(() {
+              _lines = state.Liness;
+              _updateFiltered();
+            });
+          });
 
           if (_filteredLines.isEmpty) {
             return Center(
@@ -181,14 +174,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
           }
 
           return ListView.builder(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 90),
+            padding: const EdgeInsets.all(16),
             itemCount: _filteredLines.length,
             itemBuilder: (context, index) {
               final line = _filteredLines[index];
-              return ExpandableCard(
+              return SettingsExpandableCard(
                 name: line.name ?? 'لا يوجد اسم',
                 isSupervisor: true,
                 isExpanded: _isExpandedLines[index],
+                notes: line.notes ?? 'غير متوفر',
                 onToggle: () {
                   setState(() {
                     _isExpandedLines[index] = !_isExpandedLines[index];
@@ -201,14 +195,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
           return const Center(
             child: CircularProgressIndicator(color: ColorManager.secondColor),
           );
-        } else if (state is LinesError) {
-          return Center(
-            child: Text(state.message, style: TextStyles.white20Bold),
-          );
         } else {
           return Center(
             child: Text(
-              "حدث خطأ أثناء تحميل البيانات.",
+              state is LinesError ? state.message : "حدث خطأ أثناء التحميل",
               style: TextStyles.white20Bold,
             ),
           );
@@ -216,7 +206,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       },
     );
   }
-
   Widget _buildSwitchButtons() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -233,9 +222,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: isUniversitySelected
-                    ? const Color(0xFFE71A45)
-                    : Colors.grey.shade300,
+                backgroundColor:
+                isUniversitySelected ? const Color(0xFFE71A45) : Colors.grey.shade300,
               ),
               child: Text(
                 'الجامعات',
@@ -257,9 +245,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: isUniversitySelected
-                    ? Colors.grey.shade300
-                    : ColorManager.primaryColor,
+                backgroundColor:
+                isUniversitySelected ? Colors.grey.shade300 : ColorManager.primaryColor,
               ),
               child: Text(
                 'الخطوط',
