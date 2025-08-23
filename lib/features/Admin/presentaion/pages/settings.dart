@@ -63,7 +63,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<GetAllUniversitiesCubit>(context).getAllUniveristies();
+    BlocProvider.of<GetAllUniversitiesCubit>(context).fetchAlluniversities();
     BlocProvider.of<LinesCubit>(context).getAllLiness();
   }
 
@@ -111,6 +111,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         }
       },
       builder: (context, state) {
+        print("state is$state");
         if (state is GetAllUniversitiesSuccess) {
           _universities = state.GetAllUniversities;
           _updateFiltered();
