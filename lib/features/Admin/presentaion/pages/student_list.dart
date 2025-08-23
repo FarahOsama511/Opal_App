@@ -38,7 +38,9 @@ class _StudentListState extends State<StudentList> {
       _filteredUsers = _filteredUsers.where((user) {
         return user.name!.toLowerCase().contains(_searchQuery.toLowerCase()) ||
             user.id!.contains(_searchQuery) ||
-            user.phone!.contains(_searchQuery);
+            user.phone!.contains(_searchQuery) ||
+            (user.university?.name?.toLowerCase().contains(_searchQuery) ??
+                false);
       }).toList();
     }
     if (isStudentsSelected) {

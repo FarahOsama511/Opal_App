@@ -55,3 +55,39 @@ class UserEntity extends Equatable {
     downTownId,
   ];
 }
+
+extension UserEntityCopyWith on UserEntity {
+  UserEntity copyWith({
+    String? id,
+    String? name,
+    String? phone,
+    String? role,
+    String? universityId,
+    String? universityCardId,
+    LineEntity? line,
+    String? lineId,
+    String? status,
+    UniversityEntity? university,
+    String? email,
+    String? password,
+    String? downTownId,
+    DownTownEntity? downTown,
+  }) {
+    return UserEntity(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      phone: phone ?? this.phone,
+      role: role ?? this.role,
+      universityId: universityId ?? this.universityId,
+      universityCardId: universityCardId ?? this.universityCardId,
+      line: line ?? this.line,
+      lineId: lineId ?? this.lineId,
+      status: status ?? this.status,
+      university: university ?? this.university,
+      email: email ?? this.email,
+      password: password ?? this.password,
+      downTownId: downTownId ?? this.downTownId,
+      downTown: downTown ?? this.downTown,
+    );
+  }
+}

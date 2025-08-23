@@ -70,6 +70,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 );
               } else if (state is AuthFailure) {
+                print("${state.error}");
                 ScaffoldMessenger.of(
                   context,
                 ).showSnackBar(SnackBar(content: Text(state.error)));

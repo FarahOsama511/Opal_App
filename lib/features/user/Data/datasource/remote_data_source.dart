@@ -74,8 +74,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     print("=== Register Response Status: ${response.statusCode} ===");
     print("=== Register Response Body: ${response.body} ===");
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       final jsonResponse = jsonDecode(response.body);
+      print("===========${jsonResponse}===========");
 
       return RegisterModel.fromJson(jsonResponse);
     } else {

@@ -227,6 +227,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                       DateFormat('HH:mm').format(tour.leavesAt) == selectedTime,
                 )
                 .toList();
+            print("========${openTours}=========");
 
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -252,14 +253,14 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                     label: selectedTab == 0 ? 'اختيار الخط' : 'اختيار الجامعة',
                     value: selectedTab == 0
                         ? selectedLine?.name
-                        : selectedUniversity?.name,
+                        : selectedLine?.name,
                     items: selectedTab == 0
                         ? filteredTours
                               .map((tour) => tour.line.name)
                               .toSet()
                               .toList()
                         : filteredTours
-                              .map((tour) => tour.driverName)
+                              .map((tour) => tour.line.name)
                               .toSet()
                               .toList(),
                     onChanged: (newValue) {
@@ -273,13 +274,13 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                             notes: selectedTour!.line.notes,
                           );
                         } else {
-                          final selectedTour = filteredTours.firstWhere(
-                            (tour) => tour.driverName == newValue,
+                          selectedTour = filteredTours.firstWhere(
+                            (tour) => tour.line.name == newValue,
                           );
-                          // selectedUniversity = UniversityEntity(
-                          //   name: selectedTour.university.name,
-                          //   notes: selectedTour.university.notes,
-                          // );
+                          selectedLine = LineEntity(
+                            name: selectedTour!.line.name,
+                            notes: selectedTour!.line.notes,
+                          );
                         }
                       });
                     },
@@ -287,7 +288,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                 ),
                 SizedBox(height: 12.h),
 
-                if (selectedLine != null || selectedUniversity != null)
+                if (selectedLine != null)
                   Padding(
                     padding: EdgeInsets.only(top: 12.h),
                     child: Column(

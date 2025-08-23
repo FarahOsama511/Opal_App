@@ -49,10 +49,13 @@ class SummaryStep extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'الخط',
-                    style: TextStyles.black14Bold,
-                    overflow: TextOverflow.clip,
+                  Flexible(
+                    child: Text(
+                      'الخط',
+                      style: TextStyles.black14Bold,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
                   ),
                   Text(
                     '${selectedLine!.name ?? ''}',

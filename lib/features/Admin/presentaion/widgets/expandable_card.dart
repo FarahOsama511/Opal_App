@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:opal_app/features/supervisor/bloc/get_university_by_id/get_university_by_id_state.dart';
+import 'package:opal_app/features/user/presentaion/bloc/get_all_universities/get_all_universities_state.dart';
 import '../../../../core/resources/text_styles.dart';
 import '../../../supervisor/bloc/get_university_by_id/get_university_by_id_cubit.dart';
 
@@ -38,8 +40,9 @@ class _ExpandableCardState extends State<ExpandableCard> {
   void initState() {
     super.initState();
     if (widget.universityId != null && widget.universityId!.isNotEmpty) {
-      BlocProvider.of<GetUniversityByIdCubit>(context)
-          .getUniversityById(widget.universityId!);
+      BlocProvider.of<GetUniversityByIdCubit>(
+        context,
+      ).getUniversityById(widget.universityId!);
     }
   }
 
@@ -89,18 +92,36 @@ class _ExpandableCardState extends State<ExpandableCard> {
           if (widget.isExpanded)
             Padding(
               padding: const EdgeInsets.only(top: 12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  _buildInfoRow(widget.phone ?? 'غير متوفر', 'رقم الهاتف:'),
-                  if (!widget.isSupervisor) ...[
-                    _buildInfoRow(universityName.isNotEmpty ? universityName : 'غير متوفر', 'الجامعة:'),
-                  ] else ...[
-                    _buildInfoRow(widget.line.isNotEmpty ? widget.line : 'غير متوفر', 'الخط:'),
-                  ],
-                ],
-              ),
+              child:
+                  BlocBuilder<GetUniversityByIdCubit, GetUniversityByIdState>(
+                    builder: (context, state) {
+                      String universityName = 'غير متوفر';
+
+                      if (state is getUniversityByIdSuccess &&
+                          state.university.id == widget.universityId) {
+                        universityName = state.university.name ?? 'غير متوفر';
+                      }
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          _buildInfoRow(
+                            widget.phone ?? 'غير متوفر',
+                            'رقم الهاتف:',
+                          ),
+                          if (!widget.isSupervisor)
+                            _buildInfoRow(universityName, 'الجامعة:')
+                          else
+                            _buildInfoRow(
+                              widget.line.isNotEmpty
+                                  ? widget.line
+                                  : 'غير متوفر',
+                              'الخط:',
+                            ),
+                        ],
+                      );
+                    },
+                  ),
             ),
         ],
       ),
