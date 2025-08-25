@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
-
 import '../../../../core/resources/text_styles.dart';
 
 class AddMenu extends StatelessWidget {
@@ -11,17 +11,17 @@ class AddMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      top: 80,
-      right: 16,
-      left: 16,
+      top: 80.h,
+      right: 16.w,
+      left: 16.w,
       child: Material(
         elevation: 6,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16.r),
         child: Container(
-          padding: const EdgeInsets.all(12),
+          padding: EdgeInsets.all(12.w),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(16.r),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -33,12 +33,15 @@ class AddMenu extends StatelessWidget {
                 style: TextButton.styleFrom(
                   foregroundColor: ColorManager.blackColor,
                   alignment: Alignment.centerRight,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  padding: EdgeInsets.symmetric(vertical: 12.h),
                 ),
-                child: Text('إضافة ميعاد جديد', style: TextStyles.black10Bold),
+                child: Text(
+                  'إضافة ميعاد جديد',
+                  style: TextStyles.black10Bold.copyWith(fontSize: 12.sp),
+                ),
               ),
               _buildAddOption(context, 'إضافة خط جديد', '/addLine'),
-              _buildAddOption(context, ' إضافة جامعة جديدة', '/addUniversity'),
+              _buildAddOption(context, 'إضافة جامعة جديدة', '/addUniversity'),
             ],
           ),
         ),
@@ -52,9 +55,12 @@ class AddMenu extends StatelessWidget {
       style: TextButton.styleFrom(
         foregroundColor: ColorManager.blackColor,
         alignment: Alignment.centerRight,
-        padding: const EdgeInsets.symmetric(vertical: 12),
+        padding: EdgeInsets.symmetric(vertical: 12.h),
       ),
-      child: Text(title, style: TextStyles.black10Bold),
+      child: Text(
+        title,
+        style: TextStyles.black10Bold.copyWith(fontSize: 12.sp),
+      ),
     );
   }
 }

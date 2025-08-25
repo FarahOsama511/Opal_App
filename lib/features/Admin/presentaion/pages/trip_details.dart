@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart' as intl;
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
@@ -19,25 +20,24 @@ class TripDetailsScreen extends StatelessWidget {
           child: Stack(
             children: [
               Positioned(
-                left: 210,
-                top: -100,
+                left: 210.w,
+                top: -100.h,
                 child: Opacity(
                   opacity: 0.2,
                   child: Image.asset(
                     'assets/logos.png',
-                    width: 300,
-                    height: 300,
+                    width: 300.w,
+                    height: 300.h,
                   ),
                 ),
               ),
 
-              // محتوى الصفحة
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20.h),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -45,13 +45,14 @@ class TripDetailsScreen extends StatelessWidget {
                           child: Text(
                             'رحلة آمنة\nصحبتك السلامة!',
                             textAlign: TextAlign.right,
-                            style: TextStyles.black20Bold,
+                            style: TextStyles.black20Bold.copyWith(fontSize: 20.sp),
                           ),
                         ),
                         IconButton(
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.arrow_back_ios,
                             color: ColorManager.blackColor,
+                            size: 24.sp,
                           ),
                           onPressed: () {
                             Navigator.pop(context);
@@ -60,30 +61,25 @@ class TripDetailsScreen extends StatelessWidget {
                       ],
                     ),
                   ),
+                  SizedBox(height: 20.h),
 
-                  const SizedBox(height: 20),
-
-                  // الكارت والمعلومات
                   Expanded(
                     child: Container(
                       width: double.infinity,
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         color: ColorManager.primaryColor,
                         borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(32),
+                          top: Radius.circular(32.r),
                         ),
                       ),
                       child: SingleChildScrollView(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 20,
-                        ),
+                        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            const SizedBox(height: 40),
+                            SizedBox(height: 40.h),
                             _InfoCard(tour: tour),
-                            const SizedBox(height: 20),
+                            SizedBox(height: 20.h),
                             _ActionButtons(tourId: tour.id!),
                           ],
                         ),
@@ -110,18 +106,13 @@ class _InfoCard extends StatefulWidget {
 
 class _InfoCardState extends State<_InfoCard> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+      padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 16.w),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.black, width: 1),
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: Colors.black, width: 1.w),
       ),
       width: double.infinity,
       child: Directionality(
@@ -135,8 +126,7 @@ class _InfoCardState extends State<_InfoCard> {
             _InfoRow(title: 'الخط', value: widget.tour.line.name ?? ''),
             _InfoRow(
               title: 'ميعاد الذهاب',
-              value:
-                  '${intl.DateFormat('HH:mm').format(widget.tour.leavesAt)} صباحاً',
+              value: '${intl.DateFormat('HH:mm').format(widget.tour.leavesAt)} صباحاً',
             ),
             _InfoRow(
               title: 'تاريخ اليوم',
@@ -157,12 +147,12 @@ class _InfoRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: EdgeInsets.only(bottom: 12.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(title, style: TextStyles.black14Bold),
-          Text(value, style: TextStyles.black14Bold),
+          Text(title, style: TextStyles.black14Bold.copyWith(fontSize: 14.sp)),
+          Text(value, style: TextStyles.black14Bold.copyWith(fontSize: 14.sp)),
         ],
       ),
     );
@@ -184,12 +174,11 @@ class _ActionButtons extends StatelessWidget {
           onPressed: () {
             showDialog(
               context: context,
-              builder: (context) =>
-                  CancelOREditTripDialog(tourId: tourId, isCancel: false),
+              builder: (context) => CancelOREditTripDialog(tourId: tourId, isCancel: false),
             );
           },
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12.h),
         _MainButton(
           label: 'إلغاء الرحلة',
           backgroundColor: ColorManager.greyColor,
@@ -197,8 +186,7 @@ class _ActionButtons extends StatelessWidget {
           onPressed: () {
             showDialog(
               context: context,
-              builder: (context) =>
-                  CancelOREditTripDialog(tourId: tourId, isCancel: true),
+              builder: (context) => CancelOREditTripDialog(tourId: tourId, isCancel: true),
             );
           },
         ),
@@ -224,26 +212,26 @@ class _MainButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 46,
+      height: 46.h,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: backgroundColor,
           foregroundColor: textColor,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(24.r),
           ),
           elevation: 0,
           side: BorderSide(
             color: textColor,
-            width: backgroundColor == Colors.white ? 1.5 : 0,
+            width: backgroundColor == Colors.white ? 1.5.w : 0,
           ),
         ),
         child: Text(
           label,
           style: TextStyle(
             color: textColor,
-            fontSize: 16,
+            fontSize: 16.sp,
             fontWeight: FontWeight.bold,
           ),
         ),

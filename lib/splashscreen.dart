@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'core/constants/constants.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -8,7 +8,6 @@ class SplashScreen extends StatefulWidget {
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
-
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
@@ -16,6 +15,7 @@ class _SplashScreenState extends State<SplashScreen>
   bool isLoggedIn = false;
   bool isStudent = false;
   bool isAdmin = false;
+
   checkToken() async {
     if (token != null && token != "") {
       if (role == 'student') {
@@ -55,17 +55,13 @@ class _SplashScreenState extends State<SplashScreen>
       await checkToken();
     });
   }
-
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     return Scaffold(
       backgroundColor: const Color(0xFFE71A45),
       body: Center(
@@ -74,15 +70,18 @@ class _SplashScreenState extends State<SplashScreen>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset('assets/logo.png', width: size.width * 0.35),
-              const SizedBox(height: 20),
-              const Text(
+              Image.asset(
+                'assets/logo.png',
+                width: 0.35.sw,
+              ),
+              SizedBox(height: 20.h),
+              Text(
                 'Opal',
                 style: TextStyle(
-                  fontSize: 40,
+                  fontSize: 40.sp,
                   color: Colors.yellow,
                   fontWeight: FontWeight.bold,
-                  letterSpacing: 1,
+                  letterSpacing: 1.sp,
                 ),
               ),
             ],

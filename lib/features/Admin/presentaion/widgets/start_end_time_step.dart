@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/resources/text_styles.dart';
 
 class StartEndTimeStep extends StatelessWidget {
@@ -17,11 +18,11 @@ class StartEndTimeStep extends StatelessWidget {
   });
 
   Future<void> _pickDateTime(
-    BuildContext context,
-    DateTime? initial,
-    void Function(DateTime) onPicked,
-  ) async {
-    // اختار التاريخ
+      BuildContext context,
+      DateTime? initial,
+      void Function(DateTime) onPicked,
+      ) async {
+    // اختيار التاريخ
     final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: initial ?? DateTime.now(),
@@ -31,7 +32,7 @@ class StartEndTimeStep extends StatelessWidget {
 
     if (pickedDate == null) return;
 
-    // اختار الوقت
+    // اختيار الوقت
     final TimeOfDay? pickedTime = await showTimePicker(
       context: context,
       initialTime: initial != null
@@ -41,7 +42,7 @@ class StartEndTimeStep extends StatelessWidget {
 
     if (pickedTime == null) return;
 
-    // اجمع التاريخ والوقت
+    // دمج التاريخ والوقت
     final DateTime fullDateTime = DateTime(
       pickedDate.year,
       pickedDate.month,
@@ -68,32 +69,35 @@ class StartEndTimeStep extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text("تحديد وقت بداية ونهاية الحجز", style: TextStyles.black20Bold),
-        const SizedBox(height: 20),
+        Text("تحديد وقت بداية ونهاية الحجز",
+            style: TextStyles.black20Bold.copyWith(fontSize: 20.sp)),
+        SizedBox(height: 20.h),
 
         // اختيار وقت البداية
         ListTile(
-          leading: const Icon(Icons.play_circle_fill, color: Colors.green),
+          leading: Icon(Icons.play_circle_fill, color: Colors.green, size: 28.sp),
           title: Text(
             startDate != null
                 ? "بداية: ${startDate!.day}/${startDate!.month}/${startDate!.year} - ${formatTime(startDate!)}"
                 : "اختر وقت البداية",
+            style: TextStyles.black14Bold.copyWith(fontSize: 14.sp),
           ),
-          trailing: const Icon(Icons.calendar_today),
+          trailing: Icon(Icons.calendar_today, size: 24.sp),
           onTap: () => _pickDateTime(context, startDate, onStartDateChanged),
         ),
 
-        const Divider(),
+        Divider(height: 1.h, thickness: 1.h),
 
         // اختيار وقت النهاية
         ListTile(
-          leading: const Icon(Icons.stop_circle, color: Colors.red),
+          leading: Icon(Icons.stop_circle, color: Colors.red, size: 28.sp),
           title: Text(
             endDate != null
                 ? "نهاية: ${endDate!.day}/${endDate!.month}/${endDate!.year} - ${formatTime(endDate!)}"
                 : "اختر وقت النهاية",
+            style: TextStyles.black14Bold.copyWith(fontSize: 14.sp),
           ),
-          trailing: const Icon(Icons.calendar_today),
+          trailing: Icon(Icons.calendar_today, size: 24.sp),
           onTap: () => _pickDateTime(context, endDate, onEndDateChanged),
         ),
       ],

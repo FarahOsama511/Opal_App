@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/constants/constants.dart' as university;
 import '../../../../core/resources/text_styles.dart';
 import 'delete_dialog.dart';
@@ -28,13 +29,17 @@ class SettingsExpandableCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 6),
-      padding: const EdgeInsets.all(14),
+      margin: EdgeInsets.symmetric(vertical: 6.h),
+      padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(color: Colors.black12, blurRadius: 3, offset: Offset(0, 2)),
+        borderRadius: BorderRadius.circular(16.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 3.r,
+            offset: Offset(0, 2.h),
+          ),
         ],
       ),
       child: Column(
@@ -47,7 +52,7 @@ class SettingsExpandableCard extends StatelessWidget {
                   child: Text(
                     name,
                     textAlign: TextAlign.right,
-                    style: TextStyles.black14Bold,
+                    style: TextStyles.black14Bold.copyWith(fontSize: 14.sp),
                   ),
                 ),
                 if (isExpanded && deleteIcon != null) deleteIcon!,
@@ -57,6 +62,7 @@ class SettingsExpandableCard extends StatelessWidget {
                         ? Icons.keyboard_arrow_up
                         : Icons.keyboard_arrow_down_rounded,
                     color: Colors.black,
+                    size: 24.sp,
                   ),
                   onPressed: onToggle,
                 ),
@@ -65,13 +71,13 @@ class SettingsExpandableCard extends StatelessWidget {
           ),
           if (isExpanded)
             Padding(
-              padding: const EdgeInsets.only(top: 12),
+              padding: EdgeInsets.only(top: 12.h),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   if (!isSupervisor) ...[
                     _buildInfoRow(location ?? 'غير متوفر', 'الموقع:'),
-                    _buildInfoRow((usersCount).toString(), 'عدد الطلبة:'),
+                    _buildInfoRow((usersCount ?? 0).toString(), 'عدد الطلبة:'),
                   ] else ...[
                     _buildInfoRow(notes ?? 'غير متوفر', 'الملاحظات:'),
                   ],
@@ -85,12 +91,12 @@ class SettingsExpandableCard extends StatelessWidget {
 
   Widget _buildInfoRow(String value, String label) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 6),
+      padding: EdgeInsets.only(bottom: 6.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyles.black14Bold),
-          Text(value, style: TextStyles.black14Bold),
+          Text(label, style: TextStyles.black14Bold.copyWith(fontSize: 14.sp)),
+          Text(value, style: TextStyles.black14Bold.copyWith(fontSize: 14.sp)),
         ],
       ),
     );

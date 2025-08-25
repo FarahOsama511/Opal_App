@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
 import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
@@ -23,6 +24,7 @@ class TripDetailsDialog extends StatefulWidget {
 
 class _TripDetailsDialogState extends State<TripDetailsDialog> {
   bool _inInit = true;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -38,39 +40,37 @@ class _TripDetailsDialogState extends State<TripDetailsDialog> {
 
     return Dialog(
       backgroundColor: Colors.transparent,
-      insetPadding: const EdgeInsets.all(16),
+      insetPadding: EdgeInsets.all(16.w),
       child: Stack(
         children: [
-          Positioned(left: 2, top: 2, child: Image.asset('assets/logos.png')),
+          Positioned(left: 2.w, top: 2.h, child: Image.asset('assets/logos.png')),
           Container(
             width: size.width * 0.85,
-            padding: const EdgeInsets.all(20),
+            padding: EdgeInsets.all(20.w),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(20.r),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Center(
-                  child: Text('بيانات الرحلة', style: TextStyles.black20Bold),
+                  child: Text('بيانات الرحلة', style: TextStyles.black20Bold.copyWith(fontSize: 20.sp)),
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12.h),
                 Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: EdgeInsets.all(16.w),
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black, width: 2),
-                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.black, width: 2.w),
+                    borderRadius: BorderRadius.circular(12.r),
                     color: ColorManager.secondColor,
                   ),
                   child: BlocBuilder<GetTourIdCubit, GetTourIdState>(
                     builder: (context, state) {
                       if (state is GetTourByIdLoading) {
                         return Center(
-                          child: CircularProgressIndicator(
-                            color: ColorManager.primaryColor,
-                          ),
+                          child: CircularProgressIndicator(color: ColorManager.primaryColor),
                         );
                       } else if (state is TourByIdLoaded) {
                         final tour = state.tour;
@@ -96,14 +96,14 @@ class _TripDetailsDialogState extends State<TripDetailsDialog> {
                         return Center(
                           child: Text(
                             "حدث خطأ في جلب البيانات",
-                            style: TextStyles.black14Bold,
+                            style: TextStyles.black14Bold.copyWith(fontSize: 14.sp),
                           ),
                         );
                       }
                     },
                   ),
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: 20.h),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.pop(context);
@@ -114,11 +114,7 @@ class _TripDetailsDialogState extends State<TripDetailsDialog> {
                         child: EditTripBox(
                           onClose: () => Navigator.push(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return AdminHomeScreen();
-                              },
-                            ),
+                            MaterialPageRoute(builder: (context) => AdminHomeScreen()),
                           ),
                           tour: widget.selectedtour,
                           tourId: widget.tourId,
@@ -127,60 +123,45 @@ class _TripDetailsDialogState extends State<TripDetailsDialog> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFE71A45),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    minimumSize: const Size.fromHeight(50),
+                    backgroundColor: Color(0xFFE71A45),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.r)),
+                    minimumSize: Size.fromHeight(50.h),
                   ),
-                  child: Text('تعديل الرحلة', style: TextStyles.white12Bold),
+                  child: Text('تعديل الرحلة', style: TextStyles.white12Bold.copyWith(fontSize: 12.sp)),
                 ),
-
-                const SizedBox(height: 12),
-
+                SizedBox(height: 12.h),
                 BlocBuilder<UpdateAddDeleteTourCubit, UpdateAddDeleteTourState>(
                   builder: (context, state) {
-                    print(" STATE${state}");
                     if (state is UpdateAddDeleteTourLoading) {
                       return Center(child: CircularProgressIndicator());
                     }
                     return OutlinedButton(
                       onPressed: () {
-                        context.read<UpdateAddDeleteTourCubit>().deleteTour(
-                          widget.tourId,
-                        );
+                        context.read<UpdateAddDeleteTourCubit>().deleteTour(widget.tourId);
                         Navigator.pushReplacementNamed(context, '/adminScreen');
                         BlocProvider.of<TourCubit>(context).getAllTours();
                       },
                       style: OutlinedButton.styleFrom(
                         foregroundColor: ColorManager.primaryColor,
-                        side: const BorderSide(
-                          color: ColorManager.primaryColor,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        minimumSize: const Size.fromHeight(50),
+                        side: BorderSide(color: ColorManager.primaryColor, width: 1.w),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.r)),
+                        minimumSize: Size.fromHeight(50.h),
                       ),
-                      child: Text('حذف الرحلة', style: TextStyles.red12Bold),
+                      child: Text('حذف الرحلة', style: TextStyles.red12Bold.copyWith(fontSize: 12.sp)),
                     );
                   },
                 ),
-
-                const SizedBox(height: 12),
-
+                SizedBox(height: 12.h),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    minimumSize: const Size.fromHeight(50),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.r)),
+                    minimumSize: Size.fromHeight(50.h),
                   ),
-                  child: Text('إغلاق', style: TextStyles.white12Bold),
+                  child: Text('إغلاق', style: TextStyles.white12Bold.copyWith(fontSize: 12.sp)),
                 ),
               ],
             ),
@@ -192,12 +173,12 @@ class _TripDetailsDialogState extends State<TripDetailsDialog> {
 
   Widget _buildRow(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
+      padding: EdgeInsets.symmetric(vertical: 6.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(value, style: TextStyles.black14Bold),
-          Text(label, style: TextStyles.black14Bold),
+          Text(value, style: TextStyles.black14Bold.copyWith(fontSize: 14.sp)),
+          Text(label, style: TextStyles.black14Bold.copyWith(fontSize: 14.sp)),
         ],
       ),
     );

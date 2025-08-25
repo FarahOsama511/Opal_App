@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomBottomNav extends StatelessWidget {
   final int currentIndex;
@@ -13,23 +14,23 @@ class CustomBottomNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      left: 16,
-      right: 16,
-      bottom: 16,
+      left: 16.w,
+      right: 16.w,
+      bottom: 16.h,
       child: Container(
         decoration: BoxDecoration(
           color: const Color(0xFFE71A45),
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: const [
+          borderRadius: BorderRadius.circular(24.r),
+          boxShadow: [
             BoxShadow(
               color: Colors.black26,
-              blurRadius: 6,
-              offset: Offset(0, 2),
+              blurRadius: 6.r,
+              offset: Offset(0, 2.h),
             ),
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(24.r),
           child: Theme(
             data: Theme.of(context).copyWith(
               canvasColor: Colors.transparent,

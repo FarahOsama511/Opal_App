@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
 import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
 import 'package:opal_app/features/user/presentaion/bloc/selection_tour/selection_tour_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/selection_tour/selection_tour_state.dart';
 import '../../../../core/resources/text_styles.dart';
-import 'confirmation_success.dart';
 
 class ConfirmDetailsScreen extends StatefulWidget {
   final Tour tour;
@@ -18,20 +18,15 @@ class ConfirmDetailsScreen extends StatefulWidget {
 
 class _ConfirmDetailsScreenState extends State<ConfirmDetailsScreen> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Dialog(
-      insetPadding: const EdgeInsets.all(16),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      insetPadding: EdgeInsets.all(16.w),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
       child: Container(
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.all(20.w),
         decoration: BoxDecoration(
           color: ColorManager.secondColor,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(20.r),
         ),
         child: BlocListener<SelectionTourCubit, SelectionTourState>(
           listener: (context, state) {
@@ -52,15 +47,15 @@ class _ConfirmDetailsScreenState extends State<ConfirmDetailsScreen> {
                 Center(
                   child: Text(
                     'بيانات الذهاب و العودة',
-                    style: TextStyles.black14Bold,
+                    style: TextStyles.black14Bold.copyWith(fontSize: 16.sp),
                   ),
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12.h),
                 Container(
-                  padding: const EdgeInsets.all(12),
+                  padding: EdgeInsets.all(12.w),
                   decoration: BoxDecoration(
                     border: Border.all(color: ColorManager.blackColor),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(12.r),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -69,7 +64,7 @@ class _ConfirmDetailsScreenState extends State<ConfirmDetailsScreen> {
                       _RowInfo(
                         label: ' ${widget.tour.typeDisplay}',
                         value:
-                            '${DateFormat('HH:mm').format(widget.tour.leavesAt)} صباحاً',
+                        '${DateFormat('HH:mm').format(widget.tour.leavesAt)} صباحاً',
                       ),
                       _RowInfo(
                         label: 'اسم المشرف',
@@ -78,15 +73,15 @@ class _ConfirmDetailsScreenState extends State<ConfirmDetailsScreen> {
                       _RowInfo(
                         label: 'تاريخ اليوم',
                         value:
-                            '${DateFormat('yyyy-MM-dd').format(widget.tour.leavesAt)}',
+                        '${DateFormat('yyyy-MM-dd').format(widget.tour.leavesAt)}',
                       ),
                     ],
                   ),
                 ),
-
-                const SizedBox(height: 20),
+                SizedBox(height: 20.h),
                 SizedBox(
                   width: double.infinity,
+                  height: 50.h,
                   child: ElevatedButton(
                     onPressed: () async {
                       await context.read<SelectionTourCubit>().selectionTour(
@@ -109,15 +104,16 @@ class _ConfirmDetailsScreenState extends State<ConfirmDetailsScreen> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: ColorManager.primaryColor,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(12.r),
                       ),
                     ),
-                    child: Text('تأكيد', style: TextStyles.white14Bold),
+                    child: Text('تأكيد', style: TextStyles.white14Bold.copyWith(fontSize: 14.sp)),
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10.h),
                 SizedBox(
                   width: double.infinity,
+                  height: 50.h,
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.pop(context, false);
@@ -125,10 +121,10 @@ class _ConfirmDetailsScreenState extends State<ConfirmDetailsScreen> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.grey,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(12.r),
                       ),
                     ),
-                    child: Text('السابق', style: TextStyles.white14Bold),
+                    child: Text('السابق', style: TextStyles.white14Bold.copyWith(fontSize: 14.sp)),
                   ),
                 ),
               ],
@@ -139,7 +135,6 @@ class _ConfirmDetailsScreenState extends State<ConfirmDetailsScreen> {
     );
   }
 }
-
 class _RowInfo extends StatelessWidget {
   final String label;
   final String value;
@@ -149,12 +144,12 @@ class _RowInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: EdgeInsets.symmetric(vertical: 4.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(value, style: TextStyles.black14Bold),
-          Text(label, style: TextStyles.black14Bold),
+          Text(value, style: TextStyles.black14Bold.copyWith(fontSize: 14.sp)),
+          Text(label, style: TextStyles.black14Bold.copyWith(fontSize: 14.sp)),
         ],
       ),
     );

@@ -23,6 +23,7 @@ class _AddAdminState extends State<AddAdmin> {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
   String? valdiatorMessage(String? value) {
     if (value == null || value.isEmpty) {
       return 'هذا الحقل مطلوب';
@@ -32,21 +33,19 @@ class _AddAdminState extends State<AddAdmin> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
           child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                SizedBox(height: size.height * 0.05),
+                SizedBox(height: 50.h),
 
                 LogoCircle(),
-                const SizedBox(height: 20),
+                SizedBox(height: 20.h),
 
                 CustomTextField(
                   hint: 'الإسم',
@@ -69,13 +68,13 @@ class _AddAdminState extends State<AddAdmin> {
                   validator: valdiatorMessage,
                 ),
 
-                const SizedBox(height: 10),
+                SizedBox(height: 10.h),
                 BlocConsumer<AddAdminSupervisorCubit, AddAdminSupervisorState>(
                   listener: (context, state) {
                     if (state is AddAdminSupervisorError) {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text(state.message)));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(state.message)),
+                      );
                     } else if (state is AddAdminSupervisorSuccess) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('تمت الإضافة بنجاح')),
@@ -89,7 +88,6 @@ class _AddAdminState extends State<AddAdmin> {
                     }
                   },
                   builder: (context, state) {
-                    print('state is ${state}');
                     if (state is AddAdminSupervisorLoading) {
                       return const Center(child: CircularProgressIndicator());
                     }
@@ -101,14 +99,14 @@ class _AddAdminState extends State<AddAdmin> {
                           context
                               .read<AddAdminSupervisorCubit>()
                               .AddAdminORSupervisor(
-                                AddAdminSupervisorModel(
-                                  name: nameController.text, //
-                                  phone: phoneController.text,
-                                  password: passwordController.text,
-                                  email: emailController.text,
-                                  role: "admin",
-                                ),
-                              );
+                            AddAdminSupervisorModel(
+                              name: nameController.text,
+                              phone: phoneController.text,
+                              password: passwordController.text,
+                              email: emailController.text,
+                              role: "admin",
+                            ),
+                          );
                         }
                       },
                     );
@@ -118,9 +116,7 @@ class _AddAdminState extends State<AddAdmin> {
                 PrimaryButton(
                   text: 'إلفاء ',
                   onPressed: () {
-                    setState(() {
-                      Navigator.pop(context);
-                    });
+                    Navigator.pop(context);
                   },
                   backgroundColor: ColorManager.greyColor,
                 ),

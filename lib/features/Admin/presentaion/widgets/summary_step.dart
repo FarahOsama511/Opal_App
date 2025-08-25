@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
-
 import '../../../../core/resources/text_styles.dart';
 import '../../Domain/entities/line_entity.dart';
 
@@ -23,85 +23,67 @@ class SummaryStep extends StatelessWidget {
     required this.selectedSupervisor,
     required this.selectedDate,
   });
+
   final Map<String, String> tripTypeMap = {
     'go': 'ميعاد الذهاب',
     'return': 'ميعاد العودة',
   };
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text('بيانات الرحلة', style: TextStyles.black20Bold),
-        const SizedBox(height: 10),
+        Text('بيانات الرحلة', style: TextStyles.black20Bold.copyWith(fontSize: 20.sp)),
+        SizedBox(height: 10.h),
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(16),
-          margin: const EdgeInsets.only(bottom: 16),
+          padding: EdgeInsets.all(16.w),
+          margin: EdgeInsets.only(bottom: 16.h),
           decoration: BoxDecoration(
             border: Border.all(color: Colors.grey.shade400),
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(16.r),
             color: Colors.white,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(
-                    child: Text(
-                      'الخط',
-                      style: TextStyles.black14Bold,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    ),
-                  ),
-                  Text(
-                    '${selectedLine!.name ?? ''}',
-                    style: TextStyles.black14Bold,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    tripTypeMap[typeOfTrip] ?? '',
-                    style: TextStyles.black14Bold,
-                  ),
-                  Text(
-                    '$hour:${minute.toString().padLeft(2, '0')} $period',
-                    style: TextStyles.black14Bold,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('اسم المشرف', style: TextStyles.black14Bold),
-                  Text(
-                    selectedSupervisor?.name ?? '',
-                    style: TextStyles.black14Bold,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('تاريخ اليوم', style: TextStyles.black14Bold),
-                  Text(
-                    selectedDate != null
-                        ? '${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}'
-                        : '',
-                    style: TextStyles.black14Bold,
-                  ),
-                ],
+              _buildRow('الخط', selectedLine?.name ?? ''),
+              SizedBox(height: 8.h),
+              _buildRow(tripTypeMap[typeOfTrip] ?? '', '$hour:${minute.toString().padLeft(2, '0')} $period'),
+              SizedBox(height: 8.h),
+              _buildRow('اسم المشرف', selectedSupervisor?.name ?? ''),
+              SizedBox(height: 8.h),
+              _buildRow(
+                'تاريخ اليوم',
+                selectedDate != null
+                    ? '${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}'
+                    : '',
               ),
             ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRow(String label, String value) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Flexible(
+          child: Text(
+            label,
+            style: TextStyles.black14Bold.copyWith(fontSize: 14.sp),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        Flexible(
+          child: Text(
+            value,
+            style: TextStyles.black14Bold.copyWith(fontSize: 14.sp),
+            textAlign: TextAlign.right,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
       ],

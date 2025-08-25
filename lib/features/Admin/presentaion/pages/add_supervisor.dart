@@ -30,6 +30,7 @@ class _AddSupervisorState extends State<AddSupervisor> {
   final TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final List<String> AllLines = [];
+
   String? validation(String? value) {
     if (value == null || value.isEmpty) {
       return 'هذا الحقل مطلوب';
@@ -45,20 +46,18 @@ class _AddSupervisorState extends State<AddSupervisor> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
           child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                SizedBox(height: size.height * 0.05),
+                SizedBox(height: 50.h),
                 LogoCircle(),
-                const SizedBox(height: 37),
+                SizedBox(height: 37.h),
 
                 CustomTextField(
                   hint: 'الإسم',
@@ -84,7 +83,7 @@ class _AddSupervisorState extends State<AddSupervisor> {
                 BlocBuilder<LinesCubit, GetAllLinesState>(
                   builder: (context, state) {
                     if (state is LinesLoading) {
-                      return CircularProgressIndicator(
+                      return const CircularProgressIndicator(
                         color: ColorManager.primaryColor,
                       );
                     } else if (state is LinesLoaded) {
@@ -99,7 +98,7 @@ class _AddSupervisorState extends State<AddSupervisor> {
                           });
                         },
                         displayString: (line) =>
-                            ' ${line.name ?? ''}', // هنا بيعرض الاسم
+                        ' ${line.name ?? ''}', // هنا بيعرض الاسم
                       );
                     } else {
                       return const Text('فشل في تحميل الخطوط');
@@ -107,9 +106,10 @@ class _AddSupervisorState extends State<AddSupervisor> {
                   },
                 ),
 
-                const SizedBox(height: 10),
+                SizedBox(height: 10.h),
                 UniversitiesMultiDropdown(),
-                const SizedBox(height: 10),
+                SizedBox(height: 10.h),
+
                 BlocConsumer<AddAdminSupervisorCubit, AddAdminSupervisorState>(
                   listener: (context, state) {
                     if (state is AddAdminSupervisorError) {
@@ -134,7 +134,6 @@ class _AddSupervisorState extends State<AddSupervisor> {
                     }
                   },
                   builder: (context, state) {
-                    print('state is ${state}');
                     if (state is AddAdminSupervisorLoading) {
                       return const Center(child: CircularProgressIndicator());
                     }
@@ -143,20 +142,19 @@ class _AddSupervisorState extends State<AddSupervisor> {
                       text: 'إضافة مشرف',
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          print('selectedLine is $selectedLine');
                           context
                               .read<AddAdminSupervisorCubit>()
                               .AddAdminORSupervisor(
-                                AddAdminSupervisorModel(
-                                  name: nameController.text,
-                                  phone: phoneController.text,
-                                  password: passwordController.text,
-                                  email: emailController.text,
-                                  role: "supervisor",
-                                  lineId: selectedLine!.id,
-                                  line: selectedLine,
-                                ),
-                              );
+                            AddAdminSupervisorModel(
+                              name: nameController.text,
+                              phone: phoneController.text,
+                              password: passwordController.text,
+                              email: emailController.text,
+                              role: "supervisor",
+                              lineId: selectedLine!.id,
+                              line: selectedLine,
+                            ),
+                          );
                         }
                       },
                     );
@@ -166,14 +164,11 @@ class _AddSupervisorState extends State<AddSupervisor> {
                 PrimaryButton(
                   text: 'إلفاء ',
                   onPressed: () {
-                    setState(() {
-                      Navigator.pop(context);
-                    });
+                    Navigator.pop(context);
                   },
                   backgroundColor: ColorManager.greyColor,
                 ),
-
-                const SizedBox(height: 15),
+                SizedBox(height: 15.h),
               ],
             ),
           ),
@@ -184,21 +179,21 @@ class _AddSupervisorState extends State<AddSupervisor> {
 
   Widget _buildTextField({required String hint, IconData? icon}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
+      padding: EdgeInsets.symmetric(vertical: 6.h),
       child: TextField(
         textAlign: TextAlign.right,
         decoration: InputDecoration(
           hintText: hint,
-          hintStyle: const TextStyle(fontSize: 14),
+          hintStyle: TextStyle(fontSize: 14.sp),
           prefixIcon: icon != null ? Icon(icon, color: Colors.grey) : null,
           filled: true,
           fillColor: Colors.grey.shade200,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 18,
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: 16.w,
+            vertical: 18.h,
           ),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12.r),
             borderSide: BorderSide.none,
           ),
         ),

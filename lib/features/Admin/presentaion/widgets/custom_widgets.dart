@@ -29,6 +29,7 @@ class PrimaryButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final bool isLoading;
   final Color backgroundColor;
+  final double? height;
 
   const PrimaryButton({
     required this.backgroundColor,
@@ -36,12 +37,14 @@ class PrimaryButton extends StatelessWidget {
     required this.text,
     required this.onPressed,
     this.isLoading = false,
+    this.height,
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
+      height: height ?? 50.h,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: backgroundColor,
@@ -52,9 +55,9 @@ class PrimaryButton extends StatelessWidget {
         ),
         onPressed: isLoading ? null : onPressed,
         child: isLoading
-            ? (const CircularProgressIndicator(
-                color: ColorManager.primaryColor,
-              ))
+            ? const CircularProgressIndicator(
+          color: ColorManager.primaryColor,
+        )
             : Text(text, style: TextStyles.white14Bold),
       ),
     );
@@ -66,7 +69,7 @@ class CustomDropdown<T> extends StatelessWidget {
   final T? value;
   final List<T> items;
   final ValueChanged<T?> onChanged;
-  final String Function(T)? displayString; // الجديد هنا
+  final String Function(T)? displayString;
 
   const CustomDropdown({
     super.key,

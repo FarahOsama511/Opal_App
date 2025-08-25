@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/delete_user/delete_user_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/widgets/delete_dialog.dart';
 import '../../../../core/resources/color_manager.dart';
@@ -26,14 +27,12 @@ class _StudentListState extends State<StudentList> {
   String _searchQuery = '';
 
   void _updateFilteredUsers() {
-    // Filter by role first
     _filteredUsers = _users.where((user) {
       return isStudentsSelected
           ? user.role == "student"
           : user.role == "supervisor";
     }).toList();
 
-    // Then apply search filter if query is not empty
     if (_searchQuery.isNotEmpty) {
       _filteredUsers = _filteredUsers.where((user) {
         return user.name!.toLowerCase().contains(_searchQuery.toLowerCase()) ||
@@ -47,14 +46,14 @@ class _StudentListState extends State<StudentList> {
       if (_isExpandedStudents.length != _filteredUsers.length) {
         _isExpandedStudents = List.generate(
           _filteredUsers.length,
-          (_) => false,
+              (_) => false,
         );
       }
     } else {
       if (_isExpandedSupervisors.length != _filteredUsers.length) {
         _isExpandedSupervisors = List.generate(
           _filteredUsers.length,
-          (_) => false,
+              (_) => false,
         );
       }
     }
@@ -102,16 +101,19 @@ class _StudentListState extends State<StudentList> {
         body: SafeArea(
           child: Column(
             children: [
-              SearchField(
-                hintText: 'ابحث عن مستخدم',
-                fillColor: Colors.white,
-                iconColor: Colors.red,
-                onChanged: (value) {
-                  setState(() {
-                    _searchQuery = value;
-                    _updateFilteredUsers();
-                  });
-                },
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                child: SearchField(
+                  hintText: 'ابحث عن مستخدم',
+                  fillColor: Colors.white,
+                  iconColor: Colors.red,
+                  onChanged: (value) {
+                    setState(() {
+                      _searchQuery = value;
+                      _updateFilteredUsers();
+                    });
+                  },
+                ),
               ),
               _buildSwitchButtons(),
               Expanded(
@@ -139,17 +141,18 @@ class _StudentListState extends State<StudentList> {
                           return Center(
                             child: Text(
                               "لا يوجد مستخدمون",
-                              style: TextStyles.white20Bold,
+                              style: TextStyles.white20Bold.copyWith(
+                                fontSize: 20.sp,
+                              ),
                             ),
                           );
                         }
 
                         return ListView.builder(
-                          padding: const EdgeInsets.fromLTRB(16, 12, 16, 90),
+                          padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 90.h),
                           itemCount: _filteredUsers.length,
                           itemBuilder: (context, index) {
                             final user = _filteredUsers[index];
-                            print("_filteredUsers${_filteredUsers.length}");
                             if (isStudentsSelected) {
                               return ExpandableCard(
                                 name: user.name!,
@@ -160,14 +163,14 @@ class _StudentListState extends State<StudentList> {
                                 onToggle: () {
                                   setState(() {
                                     _isExpandedStudents[index] =
-                                        !_isExpandedStudents[index];
+                                    !_isExpandedStudents[index];
                                   });
                                 },
-
                                 deleteIcon: IconButton(
-                                  icon: const Icon(
+                                  icon: Icon(
                                     Icons.delete,
                                     color: Colors.red,
+                                    size: 24.sp,
                                   ),
                                   onPressed: () => _showDeleteDialog(user),
                                 ),
@@ -177,20 +180,19 @@ class _StudentListState extends State<StudentList> {
                                 name: user.name!,
                                 phone: user.phone!,
                                 line: user.line?.name ?? '',
-                                //  universityId: user.universityId,
                                 isSupervisor: true,
                                 isExpanded: _isExpandedSupervisors[index],
                                 onToggle: () {
                                   setState(() {
                                     _isExpandedSupervisors[index] =
-                                        !_isExpandedSupervisors[index];
+                                    !_isExpandedSupervisors[index];
                                   });
                                 },
-
                                 deleteIcon: IconButton(
-                                  icon: const Icon(
+                                  icon: Icon(
                                     Icons.delete,
                                     color: Colors.red,
+                                    size: 24.sp,
                                   ),
                                   onPressed: () => _showDeleteDialog(user),
                                 ),
@@ -208,7 +210,9 @@ class _StudentListState extends State<StudentList> {
                         return Center(
                           child: Text(
                             "حدث خطأ أثناء تحميل البيانات.",
-                            style: TextStyles.white20Bold,
+                            style: TextStyles.white20Bold.copyWith(
+                              fontSize: 20.sp,
+                            ),
                           ),
                         );
                       }
@@ -237,7 +241,7 @@ class _StudentListState extends State<StudentList> {
 
   Widget _buildSwitchButtons() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       child: Row(
         children: [
           Expanded(
@@ -254,16 +258,18 @@ class _StudentListState extends State<StudentList> {
                 backgroundColor: isStudentsSelected
                     ? const Color(0xFFE71A45)
                     : Colors.grey.shade300,
+                minimumSize: Size.fromHeight(48.h),
               ),
               child: Text(
                 'الطلاب',
                 style: TextStyle(
                   color: isStudentsSelected ? Colors.white : Colors.black,
+                  fontSize: 16.sp,
                 ),
               ),
             ),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12.w),
           Expanded(
             child: ElevatedButton(
               onPressed: () {
@@ -278,6 +284,7 @@ class _StudentListState extends State<StudentList> {
                 backgroundColor: isStudentsSelected
                     ? Colors.grey.shade300
                     : ColorManager.primaryColor,
+                minimumSize: Size.fromHeight(48.h),
               ),
               child: Text(
                 'المشرفين',
@@ -285,6 +292,7 @@ class _StudentListState extends State<StudentList> {
                   color: isStudentsSelected
                       ? ColorManager.blackColor
                       : ColorManager.secondColor,
+                  fontSize: 16.sp,
                 ),
               ),
             ),

@@ -7,6 +7,7 @@ import 'package:opal_app/features/Admin/presentaion/pages/trips.dart';
 import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
 import 'package:opal_app/features/user/presentaion/bloc/user_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/user_state.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/resources/text_styles.dart';
 import '../widgets/add_menu.dart';
 import '../widgets/app_header.dart';
@@ -27,7 +28,6 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   int currentIndex = 0;
   bool showAddTripBox = false;
   int? expandedIndex;
-  //List<UserEntity> users = [];
 
   @override
   void initState() {
@@ -42,25 +42,45 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       body: SafeArea(
         child: Stack(
           children: [
-            Positioned(
-              left: 240,
-              top: -80,
-              child: Opacity(
-                opacity: 0.2,
-                child: Image.asset('assets/logos.png', width: 300, height: 300),
-              ),
-            ),
             Column(
               children: [
-                AppHeader(
-                  onLogout: () async {
-                    await CacheNetwork.deleteCacheData(key: 'access_token');
-                    Navigator.pushReplacementNamed(context, '/signin');
-                  },
-                  showAddButton: true,
-                  onAddPressed: () =>
-                      setState(() => showAddMenu = !showAddMenu),
+                /// ===== الهيدر الأبيض =====
+                Container(
+                  height: 80.h,
+                  width: double.infinity,
+                  color: Colors.white,
+                  child: Stack(
+                    children: [
+                      /// اللوجو الباهت نصه باين
+                      Positioned(
+                        top: -40.h,
+                        right: -100.w,
+                        child: Opacity(
+                          opacity: 0.2,
+                          child: Image.asset(
+                            'assets/logos.png',
+                            width: 220.w,
+                            height: 220.h,
+                          ),
+                        ),
+                      ),
+
+                      /// الأزرار (AppHeader)
+                      AppHeader(
+                        isAdmin: true,
+                        onLogout: () async {
+                          await CacheNetwork.deleteCacheData(key: 'access_token');
+                          Navigator.pushReplacementNamed(context, '/signin');
+                        },
+                        showAddButton: true,
+                        onAddPressed: () =>
+                            setState(() => showAddMenu = !showAddMenu),
+                      ),
+                    ],
+                  ),
                 ),
+
+                /// ===== محتوى الشاشة (الـ IndexedStack) =====
                 Expanded(
                   child: Stack(
                     children: [
@@ -68,11 +88,14 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                         index: currentIndex,
                         children: [
                           _buildJoinRequests(),
+                          // الجزء الأحمر هيبقى جاي فوق الأبيض
                           const TripsScreen(),
                           const StudentList(),
                           const SettingsScreen(),
                         ],
                       ),
+
+                      /// ===== البوتوم بار =====
                       CustomBottomNav(
                         currentIndex: currentIndex,
                         onTap: (index) => setState(() => currentIndex = index),
@@ -82,6 +105,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 ),
               ],
             ),
+
+            /// ===== منيو الإضافة =====
             if (showAddMenu)
               AddMenu(
                 onAddTrip: () {
@@ -91,11 +116,13 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                   });
                 },
               ),
+
+            /// ===== Add Trip Box =====
             if (showAddTripBox)
               Positioned(
-                top: 150,
-                left: 20,
-                right: 20,
+                top: 150.h,
+                left: 20.w,
+                right: 20.w,
                 child: AddTripBox(
                   onClose: () => setState(() => showAddTripBox = false),
                 ),
@@ -106,18 +133,19 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     );
   }
 
+  /// ===== الجزء الأحمر (طلبات الانضمام) =====
   Widget _buildJoinRequests() {
     return Container(
       width: double.infinity,
       color: ColorManager.primaryColor,
-      padding: const EdgeInsets.only(top: 12, bottom: 90),
+      padding: EdgeInsets.only(top: 12.h, bottom: 90.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Align(
             alignment: Alignment.centerRight,
             child: Padding(
-              padding: EdgeInsets.only(right: 16, bottom: 12),
+              padding: EdgeInsets.only(right: 16.w, bottom: 12.h),
               child: Text('طلبات الانضمام', style: TextStyles.white20Bold),
             ),
           ),
@@ -125,15 +153,13 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
             child: BlocConsumer<GetAllUserCubit, UserState>(
               listener: (context, state) {
                 if (state is UserError) {
-                  print("ERROR:${state.message}");
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(SnackBar(content: Text(state.message)));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(state.message)),
+                  );
                 }
               },
               builder: (context, state) {
                 if (state is UserSuccess) {
-                  print("length:${state.user.length}");
                   final unactivatedUsers = state.user
                       .where((u) => u.status == 'pending')
                       .toList();
@@ -141,17 +167,15 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                     return Center(
                       child: Text(
                         "لا توجد طلبات انضمام حاليا",
-                        style: TextStyle(color: Colors.white, fontSize: 25),
+                        style: TextStyle(color: Colors.white, fontSize: 25.sp),
                       ),
                     );
                   }
-                  print("KEWFB${unactivatedUsers}");
                   return ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    padding: EdgeInsets.symmetric(horizontal: 12.w),
                     itemCount: unactivatedUsers.length,
                     itemBuilder: (context, index) {
                       final data = unactivatedUsers[index];
-                      print("DATA IS ${data}");
                       return JoinRequestCard(
                         name: data.name!,
                         phone: data.phone!,
@@ -160,17 +184,15 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                         isExpanded: expandedIndex == index,
                         onToggle: () {
                           setState(() {
-                            expandedIndex = expandedIndex == index
-                                ? null
-                                : index;
+                            expandedIndex =
+                            expandedIndex == index ? null : index;
                           });
                         },
                         onAccept: () async {
-                          await context.read<GetAllUserCubit>().userIsActivate(
-                            data.id!,
-                          );
+                          await context
+                              .read<GetAllUserCubit>()
+                              .userIsActivate(data.id!);
                         },
-
                         onReject: () async {
                           await context
                               .read<GetAllUserCubit>()
@@ -180,11 +202,11 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                     },
                   );
                 } else if (state is UserLoading) {
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(color: Colors.white),
                   );
                 } else {
-                  return Center(child: Text("ERROR"));
+                  return const Center(child: Text("ERROR"));
                 }
               },
             ),

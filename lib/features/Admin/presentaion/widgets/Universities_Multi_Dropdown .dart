@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
 import '../../../user/Domain/entities/university_entity.dart';
@@ -36,17 +37,17 @@ class _UniversitiesMultiDropdownState extends State<UniversitiesMultiDropdown> {
             buttonIcon: Icon(
               Icons.arrow_drop_down,
               color: ColorManager.greyColor,
+              size: 24.sp,
             ),
-
             checkColor: ColorManager.secondColor,
             selectedColor: ColorManager.primaryColor,
-            dialogHeight: 300,
-            title: Text("اختر الجامعات", style: TextStyles.grey14Regular),
-            buttonText: Text("اختر الجامعات", style: TextStyles.grey14Regular),
+            dialogHeight: 300.h,
+            title: Text("اختر الجامعات", style: TextStyles.grey14Regular.copyWith(fontSize: 14.sp)),
+            buttonText: Text("اختر الجامعات", style: TextStyles.grey14Regular.copyWith(fontSize: 14.sp)),
             decoration: BoxDecoration(
               color: ColorManager.secondColor,
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: ColorManager.greyColor, width: 1),
+              borderRadius: BorderRadius.circular(10.r),
+              border: Border.all(color: ColorManager.greyColor, width: 1.w),
             ),
             listType: MultiSelectListType.LIST,
             initialValue: _selectedUniversities,

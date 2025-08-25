@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:opal_app/core/resources/text_styles.dart';
 
 class CustomTextField extends StatelessWidget {
@@ -26,7 +27,10 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      padding: EdgeInsets.symmetric(
+        vertical: 10.h,
+        horizontal: 10.w,
+      ),
       child: TextFormField(
         controller: controller,
         textAlign: textAlign,
@@ -34,26 +38,28 @@ class CustomTextField extends StatelessWidget {
         keyboardType: keyboardType,
         decoration: InputDecoration(
           hintText: hint,
-          hintStyle: TextStyles.black16Regular,
-          contentPadding:
-              contentPadding ??
-              const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+          hintStyle: TextStyles.black16Regular.copyWith(fontSize: 16.sp),
+          contentPadding: contentPadding ??
+              EdgeInsets.symmetric(
+                horizontal: 10.w,
+                vertical: 15.h,
+              ),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(10.r),
             borderSide: const BorderSide(color: Colors.black),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(10.r),
             borderSide: const BorderSide(color: Colors.black),
           ),
           errorText: errorText,
-          errorStyle: const TextStyle(color: Colors.red, fontSize: 12),
+          errorStyle: TextStyle(color: Colors.red, fontSize: 12.sp),
           errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(10.r),
             borderSide: const BorderSide(color: Colors.red),
           ),
           focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(10.r),
             borderSide: const BorderSide(color: Colors.red),
           ),
         ),

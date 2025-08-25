@@ -22,7 +22,6 @@ String? validation(String? value) {
   }
   return null;
 }
-
 class _AddUniversityState extends State<AddUniversity> {
   @override
   Widget build(BuildContext context) {

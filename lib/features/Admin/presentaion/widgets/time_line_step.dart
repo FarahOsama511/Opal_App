@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_state.dart';
 import 'package:opal_app/features/Admin/presentaion/widgets/custom_widgets.dart';
-
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
 import '../../Domain/entities/line_entity.dart';
@@ -41,30 +41,30 @@ class TimeLineStep extends StatefulWidget {
 
 class _TimeLineStepState extends State<TimeLineStep> {
   Widget timeSelector(
-    String label,
-    int value,
-    VoidCallback onIncrement,
-    VoidCallback onDecrement,
-  ) {
+      String label,
+      int value,
+      VoidCallback onIncrement,
+      VoidCallback onDecrement,
+      ) {
     return Column(
       children: [
         IconButton(
-          icon: const Icon(Icons.keyboard_arrow_up),
+          icon: Icon(Icons.keyboard_arrow_up, size: 30.sp),
           onPressed: onIncrement,
         ),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
           decoration: BoxDecoration(
             border: Border.all(color: Colors.grey.shade400),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(8.r),
           ),
           child: Text(
             value.toString().padLeft(2, '0'),
-            style: const TextStyle(fontSize: 16),
+            style: TextStyle(fontSize: 16.sp),
           ),
         ),
         IconButton(
-          icon: const Icon(Icons.keyboard_arrow_down),
+          icon: Icon(Icons.keyboard_arrow_down, size: 30.sp),
           onPressed: onDecrement,
         ),
       ],
@@ -75,6 +75,7 @@ class _TimeLineStepState extends State<TimeLineStep> {
     'ميعاد الذهاب': 'go',
     'ميعاد العودة': 'return',
   };
+
   @override
   void initState() {
     super.initState();
@@ -87,11 +88,11 @@ class _TimeLineStepState extends State<TimeLineStep> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         CustomDropdown<String>(
-          label: '   اختر نوع الرحلة',
+          label: 'اختر نوع الرحلة',
           value: tripTypeMap.values.contains(widget.typeOfTrip)
               ? tripTypeMap.keys.firstWhere(
-                  (key) => tripTypeMap[key] == widget.typeOfTrip,
-                )
+                (key) => tripTypeMap[key] == widget.typeOfTrip,
+          )
               : null,
           items: tripTypeMap.keys.toList(),
           onChanged: (displayValue) {
@@ -99,76 +100,68 @@ class _TimeLineStepState extends State<TimeLineStep> {
             widget.onTypeOfTripChanged(backendValue);
           },
         ),
-        const SizedBox(height: 10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            timeSelector(
-              'الساعة',
-              widget.hour,
-              () =>
-                  widget.onHourChanged(widget.hour == 12 ? 1 : widget.hour + 1),
-              () =>
-                  widget.onHourChanged(widget.hour == 1 ? 12 : widget.hour - 1),
-            ),
-            timeSelector(
-              'الدقيقة',
-              widget.minute,
-              () => widget.onMinuteChanged((widget.minute + 1) % 60),
-              () => widget.onMinuteChanged(
-                widget.minute == 0 ? 59 : widget.minute - 1,
+        SizedBox(height: 15.h),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              timeSelector(
+                'الساعة',
+                widget.hour,
+                    () => widget.onHourChanged(widget.hour == 12 ? 1 : widget.hour + 1),
+                    () => widget.onHourChanged(widget.hour == 1 ? 12 : widget.hour - 1),
               ),
-            ),
-            Column(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.keyboard_arrow_up),
-                  onPressed: () => widget.onPeriodChanged(
-                    widget.period == 'صباحًا' ? 'مساءً' : 'صباحًا',
+              SizedBox(width: 15.w),
+              timeSelector(
+                'الدقيقة',
+                widget.minute,
+                    () => widget.onMinuteChanged((widget.minute + 1) % 60),
+                    () => widget.onMinuteChanged(widget.minute == 0 ? 59 : widget.minute - 1),
+              ),
+              SizedBox(width: 15.w),
+              Column(
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.keyboard_arrow_up, size: 30.sp),
+                    onPressed: () => widget.onPeriodChanged(
+                      widget.period == 'صباحًا' ? 'مساءً' : 'صباحًا',
+                    ),
                   ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 8,
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey.shade400),
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                    child: Text(
+                      widget.period,
+                      style: TextStyle(fontSize: 16.sp),
+                    ),
                   ),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.shade400),
-                    borderRadius: BorderRadius.circular(8),
+                  IconButton(
+                    icon: Icon(Icons.keyboard_arrow_down, size: 30.sp),
+                    onPressed: () => widget.onPeriodChanged(
+                      widget.period == 'صباحًا' ? 'مساءً' : 'صباحًا',
+                    ),
                   ),
-                  child: Text(
-                    widget.period,
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.keyboard_arrow_down),
-                  onPressed: () => widget.onPeriodChanged(
-                    widget.period == 'صباحًا' ? 'مساءً' : 'صباحًا',
-                  ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
-        const SizedBox(height: 16),
-
+        SizedBox(height: 20.h),
         BlocBuilder<LinesCubit, GetAllLinesState>(
           builder: (context, state) {
-            print("state is${state}");
             if (state is LinesLoading) {
-              return const CircularProgressIndicator(
-                color: ColorManager.primaryColor,
-              );
+              return const CircularProgressIndicator(color: ColorManager.primaryColor);
             } else if (state is LinesLoaded) {
               final allLines = state.Liness;
-              print("${state.Liness.length}");
               return CustomDropdown(
                 label: 'اختر الخط الخاص بك',
                 value: widget.selectedLine,
                 items: allLines,
                 onChanged: widget.onLineChanged,
-
                 displayString: (u) => u.name!,
               );
             } else {

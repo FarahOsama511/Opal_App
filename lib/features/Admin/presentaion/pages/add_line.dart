@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
@@ -29,8 +28,8 @@ class _AddLineState extends State<AddLine> {
   @override
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
-    final size = MediaQuery.of(context).size;
     TextEditingController LineController = TextEditingController();
+
     return Scaffold(
       backgroundColor: ColorManager.secondColor,
       body: SafeArea(
@@ -98,9 +97,7 @@ class _AddLineState extends State<AddLine> {
                 PrimaryButton(
                   text: 'إلغاء ',
                   onPressed: () {
-                    setState(() {
-                      Navigator.pop(context);
-                    });
+                    Navigator.pop(context);
                   },
                   backgroundColor: ColorManager.greyColor,
                 ),

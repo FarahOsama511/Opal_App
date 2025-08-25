@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:opal_app/core/resources/text_styles.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_state.dart';
@@ -97,9 +98,9 @@ class _EditTripTimeState extends State<EditTripBox> {
         id: selectedSupervisor!.id,
         name: selectedSupervisor!.name,
       ),
-      startTime: fullStartTime, // بداية الحجز
-      endTime: fullEndTime, // نهاية الحجز
-      leavesAt: fullLeavesAt, // ميعاد المغادرة
+      startTime: fullStartTime,
+      endTime: fullEndTime,
+      leavesAt: fullLeavesAt,
       type: typeOfTrip ?? "ذهاب",
       line: LineEntity(id: selectedLine!.id, name: selectedLine!.name),
     );
@@ -154,8 +155,8 @@ class _EditTripTimeState extends State<EditTripBox> {
 
   @override
   Widget build(BuildContext context) {
-    double boxWidth = MediaQuery.of(context).size.width * 0.85;
-    double boxHeight = MediaQuery.of(context).size.height * 0.7;
+    double boxWidth = 0.85.sw;
+    double boxHeight = 0.7.sh;
 
     Widget stepContent;
     switch (currentStep) {
@@ -213,7 +214,6 @@ class _EditTripTimeState extends State<EditTripBox> {
         print("=============================${state}====================");
         if (state is TourUpdated) {
           print("Tour Updated Successfully");
-          // context.read<TourCubit>().getAllTours();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message, style: TextStyles.white12Bold),
@@ -223,22 +223,22 @@ class _EditTripTimeState extends State<EditTripBox> {
             context: context,
             builder: (context) => AlertDialog(
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(16.r),
               ),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(
+                  Text(
                     'تم التأكيد',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 20),
-                  const Icon(
+                  SizedBox(height: 20.h),
+                  Icon(
                     Icons.check_circle,
                     color: Colors.green,
-                    size: 100,
+                    size: 100.sp,
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20.h),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).pop();
@@ -247,13 +247,13 @@ class _EditTripTimeState extends State<EditTripBox> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFE71A45),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+                        borderRadius: BorderRadius.circular(30.r),
                       ),
-                      minimumSize: const Size.fromHeight(50),
+                      minimumSize: Size(double.infinity, 50.h),
                     ),
                     child: Text(
                       'العودة الى الرئيسية',
-                      style: TextStyles.white14Bold,
+                      style: TextStyles.white14Bold.copyWith(fontSize: 14.sp),
                     ),
                   ),
                 ],
@@ -272,15 +272,15 @@ class _EditTripTimeState extends State<EditTripBox> {
           height: boxHeight,
           child: Material(
             elevation: 8,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(20.r),
             child: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(16.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   StepHeader(onClose: widget.onClose),
                   Expanded(child: SingleChildScrollView(child: stepContent)),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20.h),
                   StepButtons(
                     currentStep: currentStep,
                     onNext: nextStep,

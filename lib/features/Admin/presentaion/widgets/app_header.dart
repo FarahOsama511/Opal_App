@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AppHeader extends StatelessWidget {
   final VoidCallback onLogout;
@@ -10,6 +11,7 @@ class AppHeader extends StatelessWidget {
   final Widget? titleWidget;
   final MainAxisAlignment mainAxisAlignment;
   final CrossAxisAlignment crossAxisAlignment;
+  final bool isAdmin;
 
   const AppHeader({
     super.key,
@@ -22,45 +24,69 @@ class AppHeader extends StatelessWidget {
     this.titleWidget,
     this.mainAxisAlignment = MainAxisAlignment.spaceBetween,
     this.crossAxisAlignment = CrossAxisAlignment.center,
+    this.isAdmin = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.transparent,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
       child: Directionality(
         textDirection: TextDirection.rtl,
         child: Row(
           mainAxisAlignment: mainAxisAlignment,
           crossAxisAlignment: crossAxisAlignment,
-          children: [
+          children: isAdmin
+              ? [
+            if (showAddButton && onAddPressed != null)
+              TextButton.icon(
+                onPressed: onAddPressed,
+                icon: const Icon(Icons.add, color: Colors.black),
+                label: Text(
+                  "إضافة",
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            const Spacer(),
+            IconButton(
+              icon: const Icon(Icons.logout),
+              onPressed: onLogout,
+              iconSize: 24.sp,
+            ),
+          ]
+              : [
             leadingWidget ??
-                IconButton(icon: const Icon(Icons.logout), onPressed: onLogout),
-
+                IconButton(
+                  icon: const Icon(Icons.logout),
+                  onPressed: onLogout,
+                  iconSize: 24.sp,
+                ),
             if (showAddButton && onAddPressed != null)
               IconButton(
                 icon: const Icon(Icons.add_circle_outline, color: Colors.black),
                 onPressed: onAddPressed,
+                iconSize: 24.sp,
               ),
-
             Expanded(
               child: Center(
-                child:
-                    titleWidget ??
+                child: titleWidget ??
                     (title != null
                         ? Text(
-                            title!,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
-                            textAlign: TextAlign.right,
-                          )
+                      title!,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.sp,
+                      ),
+                      textAlign: TextAlign.right,
+                    )
                         : const SizedBox.shrink()),
               ),
             ),
-
             if (trailingWidget != null) trailingWidget!,
           ],
         ),
