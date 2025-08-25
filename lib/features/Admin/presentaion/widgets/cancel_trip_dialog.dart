@@ -32,8 +32,9 @@ class CancelOREditTripDialog extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () {
-                context.read<SelectionTourCubit>().UnconfirmTour(tourId);
+              onPressed: () async {
+                print("tourid:$tourId");
+                await context.read<SelectionTourCubit>().UnconfirmTour(tourId);
                 Navigator.pushReplacementNamed(context, '/home');
               },
               style: ElevatedButton.styleFrom(

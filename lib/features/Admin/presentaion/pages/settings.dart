@@ -158,21 +158,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
             );
           }
 
-          print(
-            "عدد المستخدمين في أول جامعة: ${_universities.first.users?.length}",
-          );
-
           return ListView.builder(
             padding: const EdgeInsets.all(16),
             itemCount: _filteredUniversities.length,
             itemBuilder: (context, index) {
               final university = _filteredUniversities[index];
+              final activeUsers =
+                  university.users
+                      ?.where((user) => user.status == "active")
+                      .toList() ??
+                  [];
               return SettingsExpandableCard(
                 name: university.name ?? 'لا يوجد اسم',
                 isSupervisor: false,
                 isExpanded: _isExpandedUniversity[index],
                 location: university.location ?? 'غير متوفر',
-                usersCount: university.users?.length ?? 0,
+                usersCount: activeUsers.length,
                 onToggle: () {
                   setState(() {
                     _isExpandedUniversity[index] =

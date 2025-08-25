@@ -86,12 +86,10 @@ class _StudentListState extends State<StudentList> {
         BlocListener<DeleteUserCubit, DeleteUserState>(
           listener: (context, state) {
             if (state is DeleteUserError) {
-              _loadUsers();
               ScaffoldMessenger.of(
                 context,
               ).showSnackBar(SnackBar(content: Text(state.message)));
             } else if (state is DeleteUserLoaded) {
-              _loadUsers();
               ScaffoldMessenger.of(
                 context,
               ).showSnackBar(SnackBar(content: Text(state.deleteUser)));
@@ -126,15 +124,17 @@ class _StudentListState extends State<StudentList> {
                         ScaffoldMessenger.of(
                           context,
                         ).showSnackBar(SnackBar(content: Text(state.message)));
+                      } else if (state is UserSuccess) {
+                        setState(() {
+                          _users = state.user
+                              .where((u) => u.status == 'active')
+                              .toList();
+                          _updateFilteredUsers();
+                        });
                       }
                     },
                     builder: (context, state) {
                       if (state is UserSuccess) {
-                        _users = state.user
-                            .where((u) => u.status == 'active')
-                            .toList();
-                        _updateFilteredUsers();
-
                         if (_filteredUsers.isEmpty) {
                           return Center(
                             child: Text(

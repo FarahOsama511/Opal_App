@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:opal_app/core/resources/color_manager.dart';
-import 'package:opal_app/features/user/presentaion/pages/user_home_screen.dart';
 
 import '../../../../core/resources/text_styles.dart';
 
 class ConfirmationSuccessScreen extends StatelessWidget {
   const ConfirmationSuccessScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
+    // تغلق الشاشة بعد ثانيتين
+    Future.delayed(const Duration(seconds: 2), () {
+      Navigator.pop(context, true); // تغلق شاشة النجاح
+    });
+
     return Dialog(
       insetPadding: const EdgeInsets.all(20),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -38,32 +42,6 @@ class ConfirmationSuccessScreen extends StatelessWidget {
                 const SizedBox(height: 20),
                 const Icon(Icons.check_circle, color: Colors.green, size: 130),
                 const SizedBox(height: 24),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: ColorManager.primaryColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                    ),
-                    onPressed: () {
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) =>
-                              const UserHomeScreen(isTripConfirmed: true),
-                        ),
-                        (route) => false,
-                      );
-                    },
-                    child: Text(
-                      'العودة إلى الرئيسية',
-                      style: TextStyles.white12Bold,
-                    ),
-                  ),
-                ),
               ],
             ),
           ],

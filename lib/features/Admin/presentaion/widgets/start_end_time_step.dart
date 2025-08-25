@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../../../core/resources/text_styles.dart';
 
 class StartEndTimeStep extends StatelessWidget {
@@ -54,6 +53,17 @@ class StartEndTimeStep extends StatelessWidget {
     onPicked(fullDateTime);
   }
 
+  String formatTime(DateTime dateTime) {
+    final hour = dateTime.hour == 0
+        ? 12
+        : dateTime.hour > 12
+        ? dateTime.hour - 12
+        : dateTime.hour;
+    final period = dateTime.hour >= 12 ? 'مساءً' : 'صباحًا';
+    final minute = dateTime.minute.toString().padLeft(2, '0');
+    return "$hour:$minute $period";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -66,7 +76,7 @@ class StartEndTimeStep extends StatelessWidget {
           leading: const Icon(Icons.play_circle_fill, color: Colors.green),
           title: Text(
             startDate != null
-                ? "بداية: ${startDate!.day}/${startDate!.month}/${startDate!.year} - ${startDate!.hour}:${startDate!.minute.toString().padLeft(2, '0')}"
+                ? "بداية: ${startDate!.day}/${startDate!.month}/${startDate!.year} - ${formatTime(startDate!)}"
                 : "اختر وقت البداية",
           ),
           trailing: const Icon(Icons.calendar_today),
@@ -80,7 +90,7 @@ class StartEndTimeStep extends StatelessWidget {
           leading: const Icon(Icons.stop_circle, color: Colors.red),
           title: Text(
             endDate != null
-                ? "نهاية: ${endDate!.day}/${endDate!.month}/${endDate!.year} - ${endDate!.hour}:${endDate!.minute.toString().padLeft(2, '0')}"
+                ? "نهاية: ${endDate!.day}/${endDate!.month}/${endDate!.year} - ${formatTime(endDate!)}"
                 : "اختر وقت النهاية",
           ),
           trailing: const Icon(Icons.calendar_today),

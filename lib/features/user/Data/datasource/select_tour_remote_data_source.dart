@@ -35,10 +35,10 @@ class SelectTourRemoteDataSourceImpl implements SelectTourRemoteDataSource {
     // final prefs = await SharedPreferences.getInstance();
     // final userToken = prefs.getString('access_token');
     final response = await client.delete(
-      Uri.parse('${Base_Url}tours/${tourId}/registration}'),
+      Uri.parse('${Base_Url}tours/${tourId}/registration'),
       headers: {'Authorization': 'Bearer $token'},
     );
-
+    print("${response.statusCode}=========");
     if (response.statusCode == 200) {
       return unit;
     } else {

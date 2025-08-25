@@ -20,7 +20,6 @@ class _ConfirmDetailsScreenState extends State<ConfirmDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    //  BlocProvider.of<SelectionTourCubit>(context).selectionTour(widget.tourId);
   }
 
   @override
@@ -95,10 +94,16 @@ class _ConfirmDetailsScreenState extends State<ConfirmDetailsScreen> {
                       );
                       final state = context.read<SelectionTourCubit>().state;
                       if (state is SelectionTourSuccess) {
-                        showDialog(
-                          context: context,
-                          builder: (_) => const ConfirmationSuccessScreen(),
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: ColorManager.greyColor,
+                            content: Text(
+                              "تم الحجز بنجاح",
+                              style: TextStyles.white12Bold,
+                            ),
+                          ),
                         );
+                        Navigator.pop(context, true);
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -115,7 +120,7 @@ class _ConfirmDetailsScreenState extends State<ConfirmDetailsScreen> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      Navigator.pop(context, false);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.grey,

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -37,12 +38,39 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   List<String> departureTimes = [];
   List<Tour> filteredTours = [];
   TextEditingController notesController = TextEditingController();
+  Timer? tripTimer;
+  String? lastTripType; // go أو return
 
   @override
   void initState() {
     super.initState();
     isTripConfirmed = widget.isTripConfirmed;
     BlocProvider.of<TourCubit>(context).getAllTours();
+
+    tripTimer = Timer.periodic(Duration(minutes: 1), (_) {
+      _checkTripTime();
+    });
+  }
+
+  @override
+  void dispose() {
+    tripTimer?.cancel();
+    super.dispose();
+  }
+
+  void _checkTripTime() {
+    if (selectedTour != null && isTripConfirmed) {
+      final now = DateTime.now();
+      if (now.isAfter(selectedTour!.leavesAt)) {
+        setState(() {
+          isTripConfirmed = false;
+          selectedTour = null;
+          selectedLine = null;
+          selectedTime = null;
+          selectedTab = lastTripType == 'go' ? 1 : 0;
+        });
+      }
+    }
   }
 
   @override
@@ -50,146 +78,109 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     return Scaffold(
       backgroundColor: ColorManager.secondColor,
       body: SafeArea(
-        child: Stack(
+        child: Column(
           children: [
-            Positioned(
-              left: 210.w,
-              top: -75.h,
-              child: Opacity(
-                opacity: 0.2,
-                child: Image.asset(
-                  'assets/logos.png',
-                  width: 330.w,
-                  height: 330.h,
-                ),
+            AppHeader(
+              onLogout: () async {
+                await CacheNetwork.deleteCacheData(key: 'access_token');
+                Navigator.pushReplacementNamed(context, '/signin');
+              },
+              leadingWidget: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'مرحباً ${CacheNetwork.getCacheData(key: 'Save_UserName')}!',
+                    style: TextStyles.black20Bold.copyWith(fontSize: 20.sp),
+                    textAlign: TextAlign.right,
+                  ),
+                  SizedBox(height: 4.h),
+                  Text(
+                    'متى تريد ${selectedTab == 0 ? "الذهاب" : "العودة"}؟',
+                    style: TextStyles.black20Bold.copyWith(fontSize: 20.sp),
+                    textAlign: TextAlign.right,
+                  ),
+                ],
               ),
-            ),
-            Column(
-              children: [
-                AppHeader(
-                  onLogout: () async {
+              titleWidget: Align(
+                alignment: Alignment.centerLeft,
+                child: IconButton(
+                  icon: Transform(
+                    alignment: Alignment.center,
+                    transform: Matrix4.identity()..scale(-1.0, 1.0),
+                    child: Icon(Icons.logout, size: 24.sp),
+                  ),
+                  onPressed: () async {
                     await CacheNetwork.deleteCacheData(key: 'access_token');
                     Navigator.pushReplacementNamed(context, '/signin');
                   },
-                  leadingWidget: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            'مرحباً ${CacheNetwork.getCacheData(key: 'Save_UserName')}!',
-                            style: TextStyles.black20Bold.copyWith(
-                              fontSize: 20.sp,
-                            ),
-                            textAlign: TextAlign.right,
-                          ),
-                          SizedBox(height: 4.h),
-                          Text(
-                            'متى تريد الذهاب؟',
-                            style: TextStyles.black20Bold.copyWith(
-                              fontSize: 20.sp,
-                            ),
-                            textAlign: TextAlign.right,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  titleWidget: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: Transform(
-                            alignment: Alignment.center,
-                            transform: Matrix4.identity()..scale(-1.0, 1.0),
-                            child: Icon(Icons.logout, size: 24.sp),
-                          ),
-                          onPressed: () async {
-                            await CacheNetwork.deleteCacheData(
-                              key: 'access_token',
-                            );
-                            Navigator.pushReplacementNamed(context, '/signin');
-                          },
-                        ),
-                      ],
-                    ),
+                ),
+              ),
+            ),
+            SizedBox(height: 12.h),
+            Column(
+              children: [
+                SizedBox(height: 12.h),
+                _buildSwitchButtons(),
+              ],
+            ),
+
+            SizedBox(height: 10.h),
+
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+                decoration: BoxDecoration(
+                  color: ColorManager.primaryColor,
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(30.r),
                   ),
                 ),
-                SizedBox(height: 12.h),
-
-                if (isTripConfirmed)
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => TripDetailsScreen(
-                            tour: context
-                                .read<SelectionTourCubit>()
-                                .tourCurrent!,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    SizedBox(height: 15.h),
+                    if (isTripConfirmed &&
+                        ((selectedTab == 0 && lastTripType == 'go') ||
+                            (selectedTab == 1 && lastTripType == 'return')))
+                      Center(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: ColorManager.secondColor,
+                            padding: EdgeInsets.symmetric(
+                              vertical: 14.h,
+                              horizontal: 14.w,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.r),
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                    child: Container(
-                      margin: EdgeInsets.symmetric(horizontal: 20.w),
-                      padding: EdgeInsets.symmetric(
-                        vertical: 16.h,
-                        horizontal: 20.w,
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12.r),
-                        border: Border.all(color: ColorManager.blackColor),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'عرض الرحلة الخاصة بك',
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return TripDetailsScreen(
+                                    tour: context
+                                        .read<SelectionTourCubit>()
+                                        .tourCurrent!,
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                          child: Text(
+                            "عرض تفاصيل الرحلة",
                             style: TextStyles.black14Bold,
                           ),
-                          Icon(Icons.arrow_forward_ios, size: 18.sp),
-                        ],
-                      ),
-                    ),
-                  )
-                else
-                  Column(
-                    children: [
-                      SizedBox(height: 12.h),
-                      _buildSwitchButtons(),
-                    ],
-                  ),
-
-                SizedBox(height: 10.h),
-
-                Expanded(
-                  child: Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 20.w,
-                      vertical: 20.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: ColorManager.primaryColor,
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(30.r),
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        SizedBox(height: 15.h),
-                        _buildDepartureTimeSection(),
-                      ],
-                    ),
-                  ),
+                        ),
+                      )
+                    else
+                      _buildDepartureTimeSection(),
+                  ],
                 ),
-              ],
+              ),
             ),
           ],
         ),
@@ -212,14 +203,26 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           if (state is TourLoading) {
             return Center(child: CircularProgressIndicator());
           } else if (state is TourLoaded) {
-            List<Tour> tours = state.tours;
+            print('عدد الرحلات المستلمة: ${state.tours.length}');
+
+            List<Tour> tours = state.tours
+                .where(
+                  (tour) => selectedTab == 0
+                      ? tour.type == 'go'
+                      : tour.type == 'return',
+                )
+                .toList();
+
             List<Tour> openTours = tours
                 .where((tour) => tour.isBookingOpen)
                 .toList();
+            print('openTours: $openTours');
+
             departureTimes = openTours
                 .map((tour) => DateFormat('HH:mm').format(tour.leavesAt))
                 .toSet()
                 .toList();
+            print('departureTimes: $departureTimes');
 
             filteredTours = openTours
                 .where(
@@ -227,106 +230,86 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                       DateFormat('HH:mm').format(tour.leavesAt) == selectedTime,
                 )
                 .toList();
-            print("========${openTours}=========");
 
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: double.infinity,
-                  child: CustomDropdown(
-                    label: 'اختيار الميعاد',
-                    value: selectedTime,
-                    items: departureTimes,
-                    onChanged: (newValue) {
-                      setState(() {
-                        selectedTime = newValue;
-                      });
-                    },
-                  ),
+                CustomDropdown(
+                  label: 'اختيار الميعاد',
+                  value: selectedTime,
+                  items: departureTimes,
+                  onChanged: (newValue) {
+                    setState(() {
+                      selectedTime = newValue;
+                    });
+                  },
                 ),
                 SizedBox(height: 12.h),
 
-                Container(
-                  width: double.infinity,
-                  child: CustomDropdown(
-                    label: selectedTab == 0 ? 'اختيار الخط' : 'اختيار الجامعة',
-                    value: selectedTab == 0
-                        ? selectedLine?.name
-                        : selectedLine?.name,
-                    items: selectedTab == 0
-                        ? filteredTours
-                              .map((tour) => tour.line.name)
-                              .toSet()
-                              .toList()
-                        : filteredTours
-                              .map((tour) => tour.line.name)
-                              .toSet()
-                              .toList(),
-                    onChanged: (newValue) {
-                      setState(() {
-                        if (selectedTab == 0) {
-                          selectedTour = filteredTours.firstWhere(
-                            (tour) => tour.line.name == newValue,
-                          );
-                          selectedLine = LineEntity(
-                            name: selectedTour!.line.name,
-                            notes: selectedTour!.line.notes,
-                          );
-                        } else {
-                          selectedTour = filteredTours.firstWhere(
-                            (tour) => tour.line.name == newValue,
-                          );
-                          selectedLine = LineEntity(
-                            name: selectedTour!.line.name,
-                            notes: selectedTour!.line.notes,
-                          );
-                        }
-                      });
-                    },
-                  ),
+                CustomDropdown(
+                  label: selectedTab == 0 ? 'اختيار الخط' : 'اختيار الخط',
+                  value: selectedLine?.name,
+                  items: filteredTours
+                      .map((tour) => tour.line.name)
+                      .toSet()
+                      .toList(),
+                  onChanged: (newValue) {
+                    setState(() {
+                      selectedTour = filteredTours.firstWhere(
+                        (tour) => tour.line.name == newValue,
+                      );
+                      selectedLine = LineEntity(
+                        name: selectedTour!.line.name,
+                        notes: selectedTour!.line.notes,
+                      );
+                    });
+                  },
                 ),
                 SizedBox(height: 12.h),
 
                 if (selectedLine != null)
-                  Padding(
-                    padding: EdgeInsets.only(top: 12.h),
-                    child: Column(
-                      children: [
-                        Text(
-                          selectedLine?.notes ?? ".....",
-                          style: TextStyles.black14Bold,
-                        ),
-                        SizedBox(height: 12.h),
+                  Column(
+                    children: [
+                      Text(
+                        selectedLine?.notes ?? ".....",
+                        style: TextStyles.black14Bold,
+                      ),
+                      SizedBox(height: 12.h),
+                      ElevatedButton(
+                        onPressed: () async {
+                          final confirmed = await showDialog<bool>(
+                            context: context,
+                            builder: (_) =>
+                                ConfirmDetailsScreen(tour: selectedTour!),
+                          );
+                          print('تم الدخول للدالة');
+                          print('قيمة confirmed: $confirmed');
+                          if (confirmed == true) {
+                            setState(() {
+                              isTripConfirmed = true;
+                              lastTripType = selectedTour!.type;
+                              print('isTripConfirmed: $isTripConfirmed');
+                              print('lastTripType: $lastTripType');
+                              print('selectedTab: $selectedTab');
 
-                        ElevatedButton(
-                          onPressed: () async {
-                            final confirmed = await showDialog<bool>(
-                              context: context,
-                              builder: (_) =>
-                                  ConfirmDetailsScreen(tour: selectedTour!),
-                            );
-                            if (confirmed == true) {
-                              setState(() {
-                                isTripConfirmed = true;
-                              });
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFE71A45),
-                          ),
-                          child: Center(
-                            child: Text(
-                              "تأكيد الرحلة",
-                              style: TextStyle(
-                                fontSize: 16.sp,
-                                color: Colors.white,
-                              ),
+                              // go أو return
+                            });
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFE71A45),
+                        ),
+                        child: Center(
+                          child: Text(
+                            "تأكيد الرحلة",
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              color: Colors.white,
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
               ],
             );
@@ -347,11 +330,14 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
         children: [
           Expanded(
             child: ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  selectedTab = 0;
-                });
-              },
+              onPressed: (lastTripType == 'go' && !isTripConfirmed)
+                  ? null
+                  : () {
+                      setState(() {
+                        selectedTab = 0;
+                        selectedLine = null;
+                      });
+                    },
               style: ElevatedButton.styleFrom(
                 backgroundColor: selectedTab == 0
                     ? const Color(0xFFE71A45)
@@ -374,15 +360,14 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           SizedBox(width: 12.w),
           Expanded(
             child: ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  selectedTab = 1;
-                  departureTimes = [];
-                  filteredTours = [];
-                  selectedTime = null;
-                  selectedLine = null;
-                });
-              },
+              onPressed: (lastTripType == 'return' && !isTripConfirmed)
+                  ? null
+                  : () {
+                      setState(() {
+                        selectedTab = 1;
+                        selectedLine = null;
+                      });
+                    },
               style: ElevatedButton.styleFrom(
                 backgroundColor: selectedTab == 1
                     ? const Color(0xFFE71A45)

@@ -36,13 +36,15 @@ class TourRemoteDataSourceImpl implements TourRemoteDataSource {
   }
 
   @override
+  @override
   Future<Unit> addTour(TourModel tour) async {
     final body = {
       'supervisorId': tour.supervisor.id,
-      'startTime': tour.startTime.toUtc().toIso8601String(),
-      'endTime': tour.endTime.toUtc().toIso8601String(),
+      'startTime': tour.startTime.toIso8601String(),
+      'endTime': tour.endTime.toIso8601String(),
       'type': tour.type,
-      'leavesAt': tour.leavesAt.toUtc().toIso8601String(),
+      'driverName': tour.driverName,
+      'leavesAt': tour.leavesAt.toIso8601String(),
       'lineId': tour.line.id,
     };
     print("Request Body: ${jsonEncode(body)}");
@@ -70,9 +72,9 @@ class TourRemoteDataSourceImpl implements TourRemoteDataSource {
     final body = {
       'type': tour.type,
       'supervisorId': tour.supervisor.id,
-      'startTime': tour.startTime.toUtc().toIso8601String(),
-      'endTime': tour.endTime.toUtc().toIso8601String(),
-      'leavesAt': tour.leavesAt.toUtc().toIso8601String(),
+      'startTime': tour.startTime.toIso8601String(),
+      'endTime': tour.endTime.toIso8601String(),
+      'leavesAt': tour.leavesAt.toIso8601String(),
       'lineId': tour.line.id,
     };
     final response = await client.put(

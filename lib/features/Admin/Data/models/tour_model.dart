@@ -86,6 +86,9 @@ class TourModel extends Tour {
 extension BookingStatus on Tour {
   bool get isBookingOpen {
     final now = DateTime.now();
-    return now.isAfter(startTime) && now.isBefore(endTime);
+    final start = startTime.toLocal().subtract(Duration(hours: 3));
+    final end = endTime.toLocal().subtract(Duration(hours: 3));
+
+    return now.isAfter(start) && now.isBefore(end);
   }
 }

@@ -27,23 +27,17 @@ class _AddTripBoxState extends State<AddTripBox> {
   DateTime? startDate;
   DateTime? endDate;
   DateTime? selectedDate;
+
   int leavesAtHour = 10;
   int leavesAtMinute = 0;
-
   String leavesAtPeriod = 'صباحًا';
-  int startHour = 7;
-  int startMinute = 0;
-  String startPeriod = 'صباحًا';
-
-  int endHour = 12;
-  int endMinute = 0;
-  String endPeriod = 'مساءً';
 
   SuperVisorEntity? selectedSupervisor;
   LineEntity? selectedLine;
   String? typeOfTrip;
 
   DateTime focusedDay = DateTime.now();
+
   void submitTour() {
     if (startDate == null ||
         endDate == null ||
@@ -56,21 +50,8 @@ class _AddTripBoxState extends State<AddTripBox> {
       return;
     }
 
-    final DateTime fullStartTime = DateTime(
-      startDate!.year,
-      startDate!.month,
-      startDate!.day,
-      startPeriod == 'صباحًا' ? startHour : startHour + 12,
-      startMinute,
-    );
-
-    final DateTime fullEndTime = DateTime(
-      endDate!.year,
-      endDate!.month,
-      endDate!.day,
-      endPeriod == 'صباحًا' ? endHour : endHour + 12,
-      endMinute,
-    );
+    final DateTime fullStartTime = startDate!;
+    final DateTime fullEndTime = endDate!;
 
     if (fullEndTime.isBefore(fullStartTime)) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -78,6 +59,7 @@ class _AddTripBoxState extends State<AddTripBox> {
       );
       return;
     }
+
     final DateTime fullLeavesAt = DateTime(
       selectedDate!.year,
       selectedDate!.month,
@@ -90,11 +72,10 @@ class _AddTripBoxState extends State<AddTripBox> {
       supervisor: SuperVisorEntity(
         id: selectedSupervisor!.id,
         name: selectedSupervisor!.name,
-        // phone: selectedSupervisor!.phone,
       ),
-      startTime: fullStartTime, // بداية الحجز
-      endTime: fullEndTime, // نهاية الحجز
-      leavesAt: fullLeavesAt, // ميعاد المغادرة
+      startTime: fullStartTime,
+      endTime: fullEndTime,
+      leavesAt: fullLeavesAt,
       type: typeOfTrip ?? "ذهاب",
       line: LineEntity(id: selectedLine!.id, name: selectedLine!.name),
     );
@@ -149,6 +130,7 @@ class _AddTripBoxState extends State<AddTripBox> {
             setState(() => selectedLine = value as LineEntity);
           },
         );
+        break;
       case 2:
         stepContent = StartEndTimeStep(
           startDate: startDate,
@@ -179,13 +161,11 @@ class _AddTripBoxState extends State<AddTripBox> {
     return BlocListener<UpdateAddDeleteTourCubit, UpdateAddDeleteTourState>(
       listener: (context, state) {
         if (state is TourAdded) {
-          // context.read<TourCubit>().getAllTours();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message, style: TextStyles.white12Bold),
             ),
           );
-          print("STATE IS:${state}");
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
@@ -233,6 +213,7 @@ class _AddTripBoxState extends State<AddTripBox> {
           ).showSnackBar(SnackBar(content: Text(state.message)));
         }
       },
+
       child: Center(
         child: SizedBox(
           width: boxWidth,
