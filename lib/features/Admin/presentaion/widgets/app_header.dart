@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:opal_app/core/resources/color_manager.dart';
+
+import '../../../../core/resources/text_styles.dart';
 
 class AppHeader extends StatelessWidget {
   final VoidCallback onLogout;
@@ -39,56 +42,61 @@ class AppHeader extends StatelessWidget {
           crossAxisAlignment: crossAxisAlignment,
           children: isAdmin
               ? [
-            if (showAddButton && onAddPressed != null)
-              TextButton.icon(
-                onPressed: onAddPressed,
-                icon: const Icon(Icons.add, color: Colors.black),
-                label: Text(
-                  "إضافة",
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-            const Spacer(),
-            IconButton(
-              icon: const Icon(Icons.logout),
-              onPressed: onLogout,
-              iconSize: 24.sp,
-            ),
-          ]
-              : [
-            leadingWidget ??
-                IconButton(
-                  icon: const Icon(Icons.logout),
-                  onPressed: onLogout,
-                  iconSize: 24.sp,
-                ),
-            if (showAddButton && onAddPressed != null)
-              IconButton(
-                icon: const Icon(Icons.add_circle_outline, color: Colors.black),
-                onPressed: onAddPressed,
-                iconSize: 24.sp,
-              ),
-            Expanded(
-              child: Center(
-                child: titleWidget ??
-                    (title != null
-                        ? Text(
-                      title!,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20.sp,
+                  if (showAddButton && onAddPressed != null)
+                    TextButton.icon(
+                      onPressed: onAddPressed,
+                      icon: Icon(Icons.add, color: Colors.black, size: 30.sp),
+                      label: Text("إضافة", style: TextStyles.black20Bold),
+                    ),
+                  const Spacer(),
+                  IconButton(
+                    icon: Transform(
+                      alignment: Alignment.center,
+                      transform: Matrix4.identity()..scale(-1.0, 1.0),
+                      child: Icon(
+                        Icons.logout,
+                        size: 30.sp,
+                        color: Colors.black,
                       ),
-                      textAlign: TextAlign.right,
-                    )
-                        : const SizedBox.shrink()),
-              ),
-            ),
-            if (trailingWidget != null) trailingWidget!,
-          ],
+                    ),
+                    onPressed: onLogout,
+                    iconSize: 30.sp,
+                  ),
+                ]
+              : [
+                  leadingWidget ??
+                      IconButton(
+                        icon: const Icon(Icons.logout, color: Colors.black),
+                        onPressed: onLogout,
+                        iconSize: 30.sp,
+                      ),
+                  if (showAddButton && onAddPressed != null)
+                    IconButton(
+                      icon: const Icon(
+                        Icons.add_circle_outline,
+                        color: Colors.black,
+                      ),
+                      onPressed: onAddPressed,
+                      iconSize: 24.sp,
+                    ),
+                  Expanded(
+                    child: Center(
+                      child:
+                          titleWidget ??
+                          (title != null
+                              ? Text(
+                                  title!,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20.sp,
+                                  ),
+                                  textAlign: TextAlign.right,
+                                )
+                              : const SizedBox.shrink()),
+                    ),
+                  ),
+                  if (trailingWidget != null) trailingWidget!,
+                ],
         ),
       ),
     );

@@ -23,13 +23,10 @@ class CalendarStep extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(
-          text,
-          style: TextStyles.black20Bold.copyWith(fontSize: 20.sp),
-        ),
+        Text(text, style: TextStyles.black20Bold.copyWith(fontSize: 20.sp)),
         SizedBox(height: 10.h),
         SizedBox(
-          height: 0.4.sh,
+          height: 0.5.sh,
           child: TableCalendar(
             firstDay: DateTime(2020, 1, 1),
             lastDay: DateTime(2030, 12, 31),

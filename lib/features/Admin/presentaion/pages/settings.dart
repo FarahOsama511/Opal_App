@@ -80,10 +80,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
           listener: (context, state) {
             if (state is DeleteUniversityError) {
               ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(state.message, style: TextStyle(fontSize: 14.sp))));
+                SnackBar(
+                  content: Text(
+                    state.message,
+                    style: TextStyle(fontSize: 14.sp),
+                  ),
+                ),
+              );
             } else if (state is DeleteUniversitySuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(state.message, style: TextStyle(fontSize: 14.sp))));
+                SnackBar(
+                  content: Text(
+                    state.message,
+                    style: TextStyle(fontSize: 14.sp),
+                  ),
+                ),
+              );
             }
           },
         ),
@@ -91,10 +103,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
           listener: (context, state) {
             if (state is DeleteLineError) {
               ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(state.message, style: TextStyle(fontSize: 14.sp))));
+                SnackBar(
+                  content: Text(
+                    state.message,
+                    style: TextStyle(fontSize: 14.sp),
+                  ),
+                ),
+              );
             } else if (state is DeleteLineLoaded) {
               ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(state.deleteLine, style: TextStyle(fontSize: 14.sp))));
+                SnackBar(
+                  content: Text(
+                    state.deleteLine,
+                    style: TextStyle(fontSize: 14.sp),
+                  ),
+                ),
+              );
             }
           },
         ),
@@ -137,7 +161,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
       listener: (context, state) {
         if (state is GetAllUniversitiesError) {
           ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message, style: TextStyle(fontSize: 14.sp))));
+            SnackBar(
+              content: Text(state.message, style: TextStyle(fontSize: 14.sp)),
+            ),
+          );
         } else if (state is GetAllUniversitiesSuccess) {
           setState(() {
             _universities = state.GetAllUniversities;
@@ -149,7 +176,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
         if (state is GetAllUniversitiesSuccess) {
           if (_filteredUniversities.isEmpty) {
             return Center(
-              child: Text("لا يوجد جامعات", style: TextStyles.white20Bold.copyWith(fontSize: 20.sp)),
+              child: Text(
+                "لا يوجد جامعات",
+                style: TextStyles.white20Bold.copyWith(fontSize: 20.sp),
+              ),
             );
           }
 
@@ -158,9 +188,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
             itemCount: _filteredUniversities.length,
             itemBuilder: (context, index) {
               final university = _filteredUniversities[index];
-              final activeUsers = university.users
-                  ?.where((user) => user.status == "active")
-                  .toList() ??
+              final activeUsers =
+                  university.users
+                      ?.where((user) => user.status == "active")
+                      .toList() ??
                   [];
               return SettingsExpandableCard(
                 name: university.name ?? 'لا يوجد اسم',
@@ -170,7 +201,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 usersCount: activeUsers.length,
                 onToggle: () {
                   setState(() {
-                    _isExpandedUniversity[index] = !_isExpandedUniversity[index];
+                    _isExpandedUniversity[index] =
+                        !_isExpandedUniversity[index];
                   });
                 },
                 deleteIcon: IconButton(
@@ -203,7 +235,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
       listener: (context, state) {
         if (state is LinesError) {
           ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message, style: TextStyle(fontSize: 14.sp))));
+            SnackBar(
+              content: Text(state.message, style: TextStyle(fontSize: 14.sp)),
+            ),
+          );
         }
       },
       builder: (context, state) {
@@ -217,7 +252,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
           if (_filteredLines.isEmpty) {
             return Center(
-              child: Text("لا يوجد خطوط", style: TextStyles.white20Bold.copyWith(fontSize: 20.sp)),
+              child: Text(
+                "لا يوجد خطوط",
+                style: TextStyles.white20Bold.copyWith(fontSize: 20.sp),
+              ),
             );
           }
 
@@ -276,15 +314,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: isUniversitySelected
-                    ? Color(0xFFE71A45)
+                    ? ColorManager.primaryColor
                     : Colors.grey.shade300,
+                minimumSize: Size.fromHeight(38.h),
               ),
               child: Text(
                 'الجامعات',
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  color: isUniversitySelected ? Colors.white : Colors.black,
-                ),
+                style: isUniversitySelected
+                    ? TextStyles.white14Bold
+                    : TextStyles.black14Bold,
               ),
             ),
           ),
@@ -303,6 +341,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 backgroundColor: isUniversitySelected
                     ? Colors.grey.shade300
                     : ColorManager.primaryColor,
+                minimumSize: Size.fromHeight(38.h),
               ),
               child: Text(
                 'الخطوط',

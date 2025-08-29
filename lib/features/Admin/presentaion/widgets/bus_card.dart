@@ -50,7 +50,7 @@ class BusCard extends StatelessWidget {
             Positioned(
               bottom: -40.h,
               top: -40.h,
-              right: 40.w,
+              left: -90.h,
               child: Opacity(
                 opacity: 0.4,
                 child: Image.asset(
@@ -67,7 +67,10 @@ class BusCard extends StatelessWidget {
                 children: [
                   _RowInfo(label: 'الخط', value: line),
                   _RowInfo(label: 'اسم المشرف', value: supervisorName),
-                  _RowInfo(label: typeOfTrip ?? 'نوع الرحلة', value: departureTime),
+                  _RowInfo(
+                    label: typeOfTrip ?? 'نوع الرحلة',
+                    value: departureTime,
+                  ),
                   _RowInfo(label: 'تاريخ اليوم', value: date),
                   SizedBox(height: 10.h),
                 ],

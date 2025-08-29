@@ -53,18 +53,22 @@ class _SupervisorStepState extends State<SupervisorStep> {
                   .where((u) => u.role == "supervisor")
                   .map(
                     (u) => SuperVisorEntity(
-                  id: u.id,
-                  name: u.name,
-                  email: u.email,
-                  phone: u.phone,
-                  role: u.role,
-                ),
-              )
+                      id: u.id,
+                      name: u.name,
+                      email: u.email,
+                      phone: u.phone,
+                      role: u.role,
+                    ),
+                  )
                   .toList();
+              final selected = allSupervisors.firstWhere(
+                (s) => s.id == widget.selectedSupervisor?.id,
+                //  orElse: () => null,
+              );
 
               return CustomDropdown<SuperVisorEntity>(
                 label: 'اختر مشرف',
-                value: widget.selectedSupervisor,
+                value: selected,
                 items: allSupervisors,
                 onChanged: widget.onSupervisorChanged,
                 displayString: (u) => u.name!,

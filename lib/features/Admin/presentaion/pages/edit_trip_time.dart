@@ -9,6 +9,7 @@ import '../../Data/models/tour_model.dart';
 import '../../Domain/entities/line_entity.dart';
 import '../../Domain/entities/tour.dart';
 import '../widgets/calender_step.dart';
+import '../widgets/start_end_time_step.dart';
 import '../widgets/summary_step.dart';
 import '../widgets/supervisor_step.dart';
 import '../widgets/time_line_step.dart';
@@ -191,6 +192,13 @@ class _EditTripTimeState extends State<EditTripBox> {
 
         break;
       case 2:
+        stepContent = StartEndTimeStep(
+          startDate: startDate,
+          endDate: endDate,
+          onStartDateChanged: (val) => setState(() => startDate = val),
+          onEndDateChanged: (val) => setState(() => endDate = val),
+        );
+      case 3:
         stepContent = SupervisorStep(
           selectedSupervisor: selectedSupervisor,
           onSupervisorChanged: (val) =>
@@ -230,14 +238,13 @@ class _EditTripTimeState extends State<EditTripBox> {
                 children: [
                   Text(
                     'تم التأكيد',
-                    style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   SizedBox(height: 20.h),
-                  Icon(
-                    Icons.check_circle,
-                    color: Colors.green,
-                    size: 100.sp,
-                  ),
+                  Icon(Icons.check_circle, color: Colors.green, size: 100.sp),
                   SizedBox(height: 20.h),
                   ElevatedButton(
                     onPressed: () {

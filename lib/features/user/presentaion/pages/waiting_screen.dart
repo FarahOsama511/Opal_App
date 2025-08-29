@@ -4,18 +4,23 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
 
+import '../../../../core/resources/text_styles.dart';
+
 class WaitingScreen extends StatelessWidget {
   const WaitingScreen({super.key});
   Future<bool> showExitDialog(BuildContext context) async {
     return await showDialog<bool>(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('تأكيد الخروج'),
-            content: const Text('هل تريد الخروج من التطبيق؟'),
+            title: Text('تأكيد الخروج', style: TextStyles.black20Bold),
+            content: Text(
+              'هل تريد الخروج من التطبيق؟',
+              style: TextStyles.black16Regular,
+            ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('لا'),
+                child: Text('لا', style: TextStyles.black10Bold),
               ),
               TextButton(
                 onPressed: () {
@@ -27,7 +32,7 @@ class WaitingScreen extends StatelessWidget {
                     SystemNavigator.pop();
                   }
                 },
-                child: const Text('نعم'),
+                child: Text('نعم', style: TextStyles.red10Bold),
               ),
             ],
           ),
@@ -89,10 +94,7 @@ class WaitingScreen extends StatelessWidget {
                         ),
                         child: Text(
                           'خروج من التطبيق',
-                          style: TextStyle(
-                            fontSize: 16.sp,
-                            color: ColorManager.secondColor,
-                          ),
+                          style: TextStyles.white14Bold,
                         ),
                       ),
                     ),

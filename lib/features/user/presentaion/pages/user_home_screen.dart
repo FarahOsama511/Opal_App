@@ -80,42 +80,62 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            AppHeader(
-              onLogout: () async {
-                await CacheNetwork.deleteCacheData(key: 'access_token');
-                Navigator.pushReplacementNamed(context, '/signin');
-              },
-              leadingWidget: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'مرحباً ${CacheNetwork.getCacheData(key: 'Save_UserName')}!',
-                    style: TextStyles.black20Bold.copyWith(fontSize: 20.sp),
-                    textAlign: TextAlign.right,
+            Stack(
+              children: [
+                Positioned(
+                  top: -60.h,
+                  right: -100.w,
+                  child: Opacity(
+                    opacity: 0.4,
+                    child: Image.asset(
+                      'assets/logos.png',
+                      width: 220.w,
+                      height: 220.h,
+                    ),
                   ),
-                  SizedBox(height: 4.h),
-                  Text(
-                    'متى تريد ${selectedTab == 0 ? "الذهاب" : "العودة"}؟',
-                    style: TextStyles.black20Bold.copyWith(fontSize: 20.sp),
-                    textAlign: TextAlign.right,
-                  ),
-                ],
-              ),
-              titleWidget: Align(
-                alignment: Alignment.centerLeft,
-                child: IconButton(
-                  icon: Transform(
-                    alignment: Alignment.center,
-                    transform: Matrix4.identity()..scale(-1.0, 1.0),
-                    child: Icon(Icons.logout, size: 24.sp),
-                  ),
-                  onPressed: () async {
+                ),
+                AppHeader(
+                  onLogout: () async {
                     await CacheNetwork.deleteCacheData(key: 'access_token');
                     Navigator.pushReplacementNamed(context, '/signin');
                   },
+                  leadingWidget: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'مرحباً ${CacheNetwork.getCacheData(key: 'Save_UserName')}!',
+                        style: TextStyles.black20Bold.copyWith(fontSize: 20.sp),
+                        textAlign: TextAlign.right,
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        'متى تريد ${selectedTab == 0 ? "الذهاب" : "العودة"}؟',
+                        style: TextStyles.black20Bold.copyWith(fontSize: 20.sp),
+                        textAlign: TextAlign.right,
+                      ),
+                    ],
+                  ),
+                  titleWidget: Align(
+                    alignment: Alignment.centerLeft,
+                    child: IconButton(
+                      icon: Transform(
+                        alignment: Alignment.center,
+                        transform: Matrix4.identity()..scale(-1.0, 1.0),
+                        child: Icon(
+                          Icons.logout,
+                          size: 30.sp,
+                          color: Colors.black,
+                        ),
+                      ),
+                      onPressed: () async {
+                        await CacheNetwork.deleteCacheData(key: 'access_token');
+                        Navigator.pushReplacementNamed(context, '/signin');
+                      },
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
             SizedBox(height: 12.h),
             Column(

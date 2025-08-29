@@ -46,14 +46,14 @@ class _StudentListState extends State<StudentList> {
       if (_isExpandedStudents.length != _filteredUsers.length) {
         _isExpandedStudents = List.generate(
           _filteredUsers.length,
-              (_) => false,
+          (_) => false,
         );
       }
     } else {
       if (_isExpandedSupervisors.length != _filteredUsers.length) {
         _isExpandedSupervisors = List.generate(
           _filteredUsers.length,
-              (_) => false,
+          (_) => false,
         );
       }
     }
@@ -102,7 +102,7 @@ class _StudentListState extends State<StudentList> {
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                padding: EdgeInsets.symmetric(vertical: 0.h),
                 child: SearchField(
                   hintText: 'ابحث عن مستخدم',
                   fillColor: Colors.white,
@@ -163,7 +163,7 @@ class _StudentListState extends State<StudentList> {
                                 onToggle: () {
                                   setState(() {
                                     _isExpandedStudents[index] =
-                                    !_isExpandedStudents[index];
+                                        !_isExpandedStudents[index];
                                   });
                                 },
                                 deleteIcon: IconButton(
@@ -185,7 +185,7 @@ class _StudentListState extends State<StudentList> {
                                 onToggle: () {
                                   setState(() {
                                     _isExpandedSupervisors[index] =
-                                    !_isExpandedSupervisors[index];
+                                        !_isExpandedSupervisors[index];
                                   });
                                 },
                                 deleteIcon: IconButton(
@@ -258,14 +258,13 @@ class _StudentListState extends State<StudentList> {
                 backgroundColor: isStudentsSelected
                     ? const Color(0xFFE71A45)
                     : Colors.grey.shade300,
-                minimumSize: Size.fromHeight(48.h),
+                minimumSize: Size.fromHeight(38.h),
               ),
               child: Text(
                 'الطلاب',
-                style: TextStyle(
-                  color: isStudentsSelected ? Colors.white : Colors.black,
-                  fontSize: 16.sp,
-                ),
+                style: isStudentsSelected
+                    ? TextStyles.white14Bold
+                    : TextStyles.black14Bold,
               ),
             ),
           ),
@@ -284,7 +283,7 @@ class _StudentListState extends State<StudentList> {
                 backgroundColor: isStudentsSelected
                     ? Colors.grey.shade300
                     : ColorManager.primaryColor,
-                minimumSize: Size.fromHeight(48.h),
+                minimumSize: Size.fromHeight(38.h),
               ),
               child: Text(
                 'المشرفين',

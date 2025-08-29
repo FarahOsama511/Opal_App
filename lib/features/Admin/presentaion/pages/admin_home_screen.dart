@@ -53,10 +53,10 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                     children: [
                       /// اللوجو الباهت نصه باين
                       Positioned(
-                        top: -40.h,
+                        top: -60.h,
                         right: -100.w,
                         child: Opacity(
-                          opacity: 0.2,
+                          opacity: 0.4,
                           child: Image.asset(
                             'assets/logos.png',
                             width: 220.w,
@@ -69,7 +69,9 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                       AppHeader(
                         isAdmin: true,
                         onLogout: () async {
-                          await CacheNetwork.deleteCacheData(key: 'access_token');
+                          await CacheNetwork.deleteCacheData(
+                            key: 'access_token',
+                          );
                           Navigator.pushReplacementNamed(context, '/signin');
                         },
                         showAddButton: true,
@@ -153,9 +155,9 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
             child: BlocConsumer<GetAllUserCubit, UserState>(
               listener: (context, state) {
                 if (state is UserError) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(state.message)),
-                  );
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text(state.message)));
                 }
               },
               builder: (context, state) {
@@ -184,14 +186,15 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                         isExpanded: expandedIndex == index,
                         onToggle: () {
                           setState(() {
-                            expandedIndex =
-                            expandedIndex == index ? null : index;
+                            expandedIndex = expandedIndex == index
+                                ? null
+                                : index;
                           });
                         },
                         onAccept: () async {
-                          await context
-                              .read<GetAllUserCubit>()
-                              .userIsActivate(data.id!);
+                          await context.read<GetAllUserCubit>().userIsActivate(
+                            data.id!,
+                          );
                         },
                         onReject: () async {
                           await context
