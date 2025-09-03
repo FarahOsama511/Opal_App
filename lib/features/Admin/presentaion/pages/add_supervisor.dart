@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
+import 'package:opal_app/features/user/Domain/entities/university_entity.dart';
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
 import '../../Data/models/add_admin_supervisor_model.dart';
@@ -30,6 +30,8 @@ class _AddSupervisorState extends State<AddSupervisor> {
   final TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final List<String> AllLines = [];
+  List<UniversityEntity> selectedUniversities = [];
+  List<String> universitiesIds = [];
 
   String? validation(String? value) {
     if (value == null || value.isEmpty) {
@@ -98,7 +100,7 @@ class _AddSupervisorState extends State<AddSupervisor> {
                           });
                         },
                         displayString: (line) =>
-                        ' ${line.name ?? ''}', // هنا بيعرض الاسم
+                            ' ${line.name ?? ''}', // هنا بيعرض الاسم
                       );
                     } else {
                       return const Text('فشل في تحميل الخطوط');
@@ -107,7 +109,16 @@ class _AddSupervisorState extends State<AddSupervisor> {
                 ),
 
                 SizedBox(height: 10.h),
-                UniversitiesMultiDropdown(),
+                UniversitiesMultiDropdown(
+                  onSelectionChanged: (selected) {
+                    setState(() {
+                      selectedUniversities = selected;
+                      universitiesIds = selected
+                          .map((u) => u.id ?? '')
+                          .toList();
+                    });
+                  },
+                ),
                 SizedBox(height: 10.h),
 
                 BlocConsumer<AddAdminSupervisorCubit, AddAdminSupervisorState>(
@@ -145,16 +156,17 @@ class _AddSupervisorState extends State<AddSupervisor> {
                           context
                               .read<AddAdminSupervisorCubit>()
                               .AddAdminORSupervisor(
-                            AddAdminSupervisorModel(
-                              name: nameController.text,
-                              phone: phoneController.text,
-                              password: passwordController.text,
-                              email: emailController.text,
-                              role: "supervisor",
-                              lineId: selectedLine!.id,
-                              line: selectedLine,
-                            ),
-                          );
+                                AddAdminSupervisorModel(
+                                  name: nameController.text,
+                                  phone: phoneController.text,
+                                  password: passwordController.text,
+                                  email: emailController.text,
+                                  role: "supervisor",
+                                  lineId: selectedLine!.id,
+                                  line: selectedLine,
+                                  universitiesId: universitiesIds,
+                                ),
+                              );
                         }
                       },
                     );

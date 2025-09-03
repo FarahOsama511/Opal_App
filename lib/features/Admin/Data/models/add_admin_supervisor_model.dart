@@ -11,6 +11,7 @@ class AddAdminSupervisorModel extends UserEntity {
     super.role,
     super.lineId,
     super.line,
+    super.universitiesId,
   });
   factory AddAdminSupervisorModel.fromJson(Map<String, dynamic> json) {
     return AddAdminSupervisorModel(
@@ -22,6 +23,11 @@ class AddAdminSupervisorModel extends UserEntity {
       email: json['email'],
       role: json['role'],
       line: json['line'] != null ? LineModel.fromJson(json['line']) : null,
+      universitiesId: json['universities'] != null
+          ? (json['universities'] as List)
+                .map((e) => e['id'].toString())
+                .toList()
+          : null,
     );
   }
   Map<String, dynamic> toJson() {
@@ -34,6 +40,7 @@ class AddAdminSupervisorModel extends UserEntity {
       'password': password,
       'email': email,
       'role': role,
+      'universities': universitiesId,
     };
   }
 }

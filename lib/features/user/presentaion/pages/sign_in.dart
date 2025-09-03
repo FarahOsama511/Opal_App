@@ -160,6 +160,8 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   void _navigateBasedOnRole(String? role) {
+    final user = context.read<AuthCubit>().user!.user;
+
     switch (role) {
       case 'student':
         Navigator.pushReplacement(
@@ -170,7 +172,7 @@ class _SignInScreenState extends State<SignInScreen> {
       case 'supervisor':
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => ShowToursBySuperVisor()),
+          MaterialPageRoute(builder: (_) => ShowToursBySuperVisor(user: user)),
         );
         break;
       case 'admin':

@@ -1,12 +1,9 @@
 import 'dart:convert';
-
 import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
 import 'package:opal_app/core/constants/constants.dart';
 import 'package:opal_app/features/Admin/Data/models/add_admin_supervisor_model.dart';
-
 import '../../../../core/errors/exceptions.dart';
-import '../../../../core/network/local_network.dart';
 
 abstract class AddAdminSupervisorDatasource {
   Future<Unit> AddAdminOrSupervisor(AddAdminSupervisorModel addUser);
@@ -26,6 +23,7 @@ class AddAdminSupervisorDatasourceImpl implements AddAdminSupervisorDatasource {
       'role': user.role,
       'lineId': user.lineId,
       'line': user.line,
+      'universities': user.universitiesId,
     };
     final response = await client.post(
       Uri.parse('${Base_Url}users'),

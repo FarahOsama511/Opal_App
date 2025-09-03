@@ -19,6 +19,7 @@ class UserEntity extends Equatable {
   final String? password;
   final String? downTownId;
   final DownTownEntity? downTown;
+  final List<String>? universitiesId;
 
   UserEntity({
     this.downTown,
@@ -35,6 +36,7 @@ class UserEntity extends Equatable {
     this.line,
     this.email,
     this.password,
+    this.universitiesId,
   });
 
   @override
@@ -53,6 +55,7 @@ class UserEntity extends Equatable {
     email,
     password,
     downTownId,
+    universitiesId,
   ];
 }
 

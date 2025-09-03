@@ -1,51 +1,61 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
 import 'package:opal_app/core/network/local_network.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/widgets/app_header.dart'
     show AppHeader;
-import 'package:opal_app/features/supervisor/presentation/pages/supervisor_home_screen.dart';
+import 'package:opal_app/features/Admin/presentaion/widgets/expandable_card.dart';
+import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
 import '../../../../../../core/resources/color_manager.dart';
 import '../../../../../../core/resources/text_styles.dart';
-import '../../../Admin/Data/models/tour_model.dart';
-import '../../../Admin/Domain/entities/line_entity.dart';
-import '../../../Admin/presentaion/bloc/get_lines/get_all_lines_state.dart';
 import '../../../Admin/presentaion/bloc/get_tour_bloc/tour_cubit.dart';
 import '../../../Admin/presentaion/bloc/get_tour_bloc/tour_state.dart';
-import '../../../Admin/presentaion/widgets/bus_card.dart';
-import '../../../Admin/presentaion/widgets/custom_widgets.dart';
+import '../../../Admin/presentaion/widgets/search_field.dart';
+import '../../../user/presentaion/bloc/user_cubit.dart';
+import '../../../user/presentaion/bloc/user_state.dart';
 
 class ShowToursBySuperVisor extends StatefulWidget {
   final bool? isTripConfirmed;
-
-  ShowToursBySuperVisor({super.key, this.isTripConfirmed = false});
-
+  UserEntity user;
+  ShowToursBySuperVisor({
+    super.key,
+    this.isTripConfirmed = false,
+    required this.user,
+  });
   @override
   State<ShowToursBySuperVisor> createState() => _ShowToursBySuperVisorState();
 }
 
 class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
   int? expandedCardIndex;
-  LineEntity? selectedLine;
+  String? lineId;
   late bool isTripConfirmed;
-  // bool _inInit = true;
+  List<bool> _isExpandedStudents = [];
+  List<UserEntity> _users = [];
+  List<UserEntity> _filteredUsers = [];
+  String _searchQuery = '';
+  void _updateFilteredUsers() {
+    _filteredUsers = _users;
+    if (_searchQuery.isNotEmpty) {
+      _filteredUsers = _filteredUsers.where((user) {
+        return user.name!.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+            user.id!.contains(_searchQuery) ||
+            user.phone!.contains(_searchQuery) ||
+            (user.university?.name?.toLowerCase().contains(_searchQuery) ??
+                false);
+      }).toList();
+    }
 
-  @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   if (_inInit) {
-  //     // BlocProvider.of<GetAllUserCubit>(
-  //     //   context,
-  //     // ).getUserById(widget.supervisorId!);
-  //     _inInit = false;
-  //   }
-  // }
+    if (_isExpandedStudents.length != _filteredUsers.length) {
+      _isExpandedStudents = List.generate(_filteredUsers.length, (_) => false);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     BlocProvider.of<TourCubit>(context).getAllTours();
+    BlocProvider.of<GetAllUserCubit>(context).getUserById(widget.user.id!);
   }
 
   @override
@@ -56,10 +66,10 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
         child: Stack(
           children: [
             Positioned(
-              left: 210,
+              left: 220,
               top: -50,
               child: Opacity(
-                opacity: 0.2,
+                opacity: 0.4,
                 child: Image.asset('assets/logos.png', width: 300, height: 300),
               ),
             ),
@@ -77,14 +87,42 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(
-                            ' مرحباً ${CacheNetwork.getCacheData(key: 'Save_UserName')}!',
-                            style: TextStyles.black20Bold.copyWith(
-                              fontSize: 20.sp,
-                            ),
-                            textAlign: TextAlign.right,
+                          BlocBuilder<GetAllUserCubit, UserState>(
+                            builder: (context, state) {
+                              String lineName = '...';
+                              if (state is UserByIdSuccess) {
+                                widget.user = state.userById;
+                                print("user${widget.user}");
+                                print('LINEName:${state.userById.line!.name}');
+                                lineName =
+                                    state.userById.line?.name ?? 'غير معروف';
+                              } else if (state is UserError) {
+                                lineName = 'خط غير متاح';
+                              }
+
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'مرحباً ${CacheNetwork.getCacheData(key: "Save_UserName")}!',
+                                    style: TextStyles.black20Bold.copyWith(
+                                      fontSize: 20.sp,
+                                    ),
+                                    textAlign: TextAlign.right,
+                                  ),
+                                  SizedBox(height: 4.h),
+                                  Text(
+                                    'مشرف الخط - $lineName',
+                                    style: TextStyles.black20Bold.copyWith(
+                                      fontSize: 20.sp,
+                                    ),
+                                    textAlign: TextAlign.right,
+                                  ),
+                                ],
+                              );
+                            },
                           ),
-                          SizedBox(height: 4.h),
                         ],
                       ),
                     ],
@@ -98,7 +136,11 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
                           icon: Transform(
                             alignment: Alignment.center,
                             transform: Matrix4.identity()..scale(-1.0, 1.0),
-                            child: Icon(Icons.logout, size: 24.sp),
+                            child: Icon(
+                              Icons.logout,
+                              size: 30.sp,
+                              color: Colors.black,
+                            ),
                           ),
                           onPressed: () async {
                             await CacheNetwork.deleteCacheData(
@@ -112,28 +154,6 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
                   ),
                 ),
                 const SizedBox(height: 12),
-
-                BlocBuilder<LinesCubit, GetAllLinesState>(
-                  builder: (context, state) {
-                    if (state is LinesLoading) {
-                      return const CircularProgressIndicator(
-                        color: ColorManager.primaryColor,
-                      );
-                    } else if (state is LinesLoaded) {
-                      return CustomDropdown(
-                        label: 'اختر الخط الخاص بك',
-                        value: selectedLine,
-                        items: state.Liness,
-                        onChanged: (value) {
-                          setState(() => selectedLine = value);
-                        },
-                        displayString: (u) => u.name!,
-                      );
-                    } else {
-                      return const Text('فشل في تحميل الخطوط');
-                    }
-                  },
-                ),
                 const SizedBox(height: 10),
                 Expanded(
                   child: Container(
@@ -151,9 +171,26 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: 0.h),
+                          child: SearchField(
+                            hintText: 'ابحث عن مستخدم',
+                            fillColor: Colors.white,
+                            iconColor: Colors.red,
+                            onChanged: (value) {
+                              setState(() {
+                                _searchQuery = value;
+                                _updateFilteredUsers();
+                              });
+                            },
+                          ),
+                        ),
                         Align(
                           alignment: Alignment.centerRight,
-                          child: Text('الرحلات', style: TextStyles.white20Bold),
+                          child: Text(
+                            'عدد الطلاب',
+                            style: TextStyles.white20Bold,
+                          ),
                         ),
                         const SizedBox(height: 15),
                         BlocBuilder<TourCubit, TourState>(
@@ -161,61 +198,79 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
                             if (state is TourLoading) {
                               return const Center(
                                 child: CircularProgressIndicator(
-                                  color: ColorManager.secondColor,
+                                  color: ColorManager.primaryColor,
+                                ),
+                              );
+                            } else if (state is TourError) {
+                              return Center(
+                                child: Text(
+                                  state.message,
+                                  style: TextStyles.white20Bold,
                                 ),
                               );
                             } else if (state is TourLoaded) {
-                              final tours = selectedLine == null
-                                  ? state.tours
-                                  : state.tours
-                                        .where(
-                                          (t) =>
-                                              t.line.name == selectedLine!.name,
-                                        )
-                                        .toList();
+                              final tours = state.tours
+                                  .where(
+                                    (tour) =>
+                                        widget.user.line?.id == tour.line.id,
+                                  )
+                                  .toList();
 
+                              final studentInTours = tours
+                                  .where(
+                                    (tour) => tour.users?.isNotEmpty ?? false,
+                                  )
+                                  .toList();
+
+                              final allUsers = studentInTours
+                                  .expand((tour) => tour.users!)
+                                  .toList();
+
+                              final allowedUniversities =
+                                  widget.user.universitiesId ?? [];
+
+                              _users = allUsers
+                                  .where(
+                                    (user) => allowedUniversities.contains(
+                                      user.university?.id,
+                                    ),
+                                  )
+                                  .toList();
+
+                              _updateFilteredUsers();
+                              if (_filteredUsers.isEmpty) {
+                                return Center(
+                                  child: Text(
+                                    'لا يوجد طلاب',
+                                    style: TextStyles.white20Bold,
+                                  ),
+                                );
+                              }
                               return Expanded(
                                 child: ListView.builder(
-                                  itemCount: tours.length,
+                                  itemCount: _filteredUsers.length,
                                   itemBuilder: (context, index) {
-                                    final isExpanded =
-                                        index == expandedCardIndex;
-                                    return BusCard(
-                                      isExpanded: isExpanded,
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) {
-                                              return SupervisorScreen(
-                                                tour: tours[index] as TourModel,
-                                                // superVisorId:
-                                                //     widget.supervisorId ?? "",
-                                              );
-                                            },
-                                          ),
-                                        );
+                                    final student = _filteredUsers[index];
+                                    return ExpandableCard(
+                                      name: student.name!,
+                                      phone: student.phone!,
+                                      universityId: student.university!.id!,
+                                      isSupervisor: false,
+                                      isExpanded: _isExpandedStudents[index],
+                                      onToggle: () {
+                                        setState(() {
+                                          _isExpandedStudents[index] =
+                                              !_isExpandedStudents[index];
+                                        });
                                       },
-                                      typeOfTrip:
-                                          tours[index].typeDisplay ?? "",
-                                      line: tours[index].line.name ?? "",
-                                      supervisorName:
-                                          tours[index].driverName ?? "غير معرف",
-                                      departureTime: DateFormat(
-                                        'HH:mm',
-                                      ).format(tours[index].leavesAt),
-                                      date: DateFormat(
-                                        'yyyy-MM-dd',
-                                      ).format(tours[index].leavesAt),
                                     );
                                   },
                                 ),
                               );
                             } else {
                               return const Center(
-                                child: Text(
-                                  'حدث خطأ أثناء تحميل الرحلات',
-                                  style: TextStyle(color: Colors.white),
+                                child: CircularProgressIndicator(
+                                  color: ColorManager.primaryColor,
                                 ),
                               );
                             }

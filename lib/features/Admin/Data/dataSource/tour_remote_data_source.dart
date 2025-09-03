@@ -70,6 +70,7 @@ class TourRemoteDataSourceImpl implements TourRemoteDataSource {
   Future<Unit> updateTour(TourModel tour) async {
     final tourId = tour.id.toString();
     final body = {
+      'id': tourId,
       'type': tour.type,
       'supervisorId': tour.supervisor.id,
       'startTime': tour.startTime.toIso8601String(),
@@ -85,6 +86,7 @@ class TourRemoteDataSourceImpl implements TourRemoteDataSource {
       },
       body: jsonEncode(body),
     );
+    print("Tour ID in DataSource: ${tour.id}");
 
     if (response.statusCode == 200) {
       print("PUT URL: ${Base_Url}tours/${tour.id}");

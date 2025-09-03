@@ -18,15 +18,20 @@ class StartEndTimeStep extends StatelessWidget {
   });
 
   Future<void> _pickDateTime(
-      BuildContext context,
-      DateTime? initial,
-      void Function(DateTime) onPicked,
-      ) async {
+    BuildContext context,
+    DateTime? initial,
+    void Function(DateTime) onPicked,
+  ) async {
+    final DateTime now = DateTime.now();
+    final DateTime safeInitialDate = (initial != null && initial.isAfter(now))
+        ? initial
+        : now;
+
     // اختيار التاريخ
     final DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: initial ?? DateTime.now(),
-      firstDate: DateTime.now(),
+      initialDate: safeInitialDate,
+      firstDate: now,
       lastDate: DateTime(2100),
     );
 
@@ -69,13 +74,19 @@ class StartEndTimeStep extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text("تحديد وقت بداية ونهاية الحجز",
-            style: TextStyles.black20Bold.copyWith(fontSize: 20.sp)),
+        Text(
+          "تحديد وقت بداية ونهاية الحجز",
+          style: TextStyles.black20Bold.copyWith(fontSize: 20.sp),
+        ),
         SizedBox(height: 20.h),
 
         // اختيار وقت البداية
         ListTile(
-          leading: Icon(Icons.play_circle_fill, color: Colors.green, size: 28.sp),
+          leading: Icon(
+            Icons.play_circle_fill,
+            color: Colors.green,
+            size: 28.sp,
+          ),
           title: Text(
             startDate != null
                 ? "بداية: ${startDate!.day}/${startDate!.month}/${startDate!.year} - ${formatTime(startDate!)}"

@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:opal_app/core/resources/text_styles.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_state.dart';
-import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
 import '../../Data/models/tour_model.dart';
 import '../../Domain/entities/line_entity.dart';
 import '../../Domain/entities/tour.dart';
@@ -18,7 +17,7 @@ import '../widgets/trip_steps.dart';
 class EditTripBox extends StatefulWidget {
   final VoidCallback onClose;
   final Tour tour;
-  final String tourId;
+  String tourId;
   EditTripBox({
     super.key,
     required this.onClose,
@@ -95,6 +94,7 @@ class _EditTripTimeState extends State<EditTripBox> {
     );
 
     final tour = TourModel(
+      id: widget.tourId,
       supervisor: SuperVisorEntity(
         id: selectedSupervisor!.id,
         name: selectedSupervisor!.name,

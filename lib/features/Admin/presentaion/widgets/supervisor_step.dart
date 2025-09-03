@@ -61,9 +61,17 @@ class _SupervisorStepState extends State<SupervisorStep> {
                     ),
                   )
                   .toList();
-              final selected = allSupervisors.firstWhere(
+              final SuperVisorEntity? selected = allSupervisors.firstWhere(
                 (s) => s.id == widget.selectedSupervisor?.id,
-                //  orElse: () => null,
+                orElse: () => allSupervisors.isNotEmpty
+                    ? allSupervisors.first
+                    : SuperVisorEntity(
+                        id: '',
+                        name: '',
+                        email: '',
+                        phone: '',
+                        role: '',
+                      ),
               );
 
               return CustomDropdown<SuperVisorEntity>(

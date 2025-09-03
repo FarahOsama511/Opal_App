@@ -81,6 +81,7 @@ class AuthCubit extends Cubit<AuthState> {
     ]);
 
     emit(AuthSuccess());
+    _user = user;
     print("Login successful. Token: ${user.token}");
   }
 

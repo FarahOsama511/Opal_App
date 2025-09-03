@@ -9,7 +9,8 @@ import '../../../user/presentaion/bloc/get_all_universities/get_all_universities
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 class UniversitiesMultiDropdown extends StatefulWidget {
-  const UniversitiesMultiDropdown({super.key});
+  final Function(List<UniversityEntity>) onSelectionChanged;
+  UniversitiesMultiDropdown({super.key, required this.onSelectionChanged});
 
   @override
   State<UniversitiesMultiDropdown> createState() =>
@@ -42,8 +43,14 @@ class _UniversitiesMultiDropdownState extends State<UniversitiesMultiDropdown> {
             checkColor: ColorManager.secondColor,
             selectedColor: ColorManager.primaryColor,
             dialogHeight: 300.h,
-            title: Text("اختر الجامعات", style: TextStyles.grey14Regular.copyWith(fontSize: 14.sp)),
-            buttonText: Text("اختر الجامعات", style: TextStyles.grey14Regular.copyWith(fontSize: 14.sp)),
+            title: Text(
+              "اختر الجامعات",
+              style: TextStyles.grey14Regular.copyWith(fontSize: 14.sp),
+            ),
+            buttonText: Text(
+              "اختر الجامعات",
+              style: TextStyles.grey14Regular.copyWith(fontSize: 14.sp),
+            ),
             decoration: BoxDecoration(
               color: ColorManager.secondColor,
               borderRadius: BorderRadius.circular(10.r),
@@ -55,9 +62,7 @@ class _UniversitiesMultiDropdownState extends State<UniversitiesMultiDropdown> {
               setState(() {
                 _selectedUniversities = values;
               });
-              print(
-                "الجامعات المختارة: ${_selectedUniversities.map((e) => e.name).toList()}",
-              );
+              widget.onSelectionChanged(values);
             },
           );
         }

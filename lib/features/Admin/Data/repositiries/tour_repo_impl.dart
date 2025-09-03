@@ -86,6 +86,7 @@ class TourRepoImpl extends ToursRepository {
   @override
   Future<Either<Failure, Unit>> updateTour(Tour tour) async {
     final TourModel tourModel = TourModel(
+      id: tour.id,
       supervisor: tour.supervisor,
       startTime: tour.startTime,
       endTime: tour.endTime,
