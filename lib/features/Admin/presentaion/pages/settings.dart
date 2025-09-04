@@ -22,45 +22,61 @@ class SettingsScreen extends StatefulWidget {
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
 }
-
 class _SettingsScreenState extends State<SettingsScreen> {
   bool isUniversitySelected = true;
+  bool isLineSelected = false;
+  bool isCitySelected = false;
+
   List<bool> _isExpandedUniversity = [];
   List<bool> _isExpandedLines = [];
+  List<bool> _isExpandedCities = [];
+
   List<UniversityEntity> _universities = [];
   List<UniversityEntity> _filteredUniversities = [];
+
   List<LineEntity> _lines = [];
   List<LineEntity> _filteredLines = [];
+
+  // المدن
+  List<String> _cities = [];
+  List<String> _filteredCities = [];
+
   String _searchQuery = '';
 
   void _updateFiltered() {
     _filteredUniversities = _universities;
     _filteredLines = _lines;
+    _filteredCities = _cities;
+
     if (isUniversitySelected) {
       _filteredUniversities = _universities.where((u) {
         return _searchQuery.isEmpty ||
-            u.name?.toLowerCase().contains(_searchQuery.toLowerCase()) ==
-                true ||
+            u.name?.toLowerCase().contains(_searchQuery.toLowerCase()) == true ||
             u.location?.toLowerCase().contains(_searchQuery.toLowerCase()) ==
                 true;
       }).toList();
 
       if (_isExpandedUniversity.length != _filteredUniversities.length) {
-        _isExpandedUniversity = List.filled(
-          _filteredUniversities.length,
-          false,
-        );
+        _isExpandedUniversity = List.filled(_filteredUniversities.length, false);
       }
-    } else {
+    } else if (isLineSelected) {
       _filteredLines = _lines.where((l) {
         return _searchQuery.isEmpty ||
-            l.name?.toLowerCase().contains(_searchQuery.toLowerCase()) ==
-                true ||
+            l.name?.toLowerCase().contains(_searchQuery.toLowerCase()) == true ||
             l.notes?.toLowerCase().contains(_searchQuery) == true;
       }).toList();
 
       if (_isExpandedLines.length != _filteredLines.length) {
         _isExpandedLines = List.filled(_filteredLines.length, false);
+      }
+    } else if (isCitySelected) {
+      _filteredCities = _cities.where((c) {
+        return _searchQuery.isEmpty ||
+            c.toLowerCase().contains(_searchQuery.toLowerCase());
+      }).toList();
+
+      if (_isExpandedCities.length != _filteredCities.length) {
+        _isExpandedCities = List.filled(_filteredCities.length, false);
       }
     }
   }
@@ -80,21 +96,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
           listener: (context, state) {
             if (state is DeleteUniversityError) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    state.message,
-                    style: TextStyle(fontSize: 14.sp),
-                  ),
-                ),
+                SnackBar(content: Text(state.message, style: TextStyle(fontSize: 14.sp))),
               );
             } else if (state is DeleteUniversitySuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    state.message,
-                    style: TextStyle(fontSize: 14.sp),
-                  ),
-                ),
+                SnackBar(content: Text(state.message, style: TextStyle(fontSize: 14.sp))),
               );
             }
           },
@@ -103,21 +109,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
           listener: (context, state) {
             if (state is DeleteLineError) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    state.message,
-                    style: TextStyle(fontSize: 14.sp),
-                  ),
-                ),
+                SnackBar(content: Text(state.message, style: TextStyle(fontSize: 14.sp))),
               );
             } else if (state is DeleteLineLoaded) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    state.deleteLine,
-                    style: TextStyle(fontSize: 14.sp),
-                  ),
-                ),
+                SnackBar(content: Text(state.deleteLine, style: TextStyle(fontSize: 14.sp))),
               );
             }
           },
@@ -129,7 +125,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
           child: Column(
             children: [
               SearchField(
-                hintText: isUniversitySelected ? 'ابحث عن جامعة' : 'ابحث عن خط',
+                hintText: isUniversitySelected
+                    ? 'ابحث عن جامعة'
+                    : isLineSelected
+                    ? 'ابحث عن خط'
+                    : 'ابحث عن مدينة',
                 fillColor: ColorManager.secondColor,
                 iconColor: ColorManager.primaryColor,
                 onChanged: (value) {
@@ -146,7 +146,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   decoration: BoxDecoration(color: Color(0xFFE71A45)),
                   child: isUniversitySelected
                       ? _buildUniversitiesList()
-                      : _buildLinesList(),
+                      : isLineSelected
+                      ? _buildLinesList()
+                      : _buildCitiesList(),
                 ),
               ),
             ],
@@ -156,14 +158,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  // 🔹 الجامعات
   Widget _buildUniversitiesList() {
     return BlocConsumer<GetAllUniversitiesCubit, GetAllUniversitiesState>(
       listener: (context, state) {
         if (state is GetAllUniversitiesError) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message, style: TextStyle(fontSize: 14.sp)),
-            ),
+            SnackBar(content: Text(state.message, style: TextStyle(fontSize: 14.sp))),
           );
         } else if (state is GetAllUniversitiesSuccess) {
           setState(() {
@@ -175,24 +176,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
       builder: (context, state) {
         if (state is GetAllUniversitiesSuccess) {
           if (_filteredUniversities.isEmpty) {
-            return Center(
-              child: Text(
-                "لا يوجد جامعات",
-                style: TextStyles.white20Bold.copyWith(fontSize: 20.sp),
-              ),
-            );
+            return Center(child: Text("لا يوجد جامعات", style: TextStyles.white20Bold.copyWith(fontSize: 20.sp)));
           }
-
           return ListView.builder(
             padding: EdgeInsets.all(16.w),
             itemCount: _filteredUniversities.length,
             itemBuilder: (context, index) {
               final university = _filteredUniversities[index];
-              final activeUsers =
-                  university.users
-                      ?.where((user) => user.status == "active")
-                      .toList() ??
-                  [];
+              final activeUsers = university.users?.where((user) => user.status == "active").toList() ?? [];
               return SettingsExpandableCard(
                 name: university.name ?? 'لا يوجد اسم',
                 isSupervisor: false,
@@ -201,8 +192,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 usersCount: activeUsers.length,
                 onToggle: () {
                   setState(() {
-                    _isExpandedUniversity[index] =
-                        !_isExpandedUniversity[index];
+                    _isExpandedUniversity[index] = !_isExpandedUniversity[index];
                   });
                 },
                 deleteIcon: IconButton(
@@ -213,15 +203,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
           );
         } else if (state is GetAllUniversitiesLoading) {
-          return Center(
-            child: CircularProgressIndicator(color: ColorManager.secondColor),
-          );
+          return Center(child: CircularProgressIndicator(color: ColorManager.secondColor));
         } else {
           return Center(
             child: Text(
-              state is GetAllUniversitiesError
-                  ? state.message
-                  : "حدث خطأ أثناء التحميل",
+              state is GetAllUniversitiesError ? state.message : "حدث خطأ أثناء التحميل",
               style: TextStyles.white20Bold.copyWith(fontSize: 18.sp),
             ),
           );
@@ -230,14 +216,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  // 🔹 الخطوط
   Widget _buildLinesList() {
     return BlocConsumer<LinesCubit, GetAllLinesState>(
       listener: (context, state) {
         if (state is LinesError) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message, style: TextStyle(fontSize: 14.sp)),
-            ),
+            SnackBar(content: Text(state.message, style: TextStyle(fontSize: 14.sp))),
           );
         }
       },
@@ -249,16 +234,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _updateFiltered();
             });
           });
-
           if (_filteredLines.isEmpty) {
-            return Center(
-              child: Text(
-                "لا يوجد خطوط",
-                style: TextStyles.white20Bold.copyWith(fontSize: 20.sp),
-              ),
-            );
+            return Center(child: Text("لا يوجد خطوط", style: TextStyles.white20Bold.copyWith(fontSize: 20.sp)));
           }
-
           return ListView.builder(
             padding: EdgeInsets.all(16.w),
             itemCount: _filteredLines.length,
@@ -282,9 +260,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
           );
         } else if (state is LinesLoading) {
-          return Center(
-            child: CircularProgressIndicator(color: ColorManager.secondColor),
-          );
+          return Center(child: CircularProgressIndicator(color: ColorManager.secondColor));
         } else {
           return Center(
             child: Text(
@@ -297,6 +273,40 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  // 🔹 المدن
+  Widget _buildCitiesList() {
+    if (_filteredCities.isEmpty) {
+      return Center(child: Text("لا يوجد مدن", style: TextStyles.white20Bold.copyWith(fontSize: 20.sp)));
+    }
+    return ListView.builder(
+      padding: EdgeInsets.all(16.w),
+      itemCount: _filteredCities.length,
+      itemBuilder: (context, index) {
+        final city = _filteredCities[index];
+        return SettingsExpandableCard(
+          name: city,
+          isSupervisor: false,
+          isExpanded: _isExpandedCities[index],
+          onToggle: () {
+            setState(() {
+              _isExpandedCities[index] = !_isExpandedCities[index];
+            });
+          },
+          deleteIcon: IconButton(
+            icon: Icon(Icons.delete, color: Colors.red, size: 22.sp),
+            onPressed: () {
+              setState(() {
+                _cities.removeAt(index);
+                _filteredCities.removeAt(index);
+              });
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  // 🔹 زرار التبديل
   Widget _buildSwitchButtons() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
@@ -308,50 +318,57 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 if (!isUniversitySelected) {
                   setState(() {
                     isUniversitySelected = true;
+                    isLineSelected = false;
+                    isCitySelected = false;
                     _updateFiltered();
                   });
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: isUniversitySelected
-                    ? ColorManager.primaryColor
-                    : Colors.grey.shade300,
+                backgroundColor: isUniversitySelected ? ColorManager.primaryColor : Colors.grey.shade300,
                 minimumSize: Size.fromHeight(38.h),
               ),
-              child: Text(
-                'الجامعات',
-                style: isUniversitySelected
-                    ? TextStyles.white14Bold
-                    : TextStyles.black14Bold,
-              ),
+              child: Text('الجامعات', style: isUniversitySelected ? TextStyles.white14Bold : TextStyles.black14Bold),
             ),
           ),
           SizedBox(width: 12.w),
           Expanded(
             child: ElevatedButton(
               onPressed: () {
-                if (isUniversitySelected) {
+                if (!isLineSelected) {
                   setState(() {
                     isUniversitySelected = false;
+                    isLineSelected = true;
+                    isCitySelected = false;
                     _updateFiltered();
                   });
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: isUniversitySelected
-                    ? Colors.grey.shade300
-                    : ColorManager.primaryColor,
+                backgroundColor: isLineSelected ? ColorManager.primaryColor : Colors.grey.shade300,
                 minimumSize: Size.fromHeight(38.h),
               ),
-              child: Text(
-                'الخطوط',
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  color: isUniversitySelected
-                      ? ColorManager.blackColor
-                      : ColorManager.secondColor,
-                ),
+              child: Text('الخطوط', style: isLineSelected ? TextStyles.white14Bold : TextStyles.black14Bold),
+            ),
+          ),
+          SizedBox(width: 12.w),
+          Expanded(
+            child: ElevatedButton(
+              onPressed: () {
+                if (!isCitySelected) {
+                  setState(() {
+                    isUniversitySelected = false;
+                    isLineSelected = false;
+                    isCitySelected = true;
+                    _updateFiltered();
+                  });
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: isCitySelected ? ColorManager.primaryColor : Colors.grey.shade300,
+                minimumSize: Size.fromHeight(38.h),
               ),
+              child: Text('المدن', style: isCitySelected ? TextStyles.white14Bold : TextStyles.black14Bold),
             ),
           ),
         ],
@@ -359,6 +376,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  // 🔹 الديليت
   void _showDeleteDialog(dynamic entity) {
     String name = entity.name ?? "بدون اسم";
     String id = entity.id ?? "0";
