@@ -8,7 +8,6 @@ import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_id.dart/get_to
 import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_id.dart/get_tour_id_state.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_state.dart';
-import 'package:opal_app/features/Admin/presentaion/pages/admin_home_screen.dart';
 import '../../../../core/resources/text_styles.dart';
 import '../bloc/get_tour_bloc/tour_cubit.dart';
 import '../pages/edit_trip_time.dart';
@@ -43,7 +42,11 @@ class _TripDetailsDialogState extends State<TripDetailsDialog> {
       insetPadding: EdgeInsets.all(16.w),
       child: Stack(
         children: [
-          Positioned(left: 2.w, top: 2.h, child: Image.asset('assets/logos.png')),
+          Positioned(
+            left: 2.w,
+            top: 2.h,
+            child: Image.asset('assets/logos.png'),
+          ),
           Container(
             width: size.width * 0.85,
             padding: EdgeInsets.all(20.w),
@@ -56,7 +59,10 @@ class _TripDetailsDialogState extends State<TripDetailsDialog> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Center(
-                  child: Text('بيانات الرحلة', style: TextStyles.black20Bold.copyWith(fontSize: 20.sp)),
+                  child: Text(
+                    'بيانات الرحلة',
+                    style: TextStyles.black20Bold.copyWith(fontSize: 20.sp),
+                  ),
                 ),
                 SizedBox(height: 12.h),
                 Container(
@@ -70,7 +76,9 @@ class _TripDetailsDialogState extends State<TripDetailsDialog> {
                     builder: (context, state) {
                       if (state is GetTourByIdLoading) {
                         return Center(
-                          child: CircularProgressIndicator(color: ColorManager.primaryColor),
+                          child: CircularProgressIndicator(
+                            color: ColorManager.primaryColor,
+                          ),
                         );
                       } else if (state is TourByIdLoaded) {
                         final tour = state.tour;
@@ -96,7 +104,9 @@ class _TripDetailsDialogState extends State<TripDetailsDialog> {
                         return Center(
                           child: Text(
                             "حدث خطأ في جلب البيانات",
-                            style: TextStyles.black14Bold.copyWith(fontSize: 14.sp),
+                            style: TextStyles.black14Bold.copyWith(
+                              fontSize: 14.sp,
+                            ),
                           ),
                         );
                       }
@@ -112,10 +122,7 @@ class _TripDetailsDialogState extends State<TripDetailsDialog> {
                       builder: (context) => Dialog(
                         backgroundColor: Colors.transparent,
                         child: EditTripBox(
-                          onClose: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => AdminHomeScreen()),
-                          ),
+                          onClose: () => Navigator.pop(context),
                           tour: widget.selectedtour,
                           tourId: widget.tourId,
                         ),
@@ -124,10 +131,15 @@ class _TripDetailsDialogState extends State<TripDetailsDialog> {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFFE71A45),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.r)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.r),
+                    ),
                     minimumSize: Size.fromHeight(50.h),
                   ),
-                  child: Text('تعديل الرحلة', style: TextStyles.white12Bold.copyWith(fontSize: 12.sp)),
+                  child: Text(
+                    'تعديل الرحلة',
+                    style: TextStyles.white12Bold.copyWith(fontSize: 12.sp),
+                  ),
                 ),
                 SizedBox(height: 12.h),
                 BlocBuilder<UpdateAddDeleteTourCubit, UpdateAddDeleteTourState>(
@@ -137,17 +149,27 @@ class _TripDetailsDialogState extends State<TripDetailsDialog> {
                     }
                     return OutlinedButton(
                       onPressed: () {
-                        context.read<UpdateAddDeleteTourCubit>().deleteTour(widget.tourId);
-                        Navigator.pushReplacementNamed(context, '/adminScreen');
+                        context.read<UpdateAddDeleteTourCubit>().deleteTour(
+                          widget.tourId,
+                        );
+                        Navigator.pop(context);
                         BlocProvider.of<TourCubit>(context).getAllTours();
                       },
                       style: OutlinedButton.styleFrom(
                         foregroundColor: ColorManager.primaryColor,
-                        side: BorderSide(color: ColorManager.primaryColor, width: 1.w),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.r)),
+                        side: BorderSide(
+                          color: ColorManager.primaryColor,
+                          width: 1.w,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.r),
+                        ),
                         minimumSize: Size.fromHeight(50.h),
                       ),
-                      child: Text('حذف الرحلة', style: TextStyles.red12Bold.copyWith(fontSize: 12.sp)),
+                      child: Text(
+                        'حذف الرحلة',
+                        style: TextStyles.red12Bold.copyWith(fontSize: 12.sp),
+                      ),
                     );
                   },
                 ),
@@ -158,10 +180,15 @@ class _TripDetailsDialogState extends State<TripDetailsDialog> {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.r)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.r),
+                    ),
                     minimumSize: Size.fromHeight(50.h),
                   ),
-                  child: Text('إغلاق', style: TextStyles.white12Bold.copyWith(fontSize: 12.sp)),
+                  child: Text(
+                    'إغلاق',
+                    style: TextStyles.white12Bold.copyWith(fontSize: 12.sp),
+                  ),
                 ),
               ],
             ),

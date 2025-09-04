@@ -6,6 +6,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:opal_app/core/constants/constants.dart';
 import 'package:opal_app/core/get_it.dart' as di;
 import 'package:opal_app/core/network/local_network.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/add_down_town/add_down_town_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/add_lines/add_line_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/add_university/add_university_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/delete_line/delete_line_cubit.dart';
@@ -21,10 +22,11 @@ import 'package:opal_app/features/user/presentaion/bloc/get_all_downtowns/get_al
 import 'package:opal_app/features/user/presentaion/bloc/get_all_universities/get_all_universities_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/selection_tour/selection_tour_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/user_cubit.dart';
-import 'features/Admin/presentaion/bloc/create_admin_supervisors.dart/add_admin_supervisor_cubit.dart';
+import 'features/Admin/presentaion/bloc/create_admin_supervisors/add_admin_supervisor_cubit.dart';
 import 'features/Admin/presentaion/bloc/get_tour_bloc/tour_cubit.dart';
 import 'features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_cubit.dart';
 import 'features/Admin/presentaion/pages/add_admin.dart';
+import 'features/Admin/presentaion/pages/add_down_town.dart';
 import 'features/Admin/presentaion/pages/add_supervisor.dart';
 import 'features/Admin/presentaion/pages/add_university.dart';
 import 'features/Admin/presentaion/pages/student_list.dart';
@@ -78,6 +80,7 @@ class StudentBusApp extends StatelessWidget {
             BlocProvider(create: (_) => di.setUp<DeleteUniversityCubit>()),
             BlocProvider(create: (_) => di.setUp<DeleteLineCubit>()),
             BlocProvider(create: (_) => di.setUp<GetAllDownTownCubit>()),
+            BlocProvider(create: (_) => di.setUp<AddDownTownCubit>()),
           ],
           child: MaterialApp(
             localizationsDelegates: const [
@@ -107,6 +110,7 @@ class StudentBusApp extends StatelessWidget {
               '/addLine': (context) => const AddLine(),
               '/addUniversity': (context) => const AddUniversity(),
               '/trips': (context) => const TripsScreen(),
+              '/addDownTown': (context) => const AddDownTown(),
             },
           ),
         );

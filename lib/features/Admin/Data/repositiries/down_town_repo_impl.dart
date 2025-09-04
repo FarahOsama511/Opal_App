@@ -74,7 +74,6 @@ class DownTownRepoImpl extends DownTownRepo {
 
   @override
   Future<Either<Failure, DownTownEntity>> getDownTownById(String id) {
-    // TODO: implement getDownTownById
     throw UnimplementedError();
   }
 }

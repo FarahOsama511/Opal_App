@@ -11,7 +11,6 @@ import '../../../../core/errors/exceptions.dart';
 abstract class DownTownRemoteDataSource {
   Future<List<DownTownModel>> getAllDownTown();
   Future<Unit> AddDownTown(DownTownEntity DownTown);
-  // Future<DownTownModel> getDownTownById(String id);
   Future<Unit> deleteDownTown(String id);
 }
 
@@ -57,23 +56,6 @@ class DownTownRemoteDataSourceImpl extends DownTownRemoteDataSource {
     }
   }
 
-  @override
-  // Future<DownTownModel> getDownTownById(String id) async {
-  //   final response = await client.get(
-  //     Uri.parse('${Base_Url}downTown/${id}'),
-  //     headers: {'Authorization': 'Bearer $token'},
-  //   );
-  //   if (response.statusCode == 200) {
-  //     final jsonResponse = jsonDecode(response.body);
-  //     print('the DownTown is: $jsonResponse');
-  //     final DownTown = DownTownModel.fromJson(jsonResponse);
-  //     return DownTown;
-  //   } else {
-  //     print("state code is ${response.statusCode}");
-  //     print("body:${response.body}");
-  //     throw ServerException();
-  //   }
-  // }
   @override
   Future<Unit> deleteDownTown(String id) async {
     final response = await client.delete(

@@ -42,6 +42,7 @@ class AddMenu extends StatelessWidget {
               ),
               _buildAddOption(context, 'إضافة خط جديد', '/addLine'),
               _buildAddOption(context, 'إضافة جامعة جديدة', '/addUniversity'),
+              _buildAddOption(context, 'إضافة مدينة جديدة', '/addDownTown'),
             ],
           ),
         ),

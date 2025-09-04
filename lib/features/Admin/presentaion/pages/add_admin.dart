@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
 import 'package:opal_app/features/Admin/Data/models/add_admin_supervisor_model.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/create_admin_supervisors.dart/add_admin_supervisor_cubit.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/create_admin_supervisors.dart/add_admin_supervisor_state.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/create_admin_supervisors/add_admin_supervisor_cubit.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/create_admin_supervisors/add_admin_supervisor_state.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/admin_home_screen.dart';
 import '../widgets/custom_widgets.dart';
 import '../widgets/text_field.dart';
@@ -72,9 +72,9 @@ class _AddAdminState extends State<AddAdmin> {
                 BlocConsumer<AddAdminSupervisorCubit, AddAdminSupervisorState>(
                   listener: (context, state) {
                     if (state is AddAdminSupervisorError) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(state.message)),
-                      );
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text(state.message)));
                     } else if (state is AddAdminSupervisorSuccess) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('تمت الإضافة بنجاح')),
@@ -99,14 +99,14 @@ class _AddAdminState extends State<AddAdmin> {
                           context
                               .read<AddAdminSupervisorCubit>()
                               .AddAdminORSupervisor(
-                            AddAdminSupervisorModel(
-                              name: nameController.text,
-                              phone: phoneController.text,
-                              password: passwordController.text,
-                              email: emailController.text,
-                              role: "admin",
-                            ),
-                          );
+                                AddAdminSupervisorModel(
+                                  name: nameController.text,
+                                  phone: phoneController.text,
+                                  password: passwordController.text,
+                                  email: emailController.text,
+                                  role: "admin",
+                                ),
+                              );
                         }
                       },
                     );

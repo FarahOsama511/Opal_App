@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:opal_app/core/resources/color_manager.dart';
 import 'package:opal_app/core/resources/text_styles.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_state.dart';
@@ -221,7 +222,6 @@ class _EditTripTimeState extends State<EditTripBox> {
       listener: (context, state) {
         print("=============================${state}====================");
         if (state is TourUpdated) {
-          print("Tour Updated Successfully");
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message, style: TextStyles.white12Bold),
@@ -248,11 +248,11 @@ class _EditTripTimeState extends State<EditTripBox> {
                   SizedBox(height: 20.h),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).pop();
                       widget.onClose();
+                      Navigator.of(context).pop();
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFE71A45),
+                      backgroundColor: ColorManager.primaryColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30.r),
                       ),

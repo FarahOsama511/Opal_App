@@ -2,32 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/add_lines/add_line_cubit.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/add_lines/add_line_state.dart';
+import 'package:opal_app/features/Admin/Domain/entities/down_town_entity.dart';
+
 import 'package:opal_app/features/Admin/presentaion/widgets/custom_widgets.dart';
 import 'package:opal_app/features/Admin/presentaion/widgets/text_field.dart';
 import '../../../../core/resources/text_styles.dart';
 import '../../Domain/entities/line_entity.dart';
+import '../bloc/add_down_town/add_down_town_cubit.dart';
+import '../bloc/add_down_town/add_down_town_state.dart';
 
-class AddLine extends StatefulWidget {
-  const AddLine({super.key});
+class AddDownTown extends StatefulWidget {
+  const AddDownTown({super.key});
 
   @override
-  State<AddLine> createState() => _AddLineState();
+  State<AddDownTown> createState() => _AddDownTownState();
 }
 
 String? validatorMessage(String? value) {
   if (value == null || value.isEmpty) {
-    return 'يرجي إدخال اسم الخط';
+    return 'يرجي إدخال اسم المدينة';
   }
   return null;
 }
 
-class _AddLineState extends State<AddLine> {
+class _AddDownTownState extends State<AddDownTown> {
   @override
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
-    TextEditingController LineController = TextEditingController();
+    TextEditingController downTownController = TextEditingController();
 
     return Scaffold(
       backgroundColor: ColorManager.secondColor,
@@ -38,27 +40,27 @@ class _AddLineState extends State<AddLine> {
             key: _formKey,
             child: Column(
               children: [
-                SizedBox(height: 60.h),
+                SizedBox(height: 50.h),
                 LogoCircle(),
-                SizedBox(height: 60.h),
+                SizedBox(height: 47.h),
                 CustomTextField(
-                  hint: 'اسم الخط',
-                  controller: LineController,
+                  hint: 'اسم المدينة',
+                  controller: downTownController,
                   validator: validatorMessage,
                 ),
-                SizedBox(height: 40.h),
+                SizedBox(height: 20.h),
 
-                BlocConsumer<AddLineCubit, AddLineState>(
+                BlocConsumer<AddDownTownCubit, AddDownTownState>(
                   listener: (context, state) {
-                    if (state is AddLineError) {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text(state.message)));
-                    } else if (state is AddLineSuccess) {
+                    if (state is AddDownTownFailure) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(state.errorMessage)),
+                      );
+                    } else if (state is AddDownTownSuccess) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                            'تمت الإضافة بنجاح',
+                            state.successMessage,
                             style: TextStyles.white12Bold,
                           ),
                         ),
@@ -67,8 +69,8 @@ class _AddLineState extends State<AddLine> {
                     }
                   },
                   builder: (context, state) {
-                    print('stateLine is ${state}');
-                    if (state is AddLineLoading) {
+                    print('statedowntown is ${state}');
+                    if (state is AddDownTownLoading) {
                       return const Center(
                         child: CircularProgressIndicator(
                           color: ColorManager.primaryColor,
@@ -77,15 +79,11 @@ class _AddLineState extends State<AddLine> {
                     }
                     return PrimaryButton(
                       backgroundColor: ColorManager.primaryColor,
-                      text: 'اضافة خط',
+                      text: 'اضافة مدينة',
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          context.read<AddLineCubit>().AddLine(
-                            LineEntity(
-                              name: LineController.text,
-                              createdAt: DateTime.now(),
-                              updatedAt: DateTime.now(),
-                            ),
+                          context.read<AddDownTownCubit>().addDownTown(
+                            DownTownEntity(name: downTownController.text),
                           );
                         }
                       },
