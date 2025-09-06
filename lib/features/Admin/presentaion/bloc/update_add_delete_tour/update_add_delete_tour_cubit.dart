@@ -27,7 +27,7 @@ class UpdateAddDeleteTourCubit extends Cubit<UpdateAddDeleteTourState> {
         emit(UpdateAddDeleteTourError(_errorMessage(failure)));
       },
       (success) async {
-        await BlocProvider.of<TourCubit>(blocContext).getAllTours();
+        // await BlocProvider.of<TourCubit>(blocContext).getAllTours();
         emit(TourAdded(ADDED_SUCCESS_MESSAGE));
       },
     );
@@ -56,7 +56,7 @@ class UpdateAddDeleteTourCubit extends Cubit<UpdateAddDeleteTourState> {
       },
       (_) {
         print("Deleting tour: $tourId");
-        BlocProvider.of<TourCubit>(blocContext).getAllTours();
+        // BlocProvider.of<TourCubit>(blocContext).getAllTours();
         emit(TourDeleted(DELETED_SUCCESS_MESSAGE));
       },
     );

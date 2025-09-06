@@ -127,6 +127,7 @@ class AppRouter {
         builder: (context, state) {
           return MultiBlocProvider(
             providers: [
+              BlocProvider(create: (_) => di.setUp<TourCubit>()..getAllTours()),
               BlocProvider(create: (_) => di.setUp<DeleteUserCubit>()),
               BlocProvider(create: (_) => di.setUp<AddAdminSupervisorCubit>()),
               BlocProvider(
@@ -146,8 +147,6 @@ class AppRouter {
               BlocProvider(create: (_) => di.setUp<DeleteUniversityCubit>()),
               BlocProvider(create: (_) => di.setUp<DeleteLineCubit>()),
               BlocProvider(create: (_) => di.setUp<DeleteDownTownCubit>()),
-              BlocProvider(create: (_) => di.setUp<DeleteUserCubit>()),
-              BlocProvider(create: (_) => di.setUp<AddAdminSupervisorCubit>()),
             ],
             child: Builder(
               builder: (context) {

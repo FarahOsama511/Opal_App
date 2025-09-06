@@ -107,6 +107,12 @@ class _StudentListState extends State<StudentList> {
                 ),
               ),
               _buildSwitchButtons(),
+              IconButton(
+                icon: Icon(Icons.refresh),
+                onPressed: () {
+                  context.read<GetAllUserCubit>().fetchAllUsers();
+                },
+              ),
               Expanded(
                 child: Container(
                   width: double.infinity,
@@ -117,16 +123,21 @@ class _StudentListState extends State<StudentList> {
                         ScaffoldMessenger.of(
                           context,
                         ).showSnackBar(SnackBar(content: Text(state.message)));
-                      } else if (state is UserSuccess) {
+                      }
+                      if (state is UserSuccess) {
                         setState(() {
                           _users = state.user
                               .where((u) => u.status == 'active')
                               .toList();
+
                           _updateFilteredUsers();
                         });
                       }
+                      print("Filtered after update: ${_filteredUsers.length}");
                     },
+
                     builder: (context, state) {
+                      print("Builder triggered with state: $state");
                       if (state is UserSuccess) {
                         if (_filteredUsers.isEmpty) {
                           return Center(

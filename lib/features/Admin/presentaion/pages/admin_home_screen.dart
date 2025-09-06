@@ -86,11 +86,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                         index: currentIndex,
                         children: [
                           _buildJoinRequests(),
-                          BlocProvider(
-                            create: (_) => di.setUp<TourCubit>()
-                              ..getAllTours(), // تأكد من استدعاء getAllTours هنا
-                            child: const TripsScreen(),
-                          ),
+                          // تأكد من استدعاء getAllTours هنا
+                          const TripsScreen(),
 
                           const StudentList(),
 

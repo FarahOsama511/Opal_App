@@ -2,11 +2,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:opal_app/features/Admin/Domain/usecase/add_admin_supervisor.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/create_admin_supervisors/add_admin_supervisor_state.dart';
 import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
-import 'package:opal_app/features/user/presentaion/bloc/user_cubit.dart';
-
 import '../../../../../core/errors/failure.dart';
 import '../../../../../core/strings/failures.dart';
 import '../../../../../core/strings/messages.dart';
+import 'package:opal_app/features/user/presentaion/bloc/user_cubit.dart';
 
 class AddAdminSupervisorCubit extends Cubit<AddAdminSupervisorState> {
   final AddAdminSupervisorUseCase addAdminSupervisorUseCase;

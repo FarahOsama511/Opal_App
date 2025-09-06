@@ -51,12 +51,6 @@ class _AddSupervisorState extends State<AddSupervisor> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    // BlocProvider.of<LinesCubit>(context).getAllLiness();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
@@ -137,7 +131,6 @@ class _AddSupervisorState extends State<AddSupervisor> {
                         context,
                       ).showSnackBar(SnackBar(content: Text(state.message)));
                     } else if (state is AddAdminSupervisorSuccess) {
-                      context.read<GetAllUserCubit>().fetchAllUsers();
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
@@ -146,7 +139,8 @@ class _AddSupervisorState extends State<AddSupervisor> {
                           ),
                         ),
                       );
-                      context.go('/adminScreen');
+                      context.pop();
+                      BlocProvider.of<GetAllUserCubit>(context).fetchAllUsers();
                     }
                   },
                   builder: (context, state) {

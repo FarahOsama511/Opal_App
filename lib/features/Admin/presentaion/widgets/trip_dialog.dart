@@ -158,7 +158,7 @@ class _TripDetailsDialogState extends State<TripDetailsDialog> {
                           ),
                         ),
                       );
-                      BlocProvider.of<TourCubit>(context).getAllTours();
+                      //   BlocProvider.of<TourCubit>(context).getAllTours();
 
                       context.pop();
                     } else if (state is UpdateAddDeleteTourError) {
