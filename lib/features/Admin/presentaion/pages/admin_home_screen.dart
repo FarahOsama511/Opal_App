@@ -16,6 +16,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/custom_bottom_nav.dart';
 import '../widgets/join_request_card.dart';
 import 'add_trip_time.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_cubit.dart';
 
 class AdminHomeScreen extends StatefulWidget {
   const AdminHomeScreen({super.key});
@@ -34,6 +35,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     super.initState();
     BlocProvider.of<TourCubit>(context).getAllTours();
     BlocProvider.of<GetAllUserCubit>(context).fetchAllUsers();
+    BlocProvider.of<LinesCubit>(context).getAllLiness();
   }
 
   @override

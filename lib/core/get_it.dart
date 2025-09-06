@@ -31,7 +31,6 @@ import 'package:opal_app/features/Admin/presentaion/bloc/delete_down_town/delete
 import 'package:opal_app/features/Admin/presentaion/bloc/delete_line/delete_line_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/delete_user/delete_user_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_bloc/tour_cubit.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_id.dart/get_tour_id_cubit.dart';
 import 'package:opal_app/features/supervisor/bloc/get_university_by_id/get_university_by_id_cubit.dart';
 import 'package:opal_app/features/user/Data/datasource/select_tour_remote_data_source.dart';
 import 'package:opal_app/features/user/Data/datasource/university_data_source.dart';

@@ -135,9 +135,9 @@ class AppRouter {
                 create: (_) =>
                     di.setUp<GetAllDownTownCubit>()..fetchAllDownTowns(),
               ),
-              BlocProvider(
-                create: (_) => di.setUp<LinesCubit>()..getAllLiness(),
-              ),
+              // BlocProvider(
+              //   create: (_) => di.setUp<LinesCubit>()..getAllLiness(),
+              // ),
               BlocProvider(
                 create: (_) =>
                     di.setUp<GetAllUniversitiesCubit>()..fetchAlluniversities(),

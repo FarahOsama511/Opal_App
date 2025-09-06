@@ -36,7 +36,6 @@ class StudentBusApp extends StatelessWidget {
             BlocProvider(create: (_) => di.setUp<TourCubit>()),
             BlocProvider(create: (_) => di.setUp<LinesCubit>()),
             BlocProvider(create: (_) => di.setUp<UpdateAddDeleteTourCubit>()),
-            //  BlocProvider(create: (_) => di.setUp<GetTourIdCubit>()),
             BlocProvider(create: (_) => di.setUp<GetUniversityByIdCubit>()),
             BlocProvider(create: (_) => di.setUp<GetAllUserCubit>()),
           ],
