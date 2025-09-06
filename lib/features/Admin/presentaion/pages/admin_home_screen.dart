@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:opal_app/core/network/local_network.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/create_admin_supervisors/add_admin_supervisor_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/settings.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/student_list.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/trips.dart';
@@ -11,7 +10,6 @@ import 'package:opal_app/features/user/presentaion/bloc/user_state.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/get_it.dart' as di;
 import '../../../../core/resources/text_styles.dart';
-import '../bloc/delete_user/delete_user_cubit.dart';
 import '../bloc/get_tour_bloc/tour_cubit.dart';
 import '../widgets/add_menu.dart';
 import '../widgets/app_header.dart';
@@ -93,19 +91,9 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                               ..getAllTours(), // تأكد من استدعاء getAllTours هنا
                             child: const TripsScreen(),
                           ),
-                          MultiBlocProvider(
-                            providers: [
-                              BlocProvider<DeleteUserCubit>(
-                                create: (_) => di.setUp<DeleteUserCubit>(),
-                              ),
-                              BlocProvider<AddAdminSupervisorCubit>(
-                                create: (_) =>
-                                    di.setUp<AddAdminSupervisorCubit>(),
-                              ),
-                            ],
 
-                            child: const StudentList(),
-                          ),
+                          const StudentList(),
+
                           const SettingsScreen(),
                         ],
                       ),

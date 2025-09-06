@@ -294,7 +294,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
           );
         }
       },
-
       builder: (context, state) {
         print("state is Lines ${state}");
         if (state is LinesLoaded) {

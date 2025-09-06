@@ -108,31 +108,27 @@ class AppRouter {
         path: '/success',
         builder: (context, state) => ConfirmationSuccessScreen(),
       ),
-      GoRoute(
-        path: '/students',
-        builder: (context, state) {
-          return MultiBlocProvider(
-            providers: [
-              BlocProvider(
-                create: (_) => di.setUp<GetAllUserCubit>()..fetchAllUsers(),
-              ),
-              BlocProvider(create: (_) => di.setUp<DeleteUserCubit>()),
-              BlocProvider(create: (_) => di.setUp<AddAdminSupervisorCubit>()),
-            ],
-            child: Builder(
-              builder: (context) {
-                return const StudentList();
-              },
-            ),
-          );
-        },
-      ),
 
+      // GoRoute(
+      //   path: '/students',
+      //   builder: (context, state) {
+      //     return MultiBlocProvider(
+      //       providers: [],
+      //       child: Builder(
+      //         builder: (context) {
+      //           return const StudentList();
+      //         },
+      //       ),
+      //     );
+      //   },
+      // ),
       GoRoute(
         path: '/adminScreen',
         builder: (context, state) {
           return MultiBlocProvider(
             providers: [
+              BlocProvider(create: (_) => di.setUp<DeleteUserCubit>()),
+              BlocProvider(create: (_) => di.setUp<AddAdminSupervisorCubit>()),
               BlocProvider(
                 create: (_) => di.setUp<GetAllUserCubit>()..fetchAllUsers(),
               ),

@@ -6,7 +6,6 @@ import 'get_all_universities_state.dart';
 
 class GetAllUniversitiesCubit extends Cubit<GetAllUniversitiesState> {
   final GetAllUniveristiesUseCase getAllUniveristies;
-
   GetAllUniversitiesCubit(this.getAllUniveristies)
     : super(GetAllUniversitiesInitial());
   Future<void> fetchAlluniversities() async {

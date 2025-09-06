@@ -20,28 +20,37 @@ class UserRepoImpl extends UserRepo {
 
   @override
   Future<Either<Failure, List<UserEntity>>> getAllUsers() async {
+    try {
+      // 1️⃣ حاول تجيب المستخدمين من الكاش الأول
+      final localUsers = await userLocalDataSource.getUsers();
+      if (localUsers.isNotEmpty) {
+        // ✨ رجع الكاش بسرعة
+        Future.microtask(() async {
+          if (await networkInfo.isConnected) {
+            try {
+              // جدد الداتا من الـ API واحفظها
+              final remoteUsers = await userRemoteDataSource.getAllUser();
+              userLocalDataSource.saveUsers(remoteUsers);
+            } catch (_) {}
+          }
+        });
+        return Right(localUsers);
+      }
+    } catch (_) {
+      // لو الكاش فاضي أو حصل خطأ → نكمل تحت
+    }
+
+    // 2️⃣ لو مفيش كاش → fallback على الـ API
     if (await networkInfo.isConnected) {
       try {
-        final allUser = await userRemoteDataSource.getAllUser();
-        userLocalDataSource.saveUsers(allUser);
-        return Right(allUser);
+        final remoteUsers = await userRemoteDataSource.getAllUser();
+        userLocalDataSource.saveUsers(remoteUsers);
+        return Right(remoteUsers);
       } catch (e) {
-        try {
-          final localUsers = await userLocalDataSource.getUsers();
-          print("========${localUsers.length}==========");
-          return Right(localUsers);
-        } on EmptyCacheException {
-          return Left(EmptyCacheFailure());
-        }
+        return Left(ServerFailure());
       }
     } else {
-      try {
-        final localUsers = await userLocalDataSource.getUsers();
-        print("========${localUsers.length}==========");
-        return Right(localUsers);
-      } on EmptyCacheException {
-        return Left(EmptyCacheFailure());
-      }
+      return Left(EmptyCacheFailure());
     }
   }
 
