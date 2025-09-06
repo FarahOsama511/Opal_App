@@ -91,7 +91,7 @@ class UniversityDataSourceImpl implements UniversityDataSource {
         'Authorization': 'Bearer ${token}',
       },
     );
-    if (response == 204) {
+    if (response.statusCode == 204) {
       return unit;
     } else {
       print("status code is ${response.statusCode}");

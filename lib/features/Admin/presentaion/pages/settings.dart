@@ -114,6 +114,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 _filteredUniversities.removeWhere((u) => u.id == state.id);
                 _updateFiltered();
               });
+              print("========${state.message}");
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(

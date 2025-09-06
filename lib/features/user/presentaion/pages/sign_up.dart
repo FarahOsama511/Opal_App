@@ -64,10 +64,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
           child: BlocConsumer<AuthCubit, AuthState>(
             listener: (context, state) {
               if (state is AuthSuccess) {
-                context
-                    .read<GetAllUserCubit>()
-                    .fetchAllUsers(); // جلب كل المستخدمين مرة أخرى
-                context.go('/waiting'); // التنقل
+                // جلب كل المستخدمين مرة أخرى
+                context.go('/waiting');
+                BlocProvider.of<GetAllUserCubit>(context).fetchAllUsers();
+                // التنقل
               } else if (state is AuthFailure) {
                 print("${state.error}");
                 ScaffoldMessenger.of(
@@ -200,20 +200,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         backgroundColor: ColorManager.primaryColor,
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            context.read<AuthCubit>().register(
-                              RegisterEntity(
-                                user: UserEntity(
-                                  name: nameController.text,
-                                  phone: phoneController.text,
-                                  universityCardId: universityCardId.text,
-                                  university: selectedUniversity,
-                                  line: selectedLine,
-                                  universityId: selectedUniversity!.id,
-                                  downTown: selectedDownTown,
-                                  role: 'student',
-                                ),
-                              ),
-                            );
+                            context
+                                .read<AuthCubit>()
+                                .register(
+                                  RegisterEntity(
+                                    user: UserEntity(
+                                      name: nameController.text,
+                                      phone: phoneController.text,
+                                      universityCardId: universityCardId.text,
+                                      university: selectedUniversity,
+                                      line: selectedLine,
+                                      universityId: selectedUniversity!.id,
+                                      downTown: selectedDownTown,
+                                      role: 'student',
+                                    ),
+                                  ),
+                                )
+                                .then((_) {
+                                  // بعد ما ينجح الريجستر
+                                  context
+                                      .read<GetAllUserCubit>()
+                                      .fetchAllUsers(); // يحدث قائمة الأدمن
+                                });
                           }
                         },
                         text: 'تقديم الطلب',

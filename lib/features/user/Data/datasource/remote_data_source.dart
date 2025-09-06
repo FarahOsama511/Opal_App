@@ -31,6 +31,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(body),
     );
+
     print("=== login Response Status: ${response.statusCode} ===");
     print("=== login Response Body: ${response.body} ===");
     if (response.statusCode == 200) {
@@ -90,7 +91,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     String role,
   ) async {
     final body = {'email': email, 'password': password, 'role': role};
-
     final response = await client.post(
       Uri.parse('${Base_Url}auth/login'),
       headers: {'Content-Type': 'application/json'},

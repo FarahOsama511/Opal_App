@@ -94,7 +94,7 @@ Future<void> init() async {
   setUp.registerFactory(() => GetAllUniversitiesCubit(setUp()));
   setUp.registerFactory(() => AddLineCubit(setUp()));
   setUp.registerFactory(() => SelectionTourCubit(setUp(), setUp()));
-  setUp.registerFactory(() => GetTourIdCubit(setUp()));
+  // setUp.registerFactory(() => GetTourIdCubit(setUp()));
   setUp.registerFactory(() => DeleteUserCubit(setUp()));
   setUp.registerFactory(() => GetUniversityByIdCubit(setUp()));
   setUp.registerFactory(() => AddUniversityCubit(setUp()));
