@@ -29,8 +29,8 @@ class SettingsExpandableCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 6.h),
-      padding: EdgeInsets.all(14.w),
+      margin: EdgeInsets.only(top: 2.h, bottom: 1.h),
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 2.h),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16.r),

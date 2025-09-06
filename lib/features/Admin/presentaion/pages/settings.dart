@@ -426,8 +426,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(
+          Flexible(
             child: ElevatedButton(
               onPressed: () {
                 if (!isUniversitySelected) {
@@ -443,18 +444,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 backgroundColor: isUniversitySelected
                     ? ColorManager.primaryColor
                     : Colors.grey.shade300,
-                minimumSize: Size.fromHeight(38.h),
+                minimumSize: Size(100.w, 38.h),
+                padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 6.h),
               ),
-              child: Text(
-                'الجامعات',
-                style: isUniversitySelected
-                    ? TextStyles.white14Bold
-                    : TextStyles.black14Bold,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  'الجامعات',
+                  style: isUniversitySelected
+                      ? TextStyles.white14Bold
+                      : TextStyles.black14Bold,
+                ),
               ),
             ),
           ),
-          SizedBox(width: 12.w),
-          Expanded(
+          SizedBox(width: 8.w),
+          Flexible(
             child: ElevatedButton(
               onPressed: () {
                 if (!isLineSelected) {
@@ -470,18 +475,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 backgroundColor: isLineSelected
                     ? ColorManager.primaryColor
                     : Colors.grey.shade300,
-                minimumSize: Size.fromHeight(38.h),
+                minimumSize: Size(0, 38.h),
+                padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 6.h),
               ),
-              child: Text(
-                'الخطوط',
-                style: isLineSelected
-                    ? TextStyles.white14Bold
-                    : TextStyles.black14Bold,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  'الخطوط',
+                  style: isLineSelected
+                      ? TextStyles.white14Bold
+                      : TextStyles.black14Bold,
+                ),
               ),
             ),
           ),
-          SizedBox(width: 12.w),
-          Expanded(
+          SizedBox(width: 8.w),
+          Flexible(
             child: ElevatedButton(
               onPressed: () {
                 if (!isCitySelected) {
@@ -497,13 +506,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 backgroundColor: isCitySelected
                     ? ColorManager.primaryColor
                     : Colors.grey.shade300,
-                minimumSize: Size.fromHeight(38.h),
+                minimumSize: Size(0, 38.h),
+                padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 6.h),
               ),
-              child: Text(
-                'المدن',
-                style: isCitySelected
-                    ? TextStyles.white14Bold
-                    : TextStyles.black14Bold,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  'المدن',
+                  style: isCitySelected
+                      ? TextStyles.white14Bold
+                      : TextStyles.black14Bold,
+                ),
               ),
             ),
           ),
