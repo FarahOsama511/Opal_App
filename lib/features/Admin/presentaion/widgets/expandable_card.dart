@@ -53,7 +53,7 @@ class _ExpandableCardState extends State<ExpandableCard> {
 
     return Container(
       width: double.infinity,
-      margin: EdgeInsets.only(top: 2.h, bottom: 1.h),
+      margin: EdgeInsets.symmetric(vertical: 6.h),
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 2.h),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -67,7 +67,7 @@ class _ExpandableCardState extends State<ExpandableCard> {
         ],
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min, // يخلي الكارد يلتزم بمحتواه فقط
+        mainAxisSize: MainAxisSize.min,
         children: [
           InkWell(
             onLongPress: widget.onLongPress,
@@ -88,7 +88,7 @@ class _ExpandableCardState extends State<ExpandableCard> {
                         ? Icons.keyboard_arrow_up
                         : Icons.keyboard_arrow_down_rounded,
                     color: Colors.black,
-                    size: 22.sp, // صغرنا الأيقونة شوية
+                    size: 22.sp,
                   ),
                   onPressed: widget.onToggle,
                 ),
@@ -97,7 +97,7 @@ class _ExpandableCardState extends State<ExpandableCard> {
           ),
           if (widget.isExpanded)
             Padding(
-              padding: EdgeInsets.only(top: 6.h), // أقل من قبل
+              padding: EdgeInsets.only(top: 6.h),
               child: BlocBuilder<GetUniversityByIdCubit, GetUniversityByIdState>(
                 builder: (context, state) {
                   String universityName = 'غير متوفر';
