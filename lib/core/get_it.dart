@@ -27,6 +27,7 @@ import 'package:opal_app/features/Admin/Domain/usecase/get_tour_id_use_case.dart
 import 'package:opal_app/features/Admin/presentaion/bloc/add_down_town/add_down_town_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/add_lines/add_line_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/add_university/add_university_cubit.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/delete_down_town/delete_down_town_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/delete_line/delete_line_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/delete_user/delete_user_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_bloc/tour_cubit.dart';
@@ -101,6 +102,7 @@ Future<void> init() async {
   setUp.registerFactory(() => DeleteLineCubit(setUp()));
   setUp.registerFactory(() => GetAllDownTownCubit(setUp()));
   setUp.registerFactory(() => AddDownTownCubit(setUp()));
+  setUp.registerFactory(() => DeleteDownTownCubit(setUp()));
 
   //usecases
   setUp.registerLazySingleton(() => GetAllToursUseCase(setUp()));

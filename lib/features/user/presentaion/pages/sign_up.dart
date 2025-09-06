@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
 import 'package:opal_app/features/Admin/Domain/entities/down_town_entity.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_cubit.dart';
@@ -12,14 +13,13 @@ import 'package:opal_app/features/user/presentaion/bloc/get_all_downtowns/get_al
 import 'package:opal_app/features/user/presentaion/bloc/get_all_downtowns/get_all_down_town_state.dart';
 import 'package:opal_app/features/user/presentaion/bloc/get_all_universities/get_all_universities_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/get_all_universities/get_all_universities_state.dart';
-import 'package:opal_app/features/user/presentaion/pages/sign_in.dart';
-import 'package:opal_app/features/user/presentaion/pages/waiting_screen.dart';
 import '../../../../core/resources/text_styles.dart';
 import '../../../Admin/Domain/entities/line_entity.dart';
 import '../../../Admin/presentaion/widgets/custom_widgets.dart';
 import '../../../Admin/presentaion/widgets/text_field.dart';
 import '../../Domain/entities/authentity.dart';
 import '../../Domain/entities/university_entity.dart';
+import '../bloc/user_cubit.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -47,11 +47,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    BlocProvider.of<GetAllUniversitiesCubit>(context).fetchAlluniversities();
-    BlocProvider.of<LinesCubit>(context).getAllLiness();
-    BlocProvider.of<GetAllDownTownCubit>(context).fetchAllDownTowns();
+  void dispose() {
+    super.dispose();
+    nameController.dispose();
+    phoneController.dispose();
+    universityCardId.dispose();
+    otherUniversityController.dispose();
   }
 
   @override
@@ -63,12 +64,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
           child: BlocConsumer<AuthCubit, AuthState>(
             listener: (context, state) {
               if (state is AuthSuccess) {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const WaitingScreen(),
-                  ),
-                );
+                context
+                    .read<GetAllUserCubit>()
+                    .fetchAllUsers(); // جلب كل المستخدمين مرة أخرى
+                context.go('/waiting'); // التنقل
               } else if (state is AuthFailure) {
                 print("${state.error}");
                 ScaffoldMessenger.of(
@@ -233,12 +232,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           SizedBox(width: 4.w),
                           GestureDetector(
                             onTap: () {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const SignInScreen(),
-                                ),
-                              );
+                              context.go('/signin');
                             },
                             child: Text(
                               'سجل الدخول',

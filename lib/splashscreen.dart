@@ -1,92 +1,49 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'core/constants/constants.dart';
+import 'package:go_router/go_router.dart';
+import 'package:opal_app/core/constants/constants.dart';
+import 'package:opal_app/core/network/local_network.dart';
+import 'package:opal_app/core/resources/color_manager.dart';
 
-class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+class DeciderPage extends StatefulWidget {
+  const DeciderPage({super.key});
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  State<DeciderPage> createState() => _DeciderPageState();
 }
-class _SplashScreenState extends State<SplashScreen>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
-  bool isLoggedIn = false;
-  bool isStudent = false;
-  bool isAdmin = false;
 
-  checkToken() async {
-    if (token != null && token != "") {
+class _DeciderPageState extends State<DeciderPage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkAuth();
+    });
+  }
+
+  Future<void> _checkAuth() async {
+    token = CacheNetwork.getCacheData(key: 'access_token');
+    role = CacheNetwork.getCacheData(key: 'access_role');
+
+    if (token != null && token!.isNotEmpty) {
       if (role == 'student') {
-        isStudent = true;
-        isAdmin = false;
-        isLoggedIn = true;
-        Navigator.pushReplacementNamed(context, '/home');
+        context.go('/home');
       } else if (role == 'admin') {
-        isStudent = false;
-        isAdmin = true;
-        isLoggedIn = true;
-        Navigator.pushReplacementNamed(context, '/adminScreen');
+        context.go('/adminScreen');
       } else if (role == 'supervisor') {
-        isStudent = false;
-        isAdmin = false;
-        isLoggedIn = true;
-        Navigator.pushReplacementNamed(context, '/supervisorScreen');
+        context.go('/supervisorScreen');
+      } else {
+        context.go('/signin');
       }
     } else {
-      isStudent = false;
-      isAdmin = false;
-      isLoggedIn = false;
-      Navigator.pushReplacementNamed(context, '/signin');
+      context.go('/signin');
     }
   }
 
   @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 3),
-    );
-    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
-    _controller.forward();
-    Future.delayed(const Duration(seconds: 3), () async {
-      await checkToken();
-    });
-  }
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFE71A45),
+    return const Scaffold(
       body: Center(
-        child: FadeTransition(
-          opacity: _animation,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                'assets/logo.png',
-                width: 0.35.sw,
-              ),
-              SizedBox(height: 20.h),
-              Text(
-                'Opal',
-                style: TextStyle(
-                  fontSize: 40.sp,
-                  color: Colors.yellow,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.sp,
-                ),
-              ),
-            ],
-          ),
-        ),
+        child: CircularProgressIndicator(color: ColorManager.primaryColor),
       ),
     );
   }

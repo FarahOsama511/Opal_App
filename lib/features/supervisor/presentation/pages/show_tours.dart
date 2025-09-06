@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:opal_app/core/network/local_network.dart';
 import 'package:opal_app/features/Admin/presentaion/widgets/app_header.dart'
     show AppHeader;
@@ -93,7 +94,9 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
                               if (state is UserByIdSuccess) {
                                 widget.user = state.userById;
                                 print("user${widget.user}");
-                                print('LINEName:${state.userById.line!.name}');
+                                print(
+                                  'LINEName:${state.userById.line?.name ?? ""}',
+                                );
                                 lineName =
                                     state.userById.line?.name ?? 'غير معروف';
                               } else if (state is UserError) {
@@ -146,7 +149,7 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
                             await CacheNetwork.deleteCacheData(
                               key: 'access_token',
                             );
-                            Navigator.pushReplacementNamed(context, '/signin');
+                            context.go('/signin');
                           },
                         ),
                       ],
@@ -212,6 +215,7 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
                               final tours = state.tours
                                   .where(
                                     (tour) =>
+                                        tour.line.id != null &&
                                         widget.user.line?.id == tour.line.id,
                                   )
                                   .toList();
@@ -223,13 +227,14 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
                                   .toList();
 
                               final allUsers = studentInTours
-                                  .expand((tour) => tour.users!)
+                                  .expand((tour) => tour.users ?? [])
                                   .toList();
 
                               final allowedUniversities =
                                   widget.user.universitiesId ?? [];
 
                               _users = allUsers
+                                  .whereType<UserEntity>()
                                   .where(
                                     (user) => allowedUniversities.contains(
                                       user.university?.id,
@@ -238,23 +243,24 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
                                   .toList();
 
                               _updateFilteredUsers();
+
                               if (_filteredUsers.isEmpty) {
                                 return Center(
                                   child: Text(
-                                    'لا يوجد طلاب',
+                                    'لا يوجد طلاب مرتبطين بهذه الرحلات أو الجامعات',
                                     style: TextStyles.white20Bold,
                                   ),
                                 );
-                              }
-                              return Expanded(
-                                child: ListView.builder(
+                              } else {
+                                return ListView.builder(
                                   itemCount: _filteredUsers.length,
                                   itemBuilder: (context, index) {
                                     final student = _filteredUsers[index];
                                     return ExpandableCard(
-                                      name: student.name!,
-                                      phone: student.phone!,
-                                      universityId: student.university!.id!,
+                                      name: student.name ?? 'غير معروف',
+                                      phone: student.phone ?? "",
+                                      universityId:
+                                          student.university?.id ?? "",
                                       isSupervisor: false,
                                       isExpanded: _isExpandedStudents[index],
                                       onToggle: () {
@@ -265,8 +271,8 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
                                       },
                                     );
                                   },
-                                ),
-                              );
+                                );
+                              }
                             } else {
                               return const Center(
                                 child: CircularProgressIndicator(

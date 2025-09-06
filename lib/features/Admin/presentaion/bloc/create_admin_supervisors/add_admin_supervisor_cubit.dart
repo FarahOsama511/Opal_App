@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:opal_app/features/Admin/Domain/usecase/add_admin_supervisor.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/create_admin_supervisors/add_admin_supervisor_state.dart';
 import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
+import 'package:opal_app/features/user/presentaion/bloc/user_cubit.dart';
 
 import '../../../../../core/errors/failure.dart';
 import '../../../../../core/strings/failures.dart';
@@ -11,7 +12,7 @@ class AddAdminSupervisorCubit extends Cubit<AddAdminSupervisorState> {
   final AddAdminSupervisorUseCase addAdminSupervisorUseCase;
   AddAdminSupervisorCubit(this.addAdminSupervisorUseCase)
     : super(AddAdminSupervisorInitial());
-  Future<void> AddAdminORSupervisor(UserEntity user) async {
+  Future<void> AddAdminORSupervisor(UserEntity user, dynamic context) async {
     emit(AddAdminSupervisorLoading());
     final result = await addAdminSupervisorUseCase(user);
     result.fold(
@@ -19,6 +20,7 @@ class AddAdminSupervisorCubit extends Cubit<AddAdminSupervisorState> {
         emit(AddAdminSupervisorError(_errorMessage(failure)));
       },
       (_) {
+        BlocProvider.of<GetAllUserCubit>(context).fetchAllUsers();
         emit(AddAdminSupervisorSuccess(ADDED_SUCCESS_MESSAGE));
       },
     );

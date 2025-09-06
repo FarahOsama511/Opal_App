@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
 import 'package:opal_app/features/Admin/presentaion/widgets/custom_widgets.dart';
 import 'package:opal_app/features/Admin/presentaion/widgets/text_field.dart';
@@ -22,13 +23,20 @@ String? validation(String? value) {
   }
   return null;
 }
+
 class _AddUniversityState extends State<AddUniversity> {
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController universityController = TextEditingController();
+  TextEditingController countryController = TextEditingController();
+  @override
+  void dispose() {
+    universityController.dispose();
+    countryController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
-    TextEditingController universityController = TextEditingController();
-    TextEditingController countryController = TextEditingController();
-
     return Scaffold(
       backgroundColor: ColorManager.secondColor,
       resizeToAvoidBottomInset: true,
@@ -70,7 +78,7 @@ class _AddUniversityState extends State<AddUniversity> {
                             ),
                           ),
                         );
-                        Navigator.pushReplacementNamed(context, '/adminScreen');
+                        context.go('/adminScreen');
                       }
                     },
                     builder: (context, state) {
@@ -89,12 +97,12 @@ class _AddUniversityState extends State<AddUniversity> {
                           if (_formKey.currentState!.validate()) {
                             context.read<AddUniversityCubit>().AddUniversity(
                               UniversityEntity(
-                                id: "555555555555",
                                 location: countryController.text,
                                 name: universityController.text,
                                 createdAt: DateTime.now(),
                                 updatedAt: DateTime.now(),
                               ),
+                              context,
                             );
                           }
                         },
@@ -106,7 +114,7 @@ class _AddUniversityState extends State<AddUniversity> {
                     text: 'إلفاء ',
                     onPressed: () {
                       setState(() {
-                        Navigator.pop(context);
+                        context.pop();
                       });
                     },
                     backgroundColor: ColorManager.greyColor,

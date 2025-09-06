@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/add_lines/add_line_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/add_lines/add_line_state.dart';
@@ -24,11 +25,18 @@ String? validatorMessage(String? value) {
 }
 
 class _AddLineState extends State<AddLine> {
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController lineController = TextEditingController();
+  TextEditingController notesController = TextEditingController();
+  @override
+  void dispose() {
+    lineController.dispose();
+    notesController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
-    TextEditingController LineController = TextEditingController();
-
     return Scaffold(
       backgroundColor: ColorManager.secondColor,
       body: SafeArea(
@@ -43,7 +51,12 @@ class _AddLineState extends State<AddLine> {
                 SizedBox(height: 60.h),
                 CustomTextField(
                   hint: 'اسم الخط',
-                  controller: LineController,
+                  controller: lineController,
+                  validator: validatorMessage,
+                ),
+                CustomTextField(
+                  hint: 'ملاحظات',
+                  controller: notesController,
                   validator: validatorMessage,
                 ),
                 SizedBox(height: 40.h),
@@ -51,19 +64,23 @@ class _AddLineState extends State<AddLine> {
                 BlocConsumer<AddLineCubit, AddLineState>(
                   listener: (context, state) {
                     if (state is AddLineError) {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text(state.message)));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: ColorManager.greyColor,
+                          content: Text(state.message),
+                        ),
+                      );
                     } else if (state is AddLineSuccess) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
+                          backgroundColor: ColorManager.greyColor,
                           content: Text(
                             'تمت الإضافة بنجاح',
                             style: TextStyles.white12Bold,
                           ),
                         ),
                       );
-                      Navigator.pushReplacementNamed(context, '/adminScreen');
+                      context.go('/adminScreen');
                     }
                   },
                   builder: (context, state) {
@@ -82,10 +99,12 @@ class _AddLineState extends State<AddLine> {
                         if (_formKey.currentState!.validate()) {
                           context.read<AddLineCubit>().AddLine(
                             LineEntity(
-                              name: LineController.text,
+                              name: lineController.text,
+                              notes: notesController.text,
                               createdAt: DateTime.now(),
                               updatedAt: DateTime.now(),
                             ),
+                            context,
                           );
                         }
                       },
@@ -96,7 +115,7 @@ class _AddLineState extends State<AddLine> {
                 PrimaryButton(
                   text: 'إلغاء ',
                   onPressed: () {
-                    Navigator.pop(context);
+                    context.pop();
                   },
                   backgroundColor: ColorManager.greyColor,
                 ),

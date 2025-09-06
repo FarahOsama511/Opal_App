@@ -32,7 +32,7 @@ class _SupervisorStepState extends State<SupervisorStep> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
           'اختيار المشرف',
@@ -43,10 +43,8 @@ class _SupervisorStepState extends State<SupervisorStep> {
         BlocBuilder<GetAllUserCubit, UserState>(
           builder: (context, state) {
             if (state is UserLoading) {
-              return Center(
-                child: CircularProgressIndicator(
-                  color: ColorManager.primaryColor,
-                ),
+              return const CircularProgressIndicator(
+                color: ColorManager.primaryColor,
               );
             } else if (state is UserSuccess) {
               final allSupervisors = state.user
@@ -61,34 +59,23 @@ class _SupervisorStepState extends State<SupervisorStep> {
                     ),
                   )
                   .toList();
-              final SuperVisorEntity? selected = allSupervisors.firstWhere(
-                (s) => s.id == widget.selectedSupervisor?.id,
-                orElse: () => allSupervisors.isNotEmpty
-                    ? allSupervisors.first
-                    : SuperVisorEntity(
-                        id: '',
-                        name: '',
-                        email: '',
-                        phone: '',
-                        role: '',
-                      ),
+
+              print("Selected supervisor: ${widget.selectedSupervisor?.id}");
+              print(
+                "All supervisor IDs: ${allSupervisors.map((s) => s.id).toList()}",
               );
 
               return CustomDropdown<SuperVisorEntity>(
                 label: 'اختر مشرف',
-                value: selected,
+                value: null,
                 items: allSupervisors,
                 onChanged: widget.onSupervisorChanged,
-                displayString: (u) => u.name!,
+                displayString: (u) => u.name ?? '',
               );
             } else {
-              return Padding(
-                padding: EdgeInsets.symmetric(vertical: 10.h),
-                child: Text(
-                  'فشل في تحميل المشرفين',
-                  style: TextStyles.black14Bold.copyWith(fontSize: 14.sp),
-                  textAlign: TextAlign.center,
-                ),
+              return Text(
+                'فشل في تحميل المشرفين',
+                style: TextStyles.black14Bold.copyWith(fontSize: 14.sp),
               );
             }
           },

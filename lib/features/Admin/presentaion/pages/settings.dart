@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:opal_app/features/Admin/Domain/entities/down_town_entity.dart';
 import 'package:opal_app/features/Admin/Domain/entities/line_entity.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/delete_down_town/delete_down_town_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/delete_line/delete_line_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/delete_line/delete_line_state.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/delete_university/delete_university_cubit.dart';
@@ -9,10 +12,13 @@ import 'package:opal_app/features/Admin/presentaion/bloc/delete_university/delet
 import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_state.dart';
 import 'package:opal_app/features/user/Domain/entities/university_entity.dart';
+import 'package:opal_app/features/user/presentaion/bloc/get_all_downtowns/get_all_down_town_cubit.dart';
+import 'package:opal_app/features/user/presentaion/bloc/get_all_downtowns/get_all_down_town_state.dart';
 import 'package:opal_app/features/user/presentaion/bloc/get_all_universities/get_all_universities_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/get_all_universities/get_all_universities_state.dart';
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
+import '../bloc/delete_down_town/delete_down_town_state.dart';
 import '../widgets/SettingsExpandableCard.dart';
 import '../widgets/delete_dialog.dart';
 import '../widgets/search_field.dart';
@@ -22,6 +28,7 @@ class SettingsScreen extends StatefulWidget {
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
 }
+
 class _SettingsScreenState extends State<SettingsScreen> {
   bool isUniversitySelected = true;
   bool isLineSelected = false;
@@ -38,8 +45,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   List<LineEntity> _filteredLines = [];
 
   // المدن
-  List<String> _cities = [];
-  List<String> _filteredCities = [];
+  List<DownTownEntity> _cities = [];
+  List<DownTownEntity> _filteredCities = [];
 
   String _searchQuery = '';
 
@@ -51,18 +58,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (isUniversitySelected) {
       _filteredUniversities = _universities.where((u) {
         return _searchQuery.isEmpty ||
-            u.name?.toLowerCase().contains(_searchQuery.toLowerCase()) == true ||
+            u.name?.toLowerCase().contains(_searchQuery.toLowerCase()) ==
+                true ||
             u.location?.toLowerCase().contains(_searchQuery.toLowerCase()) ==
                 true;
       }).toList();
 
       if (_isExpandedUniversity.length != _filteredUniversities.length) {
-        _isExpandedUniversity = List.filled(_filteredUniversities.length, false);
+        _isExpandedUniversity = List.filled(
+          _filteredUniversities.length,
+          false,
+        );
       }
     } else if (isLineSelected) {
       _filteredLines = _lines.where((l) {
         return _searchQuery.isEmpty ||
-            l.name?.toLowerCase().contains(_searchQuery.toLowerCase()) == true ||
+            l.name?.toLowerCase().contains(_searchQuery.toLowerCase()) ==
+                true ||
             l.notes?.toLowerCase().contains(_searchQuery) == true;
       }).toList();
 
@@ -72,20 +84,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
     } else if (isCitySelected) {
       _filteredCities = _cities.where((c) {
         return _searchQuery.isEmpty ||
-            c.toLowerCase().contains(_searchQuery.toLowerCase());
+            c.name?.toLowerCase().contains(_searchQuery.toLowerCase()) == true;
       }).toList();
 
       if (_isExpandedCities.length != _filteredCities.length) {
         _isExpandedCities = List.filled(_filteredCities.length, false);
       }
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    BlocProvider.of<GetAllUniversitiesCubit>(context).fetchAlluniversities();
-    BlocProvider.of<LinesCubit>(context).getAllLiness();
   }
 
   @override
@@ -96,11 +101,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
           listener: (context, state) {
             if (state is DeleteUniversityError) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message, style: TextStyle(fontSize: 14.sp))),
+                SnackBar(
+                  content: Text(
+                    state.message,
+                    style: TextStyle(fontSize: 14.sp),
+                  ),
+                ),
               );
             } else if (state is DeleteUniversitySuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message, style: TextStyle(fontSize: 14.sp))),
+                SnackBar(
+                  content: Text(
+                    state.message,
+                    style: TextStyle(fontSize: 14.sp),
+                  ),
+                ),
               );
             }
           },
@@ -109,11 +124,46 @@ class _SettingsScreenState extends State<SettingsScreen> {
           listener: (context, state) {
             if (state is DeleteLineError) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message, style: TextStyle(fontSize: 14.sp))),
+                SnackBar(
+                  content: Text(
+                    state.message,
+                    style: TextStyle(fontSize: 14.sp),
+                  ),
+                ),
               );
             } else if (state is DeleteLineLoaded) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.deleteLine, style: TextStyle(fontSize: 14.sp))),
+                SnackBar(
+                  content: Text(
+                    state.deleteLine,
+                    style: TextStyle(fontSize: 14.sp),
+                  ),
+                ),
+              );
+            }
+          },
+        ),
+        BlocListener<DeleteDownTownCubit, DeleteDownTownState>(
+          listener: (context, state) {
+            if (state is DeleteDownTownError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: ColorManager.greyColor,
+                  content: Text(
+                    state.message,
+                    style: TextStyle(fontSize: 14.sp),
+                  ),
+                ),
+              );
+            } else if (state is DeleteDownTownSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: ColorManager.greyColor,
+                  content: Text(
+                    state.message,
+                    style: TextStyle(fontSize: 14.sp),
+                  ),
+                ),
               );
             }
           },
@@ -164,7 +214,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
       listener: (context, state) {
         if (state is GetAllUniversitiesError) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message, style: TextStyle(fontSize: 14.sp))),
+            SnackBar(
+              content: Text(state.message, style: TextStyle(fontSize: 14.sp)),
+            ),
           );
         } else if (state is GetAllUniversitiesSuccess) {
           setState(() {
@@ -176,14 +228,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
       builder: (context, state) {
         if (state is GetAllUniversitiesSuccess) {
           if (_filteredUniversities.isEmpty) {
-            return Center(child: Text("لا يوجد جامعات", style: TextStyles.white20Bold.copyWith(fontSize: 20.sp)));
+            return Center(
+              child: Text(
+                "لا يوجد جامعات",
+                style: TextStyles.white20Bold.copyWith(fontSize: 20.sp),
+              ),
+            );
           }
           return ListView.builder(
             padding: EdgeInsets.all(16.w),
             itemCount: _filteredUniversities.length,
             itemBuilder: (context, index) {
               final university = _filteredUniversities[index];
-              final activeUsers = university.users?.where((user) => user.status == "active").toList() ?? [];
+              final activeUsers =
+                  university.users
+                      ?.where((user) => user.status == "active")
+                      .toList() ??
+                  [];
               return SettingsExpandableCard(
                 name: university.name ?? 'لا يوجد اسم',
                 isSupervisor: false,
@@ -192,7 +253,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 usersCount: activeUsers.length,
                 onToggle: () {
                   setState(() {
-                    _isExpandedUniversity[index] = !_isExpandedUniversity[index];
+                    _isExpandedUniversity[index] =
+                        !_isExpandedUniversity[index];
                   });
                 },
                 deleteIcon: IconButton(
@@ -203,11 +265,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
           );
         } else if (state is GetAllUniversitiesLoading) {
-          return Center(child: CircularProgressIndicator(color: ColorManager.secondColor));
+          return Center(
+            child: CircularProgressIndicator(color: ColorManager.secondColor),
+          );
         } else {
           return Center(
             child: Text(
-              state is GetAllUniversitiesError ? state.message : "حدث خطأ أثناء التحميل",
+              state is GetAllUniversitiesError
+                  ? state.message
+                  : "حدث خطأ أثناء التحميل",
               style: TextStyles.white20Bold.copyWith(fontSize: 18.sp),
             ),
           );
@@ -222,11 +288,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
       listener: (context, state) {
         if (state is LinesError) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message, style: TextStyle(fontSize: 14.sp))),
+            SnackBar(
+              content: Text(state.message, style: TextStyle(fontSize: 14.sp)),
+            ),
           );
         }
       },
+
       builder: (context, state) {
+        print("state is Lines ${state}");
         if (state is LinesLoaded) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             setState(() {
@@ -234,8 +304,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _updateFiltered();
             });
           });
+          print("====${_filteredLines}");
           if (_filteredLines.isEmpty) {
-            return Center(child: Text("لا يوجد خطوط", style: TextStyles.white20Bold.copyWith(fontSize: 20.sp)));
+            return Center(
+              child: Text(
+                "لا يوجد خطوط",
+                style: TextStyles.white20Bold.copyWith(fontSize: 20.sp),
+              ),
+            );
           }
           return ListView.builder(
             padding: EdgeInsets.all(16.w),
@@ -260,7 +336,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
           );
         } else if (state is LinesLoading) {
-          return Center(child: CircularProgressIndicator(color: ColorManager.secondColor));
+          return Center(
+            child: CircularProgressIndicator(color: ColorManager.secondColor),
+          );
         } else {
           return Center(
             child: Text(
@@ -275,33 +353,71 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   // 🔹 المدن
   Widget _buildCitiesList() {
-    if (_filteredCities.isEmpty) {
-      return Center(child: Text("لا يوجد مدن", style: TextStyles.white20Bold.copyWith(fontSize: 20.sp)));
-    }
-    return ListView.builder(
-      padding: EdgeInsets.all(16.w),
-      itemCount: _filteredCities.length,
-      itemBuilder: (context, index) {
-        final city = _filteredCities[index];
-        return SettingsExpandableCard(
-          name: city,
-          isSupervisor: false,
-          isExpanded: _isExpandedCities[index],
-          onToggle: () {
+    return BlocConsumer<GetAllDownTownCubit, GetAllDownTownState>(
+      listener: (context, state) {
+        if (state is GetAllDownTownsError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message, style: TextStyle(fontSize: 14.sp)),
+            ),
+          );
+        }
+      },
+      builder: (context, state) {
+        if (state is GetAllDownTownsSuccess) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
             setState(() {
-              _isExpandedCities[index] = !_isExpandedCities[index];
+              _cities = state.getAllDownTowns;
+
+              _updateFiltered();
             });
-          },
-          deleteIcon: IconButton(
-            icon: Icon(Icons.delete, color: Colors.red, size: 22.sp),
-            onPressed: () {
-              setState(() {
-                _cities.removeAt(index);
-                _filteredCities.removeAt(index);
-              });
+          });
+          if (_filteredCities.isEmpty) {
+            return Center(
+              child: Text(
+                "لا يوجد مدن",
+                style: TextStyles.white20Bold.copyWith(fontSize: 20.sp),
+              ),
+            );
+          }
+          return ListView.builder(
+            padding: EdgeInsets.all(16.w),
+            itemCount: _filteredCities.length,
+            itemBuilder: (context, index) {
+              final city = _filteredCities[index];
+              return SettingsExpandableCard(
+                name: city.name ?? 'لا يوجد اسم',
+                location: city.name ?? 'غير متوفر',
+                isSupervisor: false,
+                isExpanded: _isExpandedCities[index],
+                usersCount: city.users?.length ?? 0,
+
+                onToggle: () {
+                  setState(() {
+                    _isExpandedCities[index] = !_isExpandedCities[index];
+                  });
+                },
+                deleteIcon: IconButton(
+                  icon: Icon(Icons.delete, color: Colors.red, size: 22.sp),
+                  onPressed: () => _showDeleteDialog(city),
+                ),
+              );
             },
-          ),
-        );
+          );
+        } else if (state is GetAllDownTownsLoading) {
+          return Center(
+            child: CircularProgressIndicator(color: ColorManager.secondColor),
+          );
+        } else {
+          return Center(
+            child: Text(
+              state is GetAllDownTownsError
+                  ? state.message
+                  : "حدث خطأ أثناء التحميل",
+              style: TextStyles.white20Bold.copyWith(fontSize: 18.sp),
+            ),
+          );
+        }
       },
     );
   }
@@ -325,10 +441,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: isUniversitySelected ? ColorManager.primaryColor : Colors.grey.shade300,
+                backgroundColor: isUniversitySelected
+                    ? ColorManager.primaryColor
+                    : Colors.grey.shade300,
                 minimumSize: Size.fromHeight(38.h),
               ),
-              child: Text('الجامعات', style: isUniversitySelected ? TextStyles.white14Bold : TextStyles.black14Bold),
+              child: Text(
+                'الجامعات',
+                style: isUniversitySelected
+                    ? TextStyles.white14Bold
+                    : TextStyles.black14Bold,
+              ),
             ),
           ),
           SizedBox(width: 12.w),
@@ -345,10 +468,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: isLineSelected ? ColorManager.primaryColor : Colors.grey.shade300,
+                backgroundColor: isLineSelected
+                    ? ColorManager.primaryColor
+                    : Colors.grey.shade300,
                 minimumSize: Size.fromHeight(38.h),
               ),
-              child: Text('الخطوط', style: isLineSelected ? TextStyles.white14Bold : TextStyles.black14Bold),
+              child: Text(
+                'الخطوط',
+                style: isLineSelected
+                    ? TextStyles.white14Bold
+                    : TextStyles.black14Bold,
+              ),
             ),
           ),
           SizedBox(width: 12.w),
@@ -365,10 +495,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: isCitySelected ? ColorManager.primaryColor : Colors.grey.shade300,
+                backgroundColor: isCitySelected
+                    ? ColorManager.primaryColor
+                    : Colors.grey.shade300,
                 minimumSize: Size.fromHeight(38.h),
               ),
-              child: Text('المدن', style: isCitySelected ? TextStyles.white14Bold : TextStyles.black14Bold),
+              child: Text(
+                'المدن',
+                style: isCitySelected
+                    ? TextStyles.white14Bold
+                    : TextStyles.black14Bold,
+              ),
             ),
           ),
         ],
@@ -392,6 +529,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             _handleDeleteLine(id);
           } else if (entity is UniversityEntity) {
             _handleDeleteUniversity(id);
+          } else if (entity is DownTownEntity) {
+            _handleDeleteCity(id);
           }
         },
       ),
@@ -404,7 +543,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _filteredLines.removeWhere((u) => u.id == lineId);
     });
     BlocProvider.of<DeleteLineCubit>(context).deleteLine(lineId);
-    Navigator.pop(context);
+    context.pop();
   }
 
   void _handleDeleteUniversity(String universityId) {
@@ -412,7 +551,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _universities.removeWhere((u) => u.id == universityId);
       _filteredUniversities.removeWhere((u) => u.id == universityId);
     });
-    BlocProvider.of<DeleteUniversityCubit>(context).deleteUser(universityId);
-    Navigator.pop(context);
+    BlocProvider.of<DeleteUniversityCubit>(
+      context,
+    ).deleteUniversity(universityId);
+    context.pop();
+  }
+
+  void _handleDeleteCity(String cityId) {
+    setState(() {
+      _cities.removeWhere((u) => u.id == cityId);
+      _filteredCities.removeWhere((u) => u.id == cityId);
+    });
+    BlocProvider.of<DeleteDownTownCubit>(context).deleteDownTown(cityId);
+    context.pop();
   }
 }

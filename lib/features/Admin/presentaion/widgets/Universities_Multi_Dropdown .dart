@@ -25,7 +25,9 @@ class _UniversitiesMultiDropdownState extends State<UniversitiesMultiDropdown> {
     return BlocBuilder<GetAllUniversitiesCubit, GetAllUniversitiesState>(
       builder: (context, state) {
         if (state is GetAllUniversitiesLoading) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(
+            child: CircularProgressIndicator(color: ColorManager.primaryColor),
+          );
         } else if (state is GetAllUniversitiesError) {
           return Center(child: Text("Error: ${state.message}"));
         } else if (state is GetAllUniversitiesSuccess) {

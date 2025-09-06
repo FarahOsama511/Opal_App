@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
 import 'package:opal_app/core/resources/text_styles.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_cubit.dart';
@@ -18,7 +19,7 @@ import '../widgets/trip_steps.dart';
 class EditTripBox extends StatefulWidget {
   final VoidCallback onClose;
   final Tour tour;
-  String tourId;
+  final String tourId;
   EditTripBox({
     super.key,
     required this.onClose,
@@ -107,13 +108,13 @@ class _EditTripTimeState extends State<EditTripBox> {
       line: LineEntity(id: selectedLine!.id, name: selectedLine!.name),
     );
 
-    context.read<UpdateAddDeleteTourCubit>().updateTour(tour);
+    context.read<UpdateAddDeleteTourCubit>().updateTour(tour, context);
   }
 
   void nextStep() {
-    if (currentStep < 3) {
+    if (currentStep < 4) {
       setState(() => currentStep++);
-    } else if (currentStep == 3) {
+    } else if (currentStep == 4) {
       submitTour();
     }
   }
@@ -199,6 +200,7 @@ class _EditTripTimeState extends State<EditTripBox> {
           onStartDateChanged: (val) => setState(() => startDate = val),
           onEndDateChanged: (val) => setState(() => endDate = val),
         );
+        break;
       case 3:
         stepContent = SupervisorStep(
           selectedSupervisor: selectedSupervisor,
@@ -220,7 +222,6 @@ class _EditTripTimeState extends State<EditTripBox> {
 
     return BlocListener<UpdateAddDeleteTourCubit, UpdateAddDeleteTourState>(
       listener: (context, state) {
-        print("=============================${state}====================");
         if (state is TourUpdated) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -248,8 +249,8 @@ class _EditTripTimeState extends State<EditTripBox> {
                   SizedBox(height: 20.h),
                   ElevatedButton(
                     onPressed: () {
+                      context.pop();
                       widget.onClose();
-                      Navigator.of(context).pop();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: ColorManager.primaryColor,

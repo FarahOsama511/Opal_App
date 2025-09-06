@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
 import 'package:opal_app/core/resources/text_styles.dart';
 import 'package:opal_app/features/user/presentaion/bloc/selection_tour/selection_tour_cubit.dart';
@@ -21,7 +22,9 @@ class CancelOREditTripDialog extends StatelessWidget {
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
       title: Text(
-        isCancel! ? 'هل أنت متأكد من إلغاء الرحلة؟' : 'هل أنت متأكد من تعديل الرحلة؟',
+        isCancel!
+            ? 'هل أنت متأكد من إلغاء الرحلة؟'
+            : 'هل أنت متأكد من تعديل الرحلة؟',
         style: TextStyles.black20Bold.copyWith(fontSize: 20.sp),
         textAlign: TextAlign.center,
       ),
@@ -32,9 +35,8 @@ class CancelOREditTripDialog extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () async {
-                print("tourId:$tourId");
                 await context.read<SelectionTourCubit>().UnconfirmTour(tourId);
-                Navigator.pushReplacementNamed(context, '/home');
+                context.go('/home');
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: ColorManager.primaryColor,
@@ -55,7 +57,7 @@ class CancelOREditTripDialog extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
-                Navigator.pop(context);
+                context.pop();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: ColorManager.greyColor,

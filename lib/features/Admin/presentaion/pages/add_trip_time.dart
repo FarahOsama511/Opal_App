@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:opal_app/features/Admin/Data/models/supervisor_model.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_state.dart';
 import '../../../../core/resources/text_styles.dart';
 import '../../Data/models/tour_model.dart';
 import '../../Domain/entities/line_entity.dart';
 import '../../Domain/entities/tour.dart';
+import '../bloc/get_tour_bloc/tour_cubit.dart';
 import '../widgets/calender_step.dart';
 import '../widgets/start_end_time_step.dart';
 import '../widgets/summary_step.dart';
 import '../widgets/supervisor_step.dart';
 import '../widgets/time_line_step.dart';
 import '../widgets/trip_steps.dart';
+import 'package:go_router/go_router.dart';
+import 'package:opal_app/core/resources/color_manager.dart';
 
 class AddTripBox extends StatefulWidget {
   final VoidCallback onClose;
@@ -81,7 +83,7 @@ class _AddTripBoxState extends State<AddTripBox> {
       line: LineEntity(id: selectedLine!.id, name: selectedLine!.name),
     );
 
-    context.read<UpdateAddDeleteTourCubit>().addTour(tour);
+    context.read<UpdateAddDeleteTourCubit>().addTour(tour, context);
   }
 
   void nextStep() {
@@ -167,6 +169,7 @@ class _AddTripBoxState extends State<AddTripBox> {
               content: Text(state.message, style: TextStyles.white12Bold),
             ),
           );
+
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
@@ -177,37 +180,39 @@ class _AddTripBoxState extends State<AddTripBox> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'تم التأكيد',
-                    style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
+                    'تم إضافة الرحلة بنجاح',
+                    style: TextStyle(
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   SizedBox(height: 20.h),
-                  Icon(
-                    Icons.check_circle,
-                    color: Colors.green,
-                    size: 100.w,
-                  ),
+                  Icon(Icons.check_circle, color: Colors.green, size: 100.w),
                   SizedBox(height: 20.h),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/adminScreen');
+                      context.pop();
                       widget.onClose();
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFE71A45),
+                      backgroundColor: ColorManager.primaryColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30.r),
                       ),
-                      minimumSize: Size.fromHeight(50.h),
+                      minimumSize: Size(double.infinity, 50.h),
                     ),
                     child: Text(
                       'العودة الى الرئيسية',
-                      style: TextStyles.white12Bold,
+                      style: TextStyles.white14Bold.copyWith(fontSize: 14.sp),
                     ),
                   ),
                 ],
               ),
             ),
           );
+
+          // ✅ تحديث الرحلات بعد الإضافة
+          BlocProvider.of<TourCubit>(context).getAllTours();
         } else if (state is UpdateAddDeleteTourError) {
           ScaffoldMessenger.of(
             context,

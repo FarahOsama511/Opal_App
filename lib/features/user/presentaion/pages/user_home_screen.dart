@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:opal_app/core/network/local_network.dart';
@@ -13,10 +14,10 @@ import '../../../Admin/Domain/entities/line_entity.dart';
 import '../../../Admin/Domain/entities/tour.dart';
 import '../../../Admin/presentaion/bloc/get_tour_bloc/tour_cubit.dart';
 import '../../../Admin/presentaion/bloc/get_tour_bloc/tour_state.dart';
-import '../../../Admin/presentaion/pages/trip_details.dart';
 import '../../../Admin/presentaion/widgets/app_header.dart';
 import '../../../Admin/presentaion/widgets/custom_widgets.dart';
 import '../bloc/selection_tour/selection_tour_cubit.dart';
+import '../../../../core/get_it.dart' as di;
 
 class UserHomeScreen extends StatefulWidget {
   final bool isTripConfirmed;
@@ -45,8 +46,6 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   void initState() {
     super.initState();
     isTripConfirmed = widget.isTripConfirmed;
-    BlocProvider.of<TourCubit>(context).getAllTours();
-
     tripTimer = Timer.periodic(Duration(minutes: 1), (_) {
       _checkTripTime();
     });
@@ -67,7 +66,8 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           selectedTour = null;
           selectedLine = null;
           selectedTime = null;
-          selectedTab = lastTripType == 'go' ? 1 : 0;
+
+          // selectedTab = lastTripType == 'go' ? 1 : 0;
         });
       }
     }
@@ -97,7 +97,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                 AppHeader(
                   onLogout: () async {
                     await CacheNetwork.deleteCacheData(key: 'access_token');
-                    Navigator.pushReplacementNamed(context, '/signin');
+                    context.go('/signin');
                   },
                   leadingWidget: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -130,7 +130,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                       ),
                       onPressed: () async {
                         await CacheNetwork.deleteCacheData(key: 'access_token');
-                        Navigator.pushReplacementNamed(context, '/signin');
+                        context.go('/signin');
                       },
                     ),
                   ),
@@ -177,17 +177,11 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                             ),
                           ),
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return TripDetailsScreen(
-                                    tour: context
-                                        .read<SelectionTourCubit>()
-                                        .tourCurrent!,
-                                  );
-                                },
-                              ),
+                            context.go(
+                              '/tripDetails',
+                              extra: context
+                                  .read<SelectionTourCubit>()
+                                  .tourCurrent!,
                             );
                           },
                           child: Text(
@@ -299,8 +293,15 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                         onPressed: () async {
                           final confirmed = await showDialog<bool>(
                             context: context,
-                            builder: (_) =>
-                                ConfirmDetailsScreen(tour: selectedTour!),
+                            builder: (dialogContext) =>
+                                BlocProvider<SelectionTourCubit>(
+                                  create: (_) => di.setUp<SelectionTourCubit>(),
+                                  child: Builder(
+                                    builder: (context) => ConfirmDetailsScreen(
+                                      tour: selectedTour!,
+                                    ),
+                                  ),
+                                ),
                           );
                           print('تم الدخول للدالة');
                           print('قيمة confirmed: $confirmed');
@@ -356,6 +357,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                       setState(() {
                         selectedTab = 0;
                         selectedLine = null;
+                        selectedTime = null;
                       });
                     },
               style: ElevatedButton.styleFrom(
@@ -386,6 +388,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                       setState(() {
                         selectedTab = 1;
                         selectedLine = null;
+                        selectedTime = null;
                       });
                     },
               style: ElevatedButton.styleFrom(

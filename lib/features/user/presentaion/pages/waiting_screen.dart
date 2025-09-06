@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
 
 import '../../../../core/resources/text_styles.dart';
@@ -19,7 +20,8 @@ class WaitingScreen extends StatelessWidget {
             ),
             actions: [
               TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
+                onPressed: () => context.pop(false),
+
                 child: Text('لا', style: TextStyles.black10Bold),
               ),
               TextButton(
@@ -27,7 +29,7 @@ class WaitingScreen extends StatelessWidget {
                   if (Platform.isAndroid) {
                     SystemNavigator.pop();
                   } else if (Platform.isIOS) {
-                    Navigator.of(context).pop(true);
+                    context.pop(true);
                   } else {
                     SystemNavigator.pop();
                   }

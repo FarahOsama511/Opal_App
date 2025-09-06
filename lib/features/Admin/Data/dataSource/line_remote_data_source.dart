@@ -3,7 +3,6 @@ import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
 import 'package:opal_app/core/constants/constants.dart';
 import 'package:opal_app/features/Admin/Data/models/line_model.dart';
-
 import '../../../../core/errors/exceptions.dart';
 import '../../Domain/entities/line_entity.dart';
 
@@ -38,7 +37,7 @@ class LineRemoteDataSourceImpl extends LineRemoteDataSource {
 
   @override
   Future<Unit> AddLine(LineEntity line) async {
-    final body = jsonEncode({'name': line.name});
+    final body = jsonEncode({'name': line.name, 'notes': line.notes});
     final response = await client.post(
       Uri.parse('${Base_Url}lines'),
       headers: {

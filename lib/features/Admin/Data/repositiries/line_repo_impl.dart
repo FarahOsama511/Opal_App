@@ -6,7 +6,6 @@ import 'package:opal_app/features/Admin/Domain/reporistires/line_repo.dart';
 import '../../../../core/errors/exceptions.dart';
 import '../../../../core/network/network_info.dart';
 import '../../Domain/entities/line_entity.dart';
-import '../../Domain/entities/tour.dart';
 import '../dataSource/line_local_data_source.dart';
 
 class LineRepoImpl extends LineRepo {
@@ -19,33 +18,37 @@ class LineRepoImpl extends LineRepo {
     required this.lineLocalDataSource,
   });
   @override
+  @override
   Future<Either<Failure, List<LineEntity>>> getAllLines() async {
+    try {
+      final localLines = await lineLocalDataSource.getLines();
+      if (localLines.isNotEmpty) {
+        Future.microtask(() async {
+          if (await networkInfo.isConnected) {
+            try {
+              final remoteLines = await remoteDataSource.getAllLines();
+              lineLocalDataSource.saveLines(remoteLines);
+            } catch (_) {}
+          }
+        });
+        return Right(localLines);
+      }
+    } catch (_) {}
     if (await networkInfo.isConnected) {
       try {
-        final Lines = await remoteDataSource.getAllLines();
-        lineLocalDataSource.saveLines(Lines);
-        return Right(Lines);
+        final lines = await remoteDataSource.getAllLines();
+        lineLocalDataSource.saveLines(lines);
+        return Right(lines);
       } catch (e) {
-        try {
-          final localLines = await lineLocalDataSource.getLines();
-          print("========${localLines.length}==========");
-          return Right(localLines);
-        } on EmptyCacheException {
-          return Left(EmptyCacheFailure());
-        }
+        return Left(ServerFailure());
       }
     } else {
-      final localLines = await lineLocalDataSource.getLines();
-      try {
-        return Right(localLines);
-      } on EmptyCacheException {
-        return Left(EmptyCacheFailure());
-      }
+      return Left(EmptyCacheFailure());
     }
   }
 
   Future<Either<Failure, Unit>> AddLine(LineEntity Line) async {
-    final LineModel lineModel = LineModel(name: Line.name);
+    final LineModel lineModel = LineModel(name: Line.name, notes: Line.notes);
     if (await networkInfo.isConnected) {
       try {
         await remoteDataSource.AddLine(lineModel);

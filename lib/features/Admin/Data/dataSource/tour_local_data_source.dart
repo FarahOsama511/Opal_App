@@ -8,6 +8,7 @@ import 'package:opal_app/features/Admin/Data/models/tour_model.dart';
 abstract class LocalDataSource {
   Future<List<TourModel>> getTours();
   Future<Unit> saveTours(List<TourModel> tours);
+  Future<bool> hasTours();
 }
 
 class TourLocalDataSourceImpl implements LocalDataSource {
@@ -35,5 +36,11 @@ class TourLocalDataSourceImpl implements LocalDataSource {
       value: jsonEncode(tourModelToJson),
     );
     return unit;
+  }
+
+  @override
+  Future<bool> hasTours() async {
+    final jsonString = CacheNetwork.getCacheData(key: 'SAVE_TOURS');
+    return jsonString != null && jsonString.isNotEmpty;
   }
 }

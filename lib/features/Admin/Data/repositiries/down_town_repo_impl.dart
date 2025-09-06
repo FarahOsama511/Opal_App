@@ -19,28 +19,36 @@ class DownTownRepoImpl extends DownTownRepo {
     required this.localDataSource,
   });
   @override
+  @override
   Future<Either<Failure, List<DownTownEntity>>> getAllDownTown() async {
+    try {
+      // 1️⃣ جرّب تعرض الكاش الأول لو موجود
+      final localDownTowns = await localDataSource.getDownTown();
+      if (localDownTowns.isNotEmpty) {
+        // رجّعهم بسرعة للمستخدم
+        Future.microtask(() async {
+          if (await networkInfo.isConnected) {
+            try {
+              final remoteDownTowns = await downTownRemoteDataSource
+                  .getAllDownTown();
+              localDataSource.saveDownTown(remoteDownTowns);
+            } catch (_) {}
+          }
+        });
+        return Right(localDownTowns);
+      }
+    } catch (_) {}
+
     if (await networkInfo.isConnected) {
       try {
-        final downTowns = await downTownRemoteDataSource.getAllDownTown();
-        localDataSource.saveDownTown(downTowns);
-        return Right(downTowns);
+        final remoteDownTowns = await downTownRemoteDataSource.getAllDownTown();
+        localDataSource.saveDownTown(remoteDownTowns);
+        return Right(remoteDownTowns);
       } catch (e) {
-        try {
-          final localDownTown = await localDataSource.getDownTown();
-          print("========${localDownTown.length}==========");
-          return Right(localDownTown);
-        } on EmptyCacheException {
-          return Left(EmptyCacheFailure());
-        }
+        return Left(ServerFailure());
       }
     } else {
-      final localDownTown = await localDataSource.getDownTown();
-      try {
-        return Right(localDownTown);
-      } on EmptyCacheException {
-        return Left(EmptyCacheFailure());
-      }
+      return Left(EmptyCacheFailure());
     }
   }
 

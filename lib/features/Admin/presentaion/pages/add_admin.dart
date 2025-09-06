@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
 import 'package:opal_app/features/Admin/Data/models/add_admin_supervisor_model.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/create_admin_supervisors/add_admin_supervisor_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/create_admin_supervisors/add_admin_supervisor_state.dart';
-import 'package:opal_app/features/Admin/presentaion/pages/admin_home_screen.dart';
 import '../widgets/custom_widgets.dart';
 import '../widgets/text_field.dart';
 
@@ -29,6 +29,15 @@ class _AddAdminState extends State<AddAdmin> {
       return 'هذا الحقل مطلوب';
     }
     return null;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    nameController.dispose();
+    phoneController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
   }
 
   @override
@@ -72,24 +81,29 @@ class _AddAdminState extends State<AddAdmin> {
                 BlocConsumer<AddAdminSupervisorCubit, AddAdminSupervisorState>(
                   listener: (context, state) {
                     if (state is AddAdminSupervisorError) {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text(state.message)));
-                    } else if (state is AddAdminSupervisorSuccess) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('تمت الإضافة بنجاح')),
-                      );
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const AdminHomeScreen(),
+                        SnackBar(
+                          content: Text(state.message),
+                          backgroundColor: ColorManager.greyColor,
                         ),
                       );
+                    } else if (state is AddAdminSupervisorSuccess) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('تمت الإضافة بنجاح'),
+                          backgroundColor: ColorManager.greyColor,
+                        ),
+                      );
+                      context.go('/adminScreen');
                     }
                   },
                   builder: (context, state) {
                     if (state is AddAdminSupervisorLoading) {
-                      return const Center(child: CircularProgressIndicator());
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: ColorManager.primaryColor,
+                        ),
+                      );
                     }
                     return PrimaryButton(
                       backgroundColor: ColorManager.primaryColor,
@@ -106,6 +120,7 @@ class _AddAdminState extends State<AddAdmin> {
                                   email: emailController.text,
                                   role: "admin",
                                 ),
+                                context,
                               );
                         }
                       },
@@ -114,9 +129,9 @@ class _AddAdminState extends State<AddAdmin> {
                 ),
                 SizedBox(height: 20.h),
                 PrimaryButton(
-                  text: 'إلفاء ',
+                  text: 'إلغاء ',
                   onPressed: () {
-                    Navigator.pop(context);
+                    context.pop();
                   },
                   backgroundColor: ColorManager.greyColor,
                 ),

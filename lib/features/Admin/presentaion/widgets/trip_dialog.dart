@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
 import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
@@ -116,13 +117,13 @@ class _TripDetailsDialogState extends State<TripDetailsDialog> {
                 SizedBox(height: 20.h),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    context.pop();
                     showDialog(
                       context: context,
                       builder: (context) => Dialog(
                         backgroundColor: Colors.transparent,
                         child: EditTripBox(
-                          onClose: () => Navigator.pop(context),
+                          onClose: () => context.pop(),
                           tour: widget.selectedtour,
                           tourId: widget.tourId,
                         ),
@@ -142,18 +143,44 @@ class _TripDetailsDialogState extends State<TripDetailsDialog> {
                   ),
                 ),
                 SizedBox(height: 12.h),
-                BlocBuilder<UpdateAddDeleteTourCubit, UpdateAddDeleteTourState>(
-                  builder: (context, state) {
-                    if (state is UpdateAddDeleteTourLoading) {
-                      return Center(child: CircularProgressIndicator());
+                BlocConsumer<
+                  UpdateAddDeleteTourCubit,
+                  UpdateAddDeleteTourState
+                >(
+                  listener: (context, state) {
+                    if (state is TourDeleted) {
+                      // لو الحذف نجح
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'تم حذف الرحلة بنجاح',
+                            style: TextStyles.white12Bold,
+                          ),
+                        ),
+                      );
+                      BlocProvider.of<TourCubit>(context).getAllTours();
+
+                      context.pop();
+                    } else if (state is UpdateAddDeleteTourError) {
+                      // لو حصل خطأ في الحذف
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            state.message,
+                            style: TextStyles.white12Bold,
+                          ),
+                        ),
+                      );
                     }
+                  },
+                  builder: (context, state) {
+                    // الزرار موجود طول الوقت
                     return OutlinedButton(
                       onPressed: () {
                         context.read<UpdateAddDeleteTourCubit>().deleteTour(
                           widget.tourId,
+                          context,
                         );
-                        Navigator.pop(context);
-                        BlocProvider.of<TourCubit>(context).getAllTours();
                       },
                       style: OutlinedButton.styleFrom(
                         foregroundColor: ColorManager.primaryColor,
@@ -166,17 +193,24 @@ class _TripDetailsDialogState extends State<TripDetailsDialog> {
                         ),
                         minimumSize: Size.fromHeight(50.h),
                       ),
-                      child: Text(
-                        'حذف الرحلة',
-                        style: TextStyles.red12Bold.copyWith(fontSize: 12.sp),
-                      ),
+                      child: state is UpdateAddDeleteTourLoading
+                          ? const CircularProgressIndicator(
+                              color: ColorManager.primaryColor,
+                            )
+                          : Text(
+                              'حذف الرحلة',
+                              style: TextStyles.red12Bold.copyWith(
+                                fontSize: 12.sp,
+                              ),
+                            ),
                     );
                   },
                 ),
+
                 SizedBox(height: 12.h),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    context.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey,

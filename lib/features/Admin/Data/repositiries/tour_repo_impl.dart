@@ -12,11 +12,13 @@ class TourRepoImpl extends ToursRepository {
   final LocalDataSource localDataSource;
   final TourRemoteDataSource remoteDataSource;
   final NetworkInfo networkInfo;
+
   TourRepoImpl(
     this.networkInfo, {
     required this.localDataSource,
     required this.remoteDataSource,
   });
+
   @override
   Future<Either<Failure, List<Tour>>> getAllTours() async {
     if (await networkInfo.isConnected) {

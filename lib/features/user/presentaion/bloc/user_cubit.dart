@@ -98,10 +98,15 @@ class GetAllUserCubit extends Cubit<UserState> {
           emit(UserError(_errorMessage(failure)));
         },
         (userById) async {
-          emit(UserByIdSuccess(userById));
-          userId = userById.id!;
-          lineName = userById.line!.name;
-          print(" User successfully: ${userById}");
+          if (userById != null) {
+            emit(UserByIdSuccess(userById));
+            userId = userById.id ?? "";
+            lineName = userById.line?.name ?? "";
+            print("User successfully: $userById");
+          } else {
+            emit(UserError("المستخدم غير موجود"));
+            print("UserById returned null");
+          }
         },
       );
     } catch (e) {

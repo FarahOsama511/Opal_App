@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
 
@@ -52,7 +53,7 @@ class AddMenu extends StatelessWidget {
 
   Widget _buildAddOption(BuildContext context, String title, String route) {
     return TextButton(
-      onPressed: () => Navigator.pushNamed(context, route),
+      onPressed: () => context.push(route),
       style: TextButton.styleFrom(
         foregroundColor: ColorManager.blackColor,
         alignment: Alignment.centerRight,

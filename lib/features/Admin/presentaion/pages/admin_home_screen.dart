@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:opal_app/core/network/local_network.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/create_admin_supervisors/add_admin_supervisor_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/settings.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/student_list.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/trips.dart';
-import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
 import 'package:opal_app/features/user/presentaion/bloc/user_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/user_state.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../core/get_it.dart' as di;
 import '../../../../core/resources/text_styles.dart';
+import '../bloc/delete_user/delete_user_cubit.dart';
+import '../bloc/get_tour_bloc/tour_cubit.dart';
 import '../widgets/add_menu.dart';
 import '../widgets/app_header.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,12 +32,6 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   int currentIndex = 0;
   bool showAddTripBox = false;
   int? expandedIndex;
-
-  @override
-  void initState() {
-    super.initState();
-    BlocProvider.of<GetAllUserCubit>(context).fetchAllUsers();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +70,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                           await CacheNetwork.deleteCacheData(
                             key: 'access_token',
                           );
-                          Navigator.pushReplacementNamed(context, '/signin');
+                          context.go('/signin');
                         },
                         showAddButton: true,
                         onAddPressed: () =>
@@ -90,9 +88,24 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                         index: currentIndex,
                         children: [
                           _buildJoinRequests(),
-                          // الجزء الأحمر هيبقى جاي فوق الأبيض
-                          const TripsScreen(),
-                          const StudentList(),
+                          BlocProvider(
+                            create: (_) => di.setUp<TourCubit>()
+                              ..getAllTours(), // تأكد من استدعاء getAllTours هنا
+                            child: const TripsScreen(),
+                          ),
+                          MultiBlocProvider(
+                            providers: [
+                              BlocProvider<DeleteUserCubit>(
+                                create: (_) => di.setUp<DeleteUserCubit>(),
+                              ),
+                              BlocProvider<AddAdminSupervisorCubit>(
+                                create: (_) =>
+                                    di.setUp<AddAdminSupervisorCubit>(),
+                              ),
+                            ],
+
+                            child: const StudentList(),
+                          ),
                           const SettingsScreen(),
                         ],
                       ),
@@ -135,7 +148,6 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     );
   }
 
-  /// ===== الجزء الأحمر (طلبات الانضمام) =====
   Widget _buildJoinRequests() {
     return Container(
       width: double.infinity,
@@ -161,6 +173,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 }
               },
               builder: (context, state) {
+                print("Current state: $state");
+
                 if (state is UserSuccess) {
                   final unactivatedUsers = state.user
                       .where((u) => u.status == 'pending')

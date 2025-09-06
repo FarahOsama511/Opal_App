@@ -62,11 +62,7 @@ class UniversityDataSourceImpl implements UniversityDataSource {
 
   @override
   Future<UniversityModel> addUniversity(UniversityModel university) async {
-    final body = {
-      'id': university.id,
-      'name': university.name,
-      'location': university.location,
-    };
+    final body = {'name': university.name, 'location': university.location};
     final response = await client.post(
       Uri.parse('${Base_Url}universities'),
       headers: {

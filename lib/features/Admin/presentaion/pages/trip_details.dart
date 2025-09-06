@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart' as intl;
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
@@ -45,7 +46,9 @@ class TripDetailsScreen extends StatelessWidget {
                           child: Text(
                             'رحلة آمنة\nصحبتك السلامة!',
                             textAlign: TextAlign.right,
-                            style: TextStyles.black20Bold.copyWith(fontSize: 20.sp),
+                            style: TextStyles.black20Bold.copyWith(
+                              fontSize: 20.sp,
+                            ),
                           ),
                         ),
                         IconButton(
@@ -55,7 +58,7 @@ class TripDetailsScreen extends StatelessWidget {
                             size: 24.sp,
                           ),
                           onPressed: () {
-                            Navigator.pop(context);
+                            context.pop();
                           },
                         ),
                       ],
@@ -73,7 +76,10 @@ class TripDetailsScreen extends StatelessWidget {
                         ),
                       ),
                       child: SingleChildScrollView(
-                        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 20.h,
+                        ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
@@ -126,7 +132,8 @@ class _InfoCardState extends State<_InfoCard> {
             _InfoRow(title: 'الخط', value: widget.tour.line.name ?? ''),
             _InfoRow(
               title: 'ميعاد الذهاب',
-              value: '${intl.DateFormat('HH:mm').format(widget.tour.leavesAt)} صباحاً',
+              value:
+                  '${intl.DateFormat('HH:mm').format(widget.tour.leavesAt)} صباحاً',
             ),
             _InfoRow(
               title: 'تاريخ اليوم',
@@ -174,7 +181,8 @@ class _ActionButtons extends StatelessWidget {
           onPressed: () {
             showDialog(
               context: context,
-              builder: (context) => CancelOREditTripDialog(tourId: tourId, isCancel: false),
+              builder: (context) =>
+                  CancelOREditTripDialog(tourId: tourId, isCancel: false),
             );
           },
         ),
@@ -186,7 +194,8 @@ class _ActionButtons extends StatelessWidget {
           onPressed: () {
             showDialog(
               context: context,
-              builder: (context) => CancelOREditTripDialog(tourId: tourId, isCancel: true),
+              builder: (context) =>
+                  CancelOREditTripDialog(tourId: tourId, isCancel: true),
             );
           },
         ),

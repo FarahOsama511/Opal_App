@@ -69,13 +69,6 @@ class SuperVisorEntity extends Equatable {
   });
 
   @override
-  List<Object?> get props => [
-    id,
-    name,
-    phone,
-    email,
-    role,
-    createdAt,
-    updatedAt,
-  ];
+  @override
+  List<Object?> get props => [id];
 }

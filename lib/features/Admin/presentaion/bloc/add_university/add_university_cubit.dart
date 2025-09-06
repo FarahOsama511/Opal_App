@@ -5,11 +5,15 @@ import 'package:opal_app/features/user/Domain/entities/university_entity.dart';
 import 'package:opal_app/features/user/Domain/usecases/add_university_usecase.dart';
 import '../../../../../core/errors/failure.dart';
 import '../../../../../core/strings/failures.dart';
+import '../../../../user/presentaion/bloc/get_all_universities/get_all_universities_cubit.dart';
 
 class AddUniversityCubit extends Cubit<AddUniversityState> {
   final AddUniversityUsecase addUniversityUsecase;
   AddUniversityCubit(this.addUniversityUsecase) : super(AddUniversityInitial());
-  Future<void> AddUniversity(UniversityEntity university) async {
+  Future<void> AddUniversity(
+    UniversityEntity university,
+    dynamic context,
+  ) async {
     emit(AddUniversityLoading());
     final result = await addUniversityUsecase(university);
     result.fold(
@@ -17,6 +21,9 @@ class AddUniversityCubit extends Cubit<AddUniversityState> {
         emit(AddUniversityFailure(_errorMessage(failure)));
       },
       (_) {
+        BlocProvider.of<GetAllUniversitiesCubit>(
+          context,
+        ).fetchAlluniversities();
         emit(AddUniversitySuccess(ADDED_SUCCESS_MESSAGE));
       },
     );

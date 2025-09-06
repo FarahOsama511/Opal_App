@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
 import 'package:opal_app/features/user/presentaion/bloc/auth_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/auth_state.dart';
-import 'package:opal_app/features/user/presentaion/pages/sign_up.dart';
-import 'package:opal_app/features/user/presentaion/pages/user_home_screen.dart';
 import '../../../../core/resources/text_styles.dart';
-import '../../../Admin/presentaion/pages/admin_home_screen.dart';
 import '../../../Admin/presentaion/widgets/custom_widgets.dart';
 import '../../../Admin/presentaion/widgets/text_field.dart';
-import '../../../supervisor/presentation/pages/show_tours.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -27,9 +24,9 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   void dispose() {
+    super.dispose();
     identifierController.dispose();
     credentialController.dispose();
-    super.dispose();
   }
 
   String? _validateIdentifier(String? value) {
@@ -164,22 +161,17 @@ class _SignInScreenState extends State<SignInScreen> {
 
     switch (role) {
       case 'student':
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const UserHomeScreen()),
-        );
+        context.go('/home');
+
         break;
       case 'supervisor':
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => ShowToursBySuperVisor(user: user)),
-        );
+        print("user is $user");
+        context.go('/supervisorScreen', extra: user);
+
         break;
       case 'admin':
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const AdminHomeScreen()),
-        );
+        context.go('/adminScreen');
+
         break;
     }
   }
@@ -191,10 +183,7 @@ class _SignInScreenState extends State<SignInScreen> {
         Text('ليس لديك حساب؟', style: TextStyles.grey14Regular),
         SizedBox(width: 3.w),
         GestureDetector(
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const SignUpScreen()),
-          ),
+          onTap: () => context.go('/signup'),
           child: Text('قدم طلب', style: TextStyles.red12Bold),
         ),
       ],

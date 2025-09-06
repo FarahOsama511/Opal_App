@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:opal_app/features/Admin/Domain/usecase/add_tour.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_bloc/tour_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_state.dart';
 import '../../../../../core/errors/failure.dart';
 import '../../../../../core/strings/failures.dart';
@@ -17,20 +18,22 @@ class UpdateAddDeleteTourCubit extends Cubit<UpdateAddDeleteTourState> {
     this.deleteTourUseCase,
     this.updateTourUseCase,
   ) : super(UpdateAddDeleteTourInitial());
-  Future<void> addTour(Tour tour) async {
+  Future<void> addTour(Tour tour, dynamic blocContext) async {
     emit(UpdateAddDeleteTourLoading());
     final result = await addTourUseCase(tour);
+
     result.fold(
       (failure) {
         emit(UpdateAddDeleteTourError(_errorMessage(failure)));
       },
-      (result) async {
+      (success) async {
+        await BlocProvider.of<TourCubit>(blocContext).getAllTours();
         emit(TourAdded(ADDED_SUCCESS_MESSAGE));
       },
     );
   }
 
-  Future<void> updateTour(Tour tour) async {
+  Future<void> updateTour(Tour tour, dynamic blocContext) async {
     emit(UpdateAddDeleteTourLoading());
     final result = await updateTourUseCase(tour);
     result.fold(
@@ -38,12 +41,13 @@ class UpdateAddDeleteTourCubit extends Cubit<UpdateAddDeleteTourState> {
         emit(UpdateAddDeleteTourError(_errorMessage(failure)));
       },
       (_) {
+        BlocProvider.of<TourCubit>(blocContext).getAllTours();
         emit(TourUpdated(UPDATED_SUCCESS_MESSAGE));
       },
     );
   }
 
-  Future<void> deleteTour(String tourId) async {
+  Future<void> deleteTour(String tourId, dynamic blocContext) async {
     emit(UpdateAddDeleteTourLoading());
     final result = await deleteTourUseCase(tourId);
     result.fold(
@@ -52,6 +56,7 @@ class UpdateAddDeleteTourCubit extends Cubit<UpdateAddDeleteTourState> {
       },
       (_) {
         print("Deleting tour: $tourId");
+        BlocProvider.of<TourCubit>(blocContext).getAllTours();
         emit(TourDeleted(DELETED_SUCCESS_MESSAGE));
       },
     );

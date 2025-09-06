@@ -32,9 +32,7 @@ class CustomBottomNav extends StatelessWidget {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(24.r),
           child: Theme(
-            data: Theme.of(context).copyWith(
-              canvasColor: Colors.transparent,
-            ),
+            data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
             child: BottomNavigationBar(
               type: BottomNavigationBarType.fixed,
               backgroundColor: Colors.transparent,
@@ -54,7 +52,7 @@ class CustomBottomNav extends StatelessWidget {
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.list_outlined),
-                  label: 'قائمة الطلاب',
+                  label: 'قائمة المستخدمين',
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.admin_panel_settings),

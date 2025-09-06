@@ -11,7 +11,7 @@ class DeleteUniversityCubit extends Cubit<DeleteUniversityState> {
   DeleteUniversityCubit(this.deleteUniversityUseCase)
     : super(DeleteUniversityInitial());
 
-  Future<void> deleteUser(String id) async {
+  Future<void> deleteUniversity(String id) async {
     emit(DeleteUniversityLoading());
     final result = await deleteUniversityUseCase(id);
     result.fold(

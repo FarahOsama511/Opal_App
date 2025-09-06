@@ -20,31 +20,41 @@ class UniversityRepoImpl extends UniversityRepo {
   });
 
   @override
+  @override
   Future<Either<Failure, List<UniversityEntity>>> getAllUniversities() async {
+    try {
+      // 1️⃣ جرّب تعرض الكاش الأول لو موجود
+      final localUniversities = await universityLocalDataSource
+          .getUniversities();
+      if (localUniversities.isNotEmpty) {
+        // رجّعهم بسرعة للمستخدم
+        Future.microtask(() async {
+          if (await networkInfo.isConnected) {
+            try {
+              final remoteUniversities = await universityDataSource
+                  .getAllUniversity();
+              universityLocalDataSource.saveUniversities(remoteUniversities);
+            } catch (_) {}
+          }
+        });
+        return Right(localUniversities);
+      }
+    } catch (_) {
+      // مفيش كاش
+    }
+
+    // 2️⃣ fallback: API
     if (await networkInfo.isConnected) {
       try {
-        final allUniversities = await universityDataSource.getAllUniversity();
-        universityLocalDataSource.saveUniversities(allUniversities);
-        return Right(allUniversities);
+        final remoteUniversities = await universityDataSource
+            .getAllUniversity();
+        universityLocalDataSource.saveUniversities(remoteUniversities);
+        return Right(remoteUniversities);
       } catch (e) {
-        try {
-          final localUniversities = await universityDataSource
-              .getAllUniversity();
-          print("========${localUniversities.length}==========");
-          return Right(localUniversities);
-        } on EmptyCacheException {
-          return Left(EmptyCacheFailure());
-        }
+        return Left(ServerFailure());
       }
     } else {
-      try {
-        final localUniversities = await universityLocalDataSource
-            .getUniversities();
-        print("========${localUniversities.length}==========");
-        return Right(localUniversities);
-      } on EmptyCacheException {
-        return Left(EmptyCacheFailure());
-      }
+      return Left(EmptyCacheFailure());
     }
   }
 
@@ -68,7 +78,6 @@ class UniversityRepoImpl extends UniversityRepo {
   ) async {
     if (await networkInfo.isConnected) {
       final UniversityModel universityModel = UniversityModel(
-        id: university.id,
         name: university.name,
         location: university.location,
       );

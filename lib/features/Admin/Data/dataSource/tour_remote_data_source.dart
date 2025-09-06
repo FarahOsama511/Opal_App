@@ -15,7 +15,6 @@ abstract class TourRemoteDataSource {
 
 class TourRemoteDataSourceImpl implements TourRemoteDataSource {
   final http.Client client;
-  String? tokenAdmin;
   TourRemoteDataSourceImpl({required this.client});
   @override
   Future<List<TourModel>> getAllTours() async {
@@ -24,9 +23,10 @@ class TourRemoteDataSourceImpl implements TourRemoteDataSource {
       headers: {'Authorization': 'Bearer $token'},
     );
     if (response.statusCode == 200) {
+      print("الـ JSON الخام: ${response.body}");
       final List<dynamic> jsonResponse =
           jsonDecode(response.body) as List<dynamic>;
-      print('the tours are: $jsonResponse');
+      print("body: ${response.body}");
       return jsonResponse.map((json) => TourModel.fromJson(json)).toList();
     } else {
       print("state code is ${response.statusCode}");

@@ -6,11 +6,12 @@ import 'package:opal_app/features/Admin/presentaion/bloc/add_down_town/add_down_
 
 import '../../../../../core/errors/failure.dart';
 import '../../../../../core/strings/failures.dart';
+import '../../../../user/presentaion/bloc/get_all_downtowns/get_all_down_town_cubit.dart';
 
 class AddDownTownCubit extends Cubit<AddDownTownState> {
   AddDownTownCubit(this.addDownTownUsecase) : super(AddDownTownInitial());
   final AddDownTownUsecase addDownTownUsecase;
-  Future<void> addDownTown(DownTownEntity downTown) async {
+  Future<void> addDownTown(DownTownEntity downTown, dynamic context) async {
     emit(AddDownTownLoading());
     final result = await addDownTownUsecase.call(downTown);
     result.fold(
@@ -19,6 +20,7 @@ class AddDownTownCubit extends Cubit<AddDownTownState> {
       },
       (_) {
         emit(AddDownTownSuccess(ADDED_SUCCESS_MESSAGE));
+        BlocProvider.of<GetAllDownTownCubit>(context).fetchAllDownTowns();
       },
     );
   }

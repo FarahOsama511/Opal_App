@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
@@ -64,7 +65,7 @@ class _ConfirmDetailsScreenState extends State<ConfirmDetailsScreen> {
                       _RowInfo(
                         label: ' ${widget.tour.typeDisplay}',
                         value:
-                        '${DateFormat('HH:mm').format(widget.tour.leavesAt)} صباحاً',
+                            '${DateFormat('HH:mm').format(widget.tour.leavesAt)} صباحاً',
                       ),
                       _RowInfo(
                         label: 'اسم المشرف',
@@ -73,7 +74,7 @@ class _ConfirmDetailsScreenState extends State<ConfirmDetailsScreen> {
                       _RowInfo(
                         label: 'تاريخ اليوم',
                         value:
-                        '${DateFormat('yyyy-MM-dd').format(widget.tour.leavesAt)}',
+                            '${DateFormat('yyyy-MM-dd').format(widget.tour.leavesAt)}',
                       ),
                     ],
                   ),
@@ -98,7 +99,7 @@ class _ConfirmDetailsScreenState extends State<ConfirmDetailsScreen> {
                             ),
                           ),
                         );
-                        Navigator.pop(context, true);
+                        context.pop(true);
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -107,7 +108,10 @@ class _ConfirmDetailsScreenState extends State<ConfirmDetailsScreen> {
                         borderRadius: BorderRadius.circular(12.r),
                       ),
                     ),
-                    child: Text('تأكيد', style: TextStyles.white14Bold.copyWith(fontSize: 14.sp)),
+                    child: Text(
+                      'تأكيد',
+                      style: TextStyles.white14Bold.copyWith(fontSize: 14.sp),
+                    ),
                   ),
                 ),
                 SizedBox(height: 10.h),
@@ -116,7 +120,7 @@ class _ConfirmDetailsScreenState extends State<ConfirmDetailsScreen> {
                   height: 50.h,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pop(context, false);
+                      context.pop(false);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.grey,
@@ -124,7 +128,10 @@ class _ConfirmDetailsScreenState extends State<ConfirmDetailsScreen> {
                         borderRadius: BorderRadius.circular(12.r),
                       ),
                     ),
-                    child: Text('السابق', style: TextStyles.white14Bold.copyWith(fontSize: 14.sp)),
+                    child: Text(
+                      'السابق',
+                      style: TextStyles.white14Bold.copyWith(fontSize: 14.sp),
+                    ),
                   ),
                 ),
               ],
@@ -135,6 +142,7 @@ class _ConfirmDetailsScreenState extends State<ConfirmDetailsScreen> {
     );
   }
 }
+
 class _RowInfo extends StatelessWidget {
   final String label;
   final String value;

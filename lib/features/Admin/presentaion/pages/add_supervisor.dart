@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:opal_app/features/user/Domain/entities/university_entity.dart';
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
+import '../../../user/presentaion/bloc/user_cubit.dart';
 import '../../Data/models/add_admin_supervisor_model.dart';
 import '../../Domain/entities/line_entity.dart';
 import '../bloc/create_admin_supervisors/add_admin_supervisor_cubit.dart';
@@ -13,7 +15,6 @@ import '../bloc/get_lines/get_all_lines_state.dart';
 import '../widgets/Universities_Multi_Dropdown .dart';
 import '../widgets/custom_widgets.dart';
 import '../widgets/text_field.dart';
-import 'admin_home_screen.dart';
 
 class AddSupervisor extends StatefulWidget {
   const AddSupervisor({super.key});
@@ -41,9 +42,18 @@ class _AddSupervisorState extends State<AddSupervisor> {
   }
 
   @override
+  void dispose() {
+    nameController.dispose();
+    phoneController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
-    BlocProvider.of<LinesCubit>(context).getAllLiness();
+    // BlocProvider.of<LinesCubit>(context).getAllLiness();
   }
 
   @override
@@ -99,11 +109,10 @@ class _AddSupervisorState extends State<AddSupervisor> {
                             selectedLine = line;
                           });
                         },
-                        displayString: (line) =>
-                            ' ${line.name ?? ''}', // هنا بيعرض الاسم
+                        displayString: (line) => ' ${line.name ?? ''}',
                       );
                     } else {
-                      return const Text('فشل في تحميل الخطوط');
+                      return Center(child: const Text('فشل في تحميل الخطوط'));
                     }
                   },
                 ),
@@ -128,6 +137,7 @@ class _AddSupervisorState extends State<AddSupervisor> {
                         context,
                       ).showSnackBar(SnackBar(content: Text(state.message)));
                     } else if (state is AddAdminSupervisorSuccess) {
+                      context.read<GetAllUserCubit>().fetchAllUsers();
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
@@ -136,12 +146,7 @@ class _AddSupervisorState extends State<AddSupervisor> {
                           ),
                         ),
                       );
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const AdminHomeScreen(),
-                        ),
-                      );
+                      context.go('/adminScreen');
                     }
                   },
                   builder: (context, state) {
@@ -166,6 +171,7 @@ class _AddSupervisorState extends State<AddSupervisor> {
                                   line: selectedLine,
                                   universitiesId: universitiesIds,
                                 ),
+                                context,
                               );
                         }
                       },
@@ -174,9 +180,9 @@ class _AddSupervisorState extends State<AddSupervisor> {
                 ),
                 SizedBox(height: 20.h),
                 PrimaryButton(
-                  text: 'إلفاء ',
+                  text: 'إلغاء ',
                   onPressed: () {
-                    Navigator.pop(context);
+                    context.pop();
                   },
                   backgroundColor: ColorManager.greyColor,
                 ),
@@ -189,27 +195,27 @@ class _AddSupervisorState extends State<AddSupervisor> {
     );
   }
 
-  Widget _buildTextField({required String hint, IconData? icon}) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 6.h),
-      child: TextField(
-        textAlign: TextAlign.right,
-        decoration: InputDecoration(
-          hintText: hint,
-          hintStyle: TextStyle(fontSize: 14.sp),
-          prefixIcon: icon != null ? Icon(icon, color: Colors.grey) : null,
-          filled: true,
-          fillColor: Colors.grey.shade200,
-          contentPadding: EdgeInsets.symmetric(
-            horizontal: 16.w,
-            vertical: 18.h,
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.r),
-            borderSide: BorderSide.none,
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget _buildTextField({required String hint, IconData? icon}) {
+  //   return Padding(
+  //     padding: EdgeInsets.symmetric(vertical: 6.h),
+  //     child: TextField(
+  //       textAlign: TextAlign.right,
+  //       decoration: InputDecoration(
+  //         hintText: hint,
+  //         hintStyle: TextStyle(fontSize: 14.sp),
+  //         prefixIcon: icon != null ? Icon(icon, color: Colors.grey) : null,
+  //         filled: true,
+  //         fillColor: Colors.grey.shade200,
+  //         contentPadding: EdgeInsets.symmetric(
+  //           horizontal: 16.w,
+  //           vertical: 18.h,
+  //         ),
+  //         border: OutlineInputBorder(
+  //           borderRadius: BorderRadius.circular(12.r),
+  //           borderSide: BorderSide.none,
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 }

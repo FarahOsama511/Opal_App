@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
 import 'package:opal_app/features/Admin/Domain/entities/down_town_entity.dart';
-
 import 'package:opal_app/features/Admin/presentaion/widgets/custom_widgets.dart';
 import 'package:opal_app/features/Admin/presentaion/widgets/text_field.dart';
 import '../../../../core/resources/text_styles.dart';
-import '../../Domain/entities/line_entity.dart';
 import '../bloc/add_down_town/add_down_town_cubit.dart';
 import '../bloc/add_down_town/add_down_town_state.dart';
 
@@ -26,11 +25,16 @@ String? validatorMessage(String? value) {
 }
 
 class _AddDownTownState extends State<AddDownTown> {
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController downTownController = TextEditingController();
+  @override
+  void dispose() {
+    super.dispose();
+    downTownController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
-    TextEditingController downTownController = TextEditingController();
-
     return Scaffold(
       backgroundColor: ColorManager.secondColor,
       body: SafeArea(
@@ -65,11 +69,10 @@ class _AddDownTownState extends State<AddDownTown> {
                           ),
                         ),
                       );
-                      Navigator.pushReplacementNamed(context, '/adminScreen');
+                      context.go('/adminScreen');
                     }
                   },
                   builder: (context, state) {
-                    print('statedowntown is ${state}');
                     if (state is AddDownTownLoading) {
                       return const Center(
                         child: CircularProgressIndicator(
@@ -84,6 +87,7 @@ class _AddDownTownState extends State<AddDownTown> {
                         if (_formKey.currentState!.validate()) {
                           context.read<AddDownTownCubit>().addDownTown(
                             DownTownEntity(name: downTownController.text),
+                            context,
                           );
                         }
                       },
@@ -94,7 +98,7 @@ class _AddDownTownState extends State<AddDownTown> {
                 PrimaryButton(
                   text: 'إلغاء ',
                   onPressed: () {
-                    Navigator.pop(context);
+                    context.pop();
                   },
                   backgroundColor: ColorManager.greyColor,
                 ),
