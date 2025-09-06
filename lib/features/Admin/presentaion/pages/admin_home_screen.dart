@@ -8,7 +8,6 @@ import 'package:opal_app/features/Admin/presentaion/pages/trips.dart';
 import 'package:opal_app/features/user/presentaion/bloc/user_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/user_state.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../core/get_it.dart' as di;
 import '../../../../core/resources/text_styles.dart';
 import '../bloc/get_tour_bloc/tour_cubit.dart';
 import '../widgets/add_menu.dart';
@@ -30,6 +29,12 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   int currentIndex = 0;
   bool showAddTripBox = false;
   int? expandedIndex;
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<TourCubit>(context).getAllTours();
+    BlocProvider.of<GetAllUserCubit>(context).fetchAllUsers();
+  }
 
   @override
   Widget build(BuildContext context) {

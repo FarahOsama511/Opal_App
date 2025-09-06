@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/add_lines/add_line_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/add_lines/add_line_state.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/widgets/custom_widgets.dart';
 import 'package:opal_app/features/Admin/presentaion/widgets/text_field.dart';
 import '../../../../core/resources/text_styles.dart';
@@ -81,6 +82,7 @@ class _AddLineState extends State<AddLine> {
                         ),
                       );
                       context.go('/adminScreen');
+                      BlocProvider.of<LinesCubit>(context).getAllLiness();
                     }
                   },
                   builder: (context, state) {

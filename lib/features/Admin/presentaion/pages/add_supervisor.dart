@@ -139,7 +139,7 @@ class _AddSupervisorState extends State<AddSupervisor> {
                           ),
                         ),
                       );
-                      context.pop();
+                      context.go('/adminScreen');
                       BlocProvider.of<GetAllUserCubit>(context).fetchAllUsers();
                     }
                   },

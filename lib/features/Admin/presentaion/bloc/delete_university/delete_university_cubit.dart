@@ -20,7 +20,7 @@ class DeleteUniversityCubit extends Cubit<DeleteUniversityState> {
       },
       (_) {
         print("Deleting university: $id");
-        emit(DeleteUniversitySuccess(DELETED_SUCCESS_MESSAGE));
+        emit(DeleteUniversitySuccess(DELETED_SUCCESS_MESSAGE, id));
       },
     );
   }

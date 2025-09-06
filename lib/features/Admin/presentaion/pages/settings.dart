@@ -109,6 +109,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               );
             } else if (state is DeleteUniversitySuccess) {
+              setState(() {
+                _universities.removeWhere((u) => u.id == state.id);
+                _filteredUniversities.removeWhere((u) => u.id == state.id);
+                _updateFiltered();
+              });
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
@@ -132,6 +137,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               );
             } else if (state is DeleteLineLoaded) {
+              setState(() {
+                _lines.removeWhere((u) => u.id == state.id);
+                _filteredLines.removeWhere((u) => u.id == state.id);
+                _updateFiltered();
+              });
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
@@ -156,6 +166,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               );
             } else if (state is DeleteDownTownSuccess) {
+              setState(() {
+                _cities.removeWhere((u) => u.id == state.id);
+                _filteredCities.removeWhere((u) => u.id == state.id);
+                _updateFiltered();
+              });
+              // context.pop();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: ColorManager.greyColor,
@@ -295,7 +311,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
         }
       },
       builder: (context, state) {
-        print("state is Lines ${state}");
         if (state is LinesLoaded) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             setState(() {
@@ -303,7 +318,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _updateFiltered();
             });
           });
-          print("====${_filteredLines}");
           if (_filteredLines.isEmpty) {
             return Center(
               child: Text(
@@ -537,19 +551,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _handleDeleteLine(String lineId) {
-    setState(() {
-      _lines.removeWhere((u) => u.id == lineId);
-      _filteredLines.removeWhere((u) => u.id == lineId);
-    });
     BlocProvider.of<DeleteLineCubit>(context).deleteLine(lineId);
     context.pop();
   }
 
   void _handleDeleteUniversity(String universityId) {
-    setState(() {
-      _universities.removeWhere((u) => u.id == universityId);
-      _filteredUniversities.removeWhere((u) => u.id == universityId);
-    });
     BlocProvider.of<DeleteUniversityCubit>(
       context,
     ).deleteUniversity(universityId);
@@ -557,10 +563,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _handleDeleteCity(String cityId) {
-    setState(() {
-      _cities.removeWhere((u) => u.id == cityId);
-      _filteredCities.removeWhere((u) => u.id == cityId);
-    });
     BlocProvider.of<DeleteDownTownCubit>(context).deleteDownTown(cityId);
     context.pop();
   }

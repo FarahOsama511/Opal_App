@@ -5,7 +5,6 @@ import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
 import '../../../../../core/errors/failure.dart';
 import '../../../../../core/strings/failures.dart';
 import '../../../../../core/strings/messages.dart';
-import 'package:opal_app/features/user/presentaion/bloc/user_cubit.dart';
 
 class AddAdminSupervisorCubit extends Cubit<AddAdminSupervisorState> {
   final AddAdminSupervisorUseCase addAdminSupervisorUseCase;
@@ -19,7 +18,6 @@ class AddAdminSupervisorCubit extends Cubit<AddAdminSupervisorState> {
         emit(AddAdminSupervisorError(_errorMessage(failure)));
       },
       (_) {
-        BlocProvider.of<GetAllUserCubit>(context).fetchAllUsers();
         emit(AddAdminSupervisorSuccess(ADDED_SUCCESS_MESSAGE));
       },
     );

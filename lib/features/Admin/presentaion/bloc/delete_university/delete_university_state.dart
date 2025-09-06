@@ -6,7 +6,8 @@ class DeleteUniversityLoading extends DeleteUniversityState {}
 
 class DeleteUniversitySuccess extends DeleteUniversityState {
   final String message;
-  DeleteUniversitySuccess(this.message);
+  final String id;
+  DeleteUniversitySuccess(this.message, this.id);
 }
 
 class DeleteUniversityError extends DeleteUniversityState {

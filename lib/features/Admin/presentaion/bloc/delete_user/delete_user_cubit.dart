@@ -18,8 +18,8 @@ class DeleteUserCubit extends Cubit<DeleteUserState> {
         emit(DeleteUserError(_errorMessage(failure)));
       },
       (_) {
-        print("Deleting tour: $userId");
-        emit(DeleteUserLoaded(DELETED_SUCCESS_MESSAGE));
+        print("Deleting user: $userId");
+        emit(DeleteUserLoaded(DELETED_SUCCESS_MESSAGE, userId));
       },
     );
   }

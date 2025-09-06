@@ -6,8 +6,9 @@ class DeleteUserLoading extends DeleteUserState {}
 
 class DeleteUserLoaded extends DeleteUserState {
   final String deleteUser;
+  final String userId;
 
-  DeleteUserLoaded(this.deleteUser);
+  DeleteUserLoaded(this.deleteUser, this.userId);
 }
 
 class DeleteUserError extends DeleteUserState {

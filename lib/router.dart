@@ -15,7 +15,6 @@ import 'package:opal_app/features/Admin/presentaion/pages/trip_details.dart';
 import 'package:opal_app/features/supervisor/presentation/pages/show_tours.dart';
 import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
 import 'package:opal_app/features/user/presentaion/bloc/get_all_downtowns/get_all_down_town_cubit.dart';
-import 'package:opal_app/features/user/presentaion/bloc/user_cubit.dart';
 import 'package:opal_app/features/user/presentaion/pages/sign_in.dart';
 import 'package:opal_app/features/user/presentaion/pages/sign_up.dart';
 import 'package:opal_app/splashscreen.dart';
@@ -28,7 +27,6 @@ import 'features/Admin/presentaion/bloc/get_lines/get_all_lines_cubit.dart';
 import 'features/Admin/presentaion/pages/add_admin.dart';
 import 'features/Admin/presentaion/pages/add_supervisor.dart';
 import 'features/Admin/presentaion/pages/admin_home_screen.dart';
-import 'features/Admin/presentaion/pages/student_list.dart';
 import 'features/Admin/presentaion/pages/trips.dart';
 import 'features/selection/presentation/pages/confirm_details.dart';
 import 'features/selection/presentation/pages/confirmation_success.dart';
@@ -127,12 +125,12 @@ class AppRouter {
         builder: (context, state) {
           return MultiBlocProvider(
             providers: [
-              BlocProvider(create: (_) => di.setUp<TourCubit>()..getAllTours()),
+              //BlocProvider(create: (_) => di.setUp<TourCubit>()..getAllTours()),
               BlocProvider(create: (_) => di.setUp<DeleteUserCubit>()),
               BlocProvider(create: (_) => di.setUp<AddAdminSupervisorCubit>()),
-              BlocProvider(
-                create: (_) => di.setUp<GetAllUserCubit>()..fetchAllUsers(),
-              ),
+              // BlocProvider(
+              //   create: (_) => di.setUp<GetAllUserCubit>()..fetchAllUsers(),
+              // ),
               BlocProvider(
                 create: (_) =>
                     di.setUp<GetAllDownTownCubit>()..fetchAllDownTowns(),
@@ -206,8 +204,13 @@ class AppRouter {
       GoRoute(
         path: '/addUniversity',
         builder: (context, state) {
-          return BlocProvider<AddUniversityCubit>(
-            create: (_) => di.setUp<AddUniversityCubit>(),
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider<AddUniversityCubit>(
+                create: (_) => di.setUp<AddUniversityCubit>(),
+              ),
+              BlocProvider(create: (_) => di.setUp<GetAllUniversitiesCubit>()),
+            ],
             child: Builder(builder: (context) => const AddUniversity()),
           );
         },
@@ -215,8 +218,13 @@ class AppRouter {
       GoRoute(
         path: '/addDownTown',
         builder: (context, state) {
-          return BlocProvider<AddDownTownCubit>(
-            create: (_) => di.setUp<AddDownTownCubit>(),
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider<AddDownTownCubit>(
+                create: (_) => di.setUp<AddDownTownCubit>(),
+              ),
+              BlocProvider(create: (_) => di.setUp<GetAllDownTownCubit>()),
+            ],
             child: Builder(builder: (context) => const AddDownTown()),
           );
         },
