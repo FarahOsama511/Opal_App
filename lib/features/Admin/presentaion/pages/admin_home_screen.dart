@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:opal_app/core/network/local_network.dart';
@@ -8,7 +9,6 @@ import 'package:opal_app/features/Admin/presentaion/pages/trips.dart';
 import 'package:opal_app/features/user/presentaion/bloc/user_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/user_state.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../core/get_it.dart' as di;
 import '../../../../core/resources/text_styles.dart';
 import '../bloc/get_tour_bloc/tour_cubit.dart';
 import '../widgets/add_menu.dart';
@@ -30,6 +30,24 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   int currentIndex = 0;
   bool showAddTripBox = false;
   int? expandedIndex;
+
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<TourCubit>(context).getAllTours();
+    // BlocProvider.of<GetAllUserCubit>(context).fetchAllUsers();
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      BlocProvider.of<GetAllUserCubit>(context).fetchAllUsers();
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,11 +104,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                         index: currentIndex,
                         children: [
                           _buildJoinRequests(),
-                          BlocProvider(
-                            create: (_) => di.setUp<TourCubit>()
-                              ..getAllTours(), // تأكد من استدعاء getAllTours هنا
-                            child: const TripsScreen(),
-                          ),
+                          // تأكد من استدعاء getAllTours هنا
+                          const TripsScreen(),
 
                           const StudentList(),
 
@@ -211,7 +226,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                     child: CircularProgressIndicator(color: Colors.white),
                   );
                 } else {
-                  return const Center(child: Text("ERROR"));
+                  return const Center(child: Text("حدث فشل في تحميل البيانات"));
                 }
               },
             ),

@@ -7,6 +7,7 @@ import 'package:opal_app/features/Admin/Domain/entities/down_town_entity.dart';
 import 'package:opal_app/features/Admin/presentaion/widgets/custom_widgets.dart';
 import 'package:opal_app/features/Admin/presentaion/widgets/text_field.dart';
 import '../../../../core/resources/text_styles.dart';
+import '../../../user/presentaion/bloc/get_all_downtowns/get_all_down_town_cubit.dart';
 import '../bloc/add_down_town/add_down_town_cubit.dart';
 import '../bloc/add_down_town/add_down_town_state.dart';
 
@@ -70,6 +71,9 @@ class _AddDownTownState extends State<AddDownTown> {
                         ),
                       );
                       context.go('/adminScreen');
+                      BlocProvider.of<GetAllDownTownCubit>(
+                        context,
+                      ).fetchAllDownTowns();
                     }
                   },
                   builder: (context, state) {

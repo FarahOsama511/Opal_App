@@ -6,6 +6,7 @@ import 'package:opal_app/core/resources/color_manager.dart';
 import 'package:opal_app/features/Admin/presentaion/widgets/custom_widgets.dart';
 import 'package:opal_app/features/Admin/presentaion/widgets/text_field.dart';
 import 'package:opal_app/features/user/Domain/entities/university_entity.dart';
+import 'package:opal_app/features/user/presentaion/bloc/get_all_universities/get_all_universities_cubit.dart';
 import '../../../../core/resources/text_styles.dart';
 import '../bloc/add_university/add_university_cubit.dart';
 import '../bloc/add_university/add_university_state.dart';
@@ -39,7 +40,7 @@ class _AddUniversityState extends State<AddUniversity> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorManager.secondColor,
-      resizeToAvoidBottomInset: true,
+      //  resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -79,6 +80,9 @@ class _AddUniversityState extends State<AddUniversity> {
                           ),
                         );
                         context.go('/adminScreen');
+                        BlocProvider.of<GetAllUniversitiesCubit>(
+                          context,
+                        ).fetchAlluniversities();
                       }
                     },
                     builder: (context, state) {

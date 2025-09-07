@@ -5,8 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
 import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_id.dart/get_tour_id_cubit.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_id.dart/get_tour_id_state.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_state.dart';
 import '../../../../core/resources/text_styles.dart';
@@ -23,21 +21,9 @@ class TripDetailsDialog extends StatefulWidget {
 }
 
 class _TripDetailsDialogState extends State<TripDetailsDialog> {
-  bool _inInit = true;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_inInit) {
-      BlocProvider.of<GetTourIdCubit>(context).getTourById(widget.tourId);
-      _inInit = false;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-
     return Dialog(
       backgroundColor: Colors.transparent,
       insetPadding: EdgeInsets.all(16.w),
@@ -73,45 +59,28 @@ class _TripDetailsDialogState extends State<TripDetailsDialog> {
                     borderRadius: BorderRadius.circular(12.r),
                     color: ColorManager.secondColor,
                   ),
-                  child: BlocBuilder<GetTourIdCubit, GetTourIdState>(
-                    builder: (context, state) {
-                      if (state is GetTourByIdLoading) {
-                        return Center(
-                          child: CircularProgressIndicator(
-                            color: ColorManager.primaryColor,
-                          ),
-                        );
-                      } else if (state is TourByIdLoaded) {
-                        final tour = state.tour;
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            _buildRow('الخط', tour.line.name!),
-                            _buildRow(
-                              tour.typeDisplay,
-                              '${DateFormat('HH:mm').format(tour.leavesAt)} صباحاً',
-                            ),
-                            _buildRow(
-                              'اسم المشرف',
-                              tour.driverName ?? "غير معرف",
-                            ),
-                            _buildRow(
-                              'تاريخ اليوم',
-                              DateFormat('yyyy-MM-dd').format(tour.leavesAt),
-                            ),
-                          ],
-                        );
-                      } else {
-                        return Center(
-                          child: Text(
-                            "حدث خطأ في جلب البيانات",
-                            style: TextStyles.black14Bold.copyWith(
-                              fontSize: 14.sp,
-                            ),
-                          ),
-                        );
-                      }
-                    },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _buildRow(
+                        'الخط',
+                        widget.selectedtour.line.name ?? "غير معرف",
+                      ),
+                      _buildRow(
+                        widget.selectedtour.typeDisplay,
+                        '${DateFormat('HH:mm').format(widget.selectedtour.leavesAt)} صباحاً',
+                      ),
+                      _buildRow(
+                        'اسم المشرف',
+                        widget.selectedtour.supervisor.name ?? "غير معرف",
+                      ),
+                      _buildRow(
+                        'تاريخ اليوم',
+                        DateFormat(
+                          'yyyy-MM-dd',
+                        ).format(widget.selectedtour.leavesAt),
+                      ),
+                    ],
                   ),
                 ),
                 SizedBox(height: 20.h),

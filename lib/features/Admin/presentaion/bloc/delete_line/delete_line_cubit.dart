@@ -19,7 +19,7 @@ class DeleteLineCubit extends Cubit<DeleteLineState> {
       },
       (_) {
         print("Deleting line: $LineId");
-        emit(DeleteLineLoaded(DELETED_SUCCESS_MESSAGE));
+        emit(DeleteLineLoaded(DELETED_SUCCESS_MESSAGE, LineId));
       },
     );
   }

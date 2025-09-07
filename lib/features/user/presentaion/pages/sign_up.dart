@@ -64,9 +64,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
           child: BlocConsumer<AuthCubit, AuthState>(
             listener: (context, state) {
               if (state is AuthSuccess) {
-                context
-                    .read<GetAllUserCubit>()
-                    .fetchAllUsers(); // جلب كل المستخدمين مرة أخرى
+                BlocProvider.of<GetAllUserCubit>(
+                  context,
+                ).fetchAllUsers(); // جلب كل المستخدمين مرة أخرى
                 context.go('/waiting'); // التنقل
               } else if (state is AuthFailure) {
                 print("${state.error}");

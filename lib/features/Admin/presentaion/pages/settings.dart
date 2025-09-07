@@ -109,6 +109,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               );
             } else if (state is DeleteUniversitySuccess) {
+              setState(() {
+                _universities.removeWhere((u) => u.id == state.id);
+                _filteredUniversities.removeWhere((u) => u.id == state.id);
+                _updateFiltered();
+              });
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
@@ -132,6 +137,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               );
             } else if (state is DeleteLineLoaded) {
+              setState(() {
+                _lines.removeWhere((u) => u.id == state.id);
+                _filteredLines.removeWhere((u) => u.id == state.id);
+                _updateFiltered();
+              });
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
@@ -156,6 +166,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               );
             } else if (state is DeleteDownTownSuccess) {
+              setState(() {
+                _cities.removeWhere((u) => u.id == state.id);
+                _filteredCities.removeWhere((u) => u.id == state.id);
+                _updateFiltered();
+              });
+              // context.pop();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: ColorManager.greyColor,
@@ -295,7 +311,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
         }
       },
       builder: (context, state) {
-        print("state is Lines ${state}");
         if (state is LinesLoaded) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             setState(() {
@@ -303,7 +318,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _updateFiltered();
             });
           });
-          print("====${_filteredLines}");
           if (_filteredLines.isEmpty) {
             return Center(
               child: Text(
@@ -426,9 +440,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Flexible(
+          Expanded(
             child: ElevatedButton(
               onPressed: () {
                 if (!isUniversitySelected) {
@@ -441,14 +454,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: isUniversitySelected
-                    ? ColorManager.primaryColor
-                    : Colors.grey.shade300,
-                minimumSize: Size(100.w, 38.h),
-                padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 6.h),
+                backgroundColor: isUniversitySelected ? ColorManager.primaryColor: Colors.grey.shade300,
+                minimumSize: Size(0, 45.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.r),
+                ),
               ),
               child: FittedBox(
-                fit: BoxFit.scaleDown,
+                fit: BoxFit.scaleDown, // النص يتغير حجمه تلقائيًا
                 child: Text(
                   'الجامعات',
                   style: isUniversitySelected
@@ -459,7 +472,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
           SizedBox(width: 8.w),
-          Flexible(
+          Expanded(
             child: ElevatedButton(
               onPressed: () {
                 if (!isLineSelected) {
@@ -472,11 +485,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: isLineSelected
-                    ? ColorManager.primaryColor
-                    : Colors.grey.shade300,
-                minimumSize: Size(0, 38.h),
-                padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 6.h),
+                backgroundColor: isLineSelected ? ColorManager.primaryColor : Colors.grey.shade300,
+                minimumSize: Size(0, 45.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.r),
+                ),
               ),
               child: FittedBox(
                 fit: BoxFit.scaleDown,
@@ -490,7 +503,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
           SizedBox(width: 8.w),
-          Flexible(
+          Expanded(
             child: ElevatedButton(
               onPressed: () {
                 if (!isCitySelected) {
@@ -503,11 +516,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: isCitySelected
-                    ? ColorManager.primaryColor
-                    : Colors.grey.shade300,
-                minimumSize: Size(0, 38.h),
-                padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 6.h),
+                backgroundColor: isCitySelected ?ColorManager.primaryColor : Colors.grey.shade300,
+                minimumSize: Size(0, 45.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.r),
+                ),
               ),
               child: FittedBox(
                 fit: BoxFit.scaleDown,
@@ -524,6 +537,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
     );
   }
+
 
   // 🔹 الديليت
   void _showDeleteDialog(dynamic entity) {
@@ -550,19 +564,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _handleDeleteLine(String lineId) {
-    setState(() {
-      _lines.removeWhere((u) => u.id == lineId);
-      _filteredLines.removeWhere((u) => u.id == lineId);
-    });
     BlocProvider.of<DeleteLineCubit>(context).deleteLine(lineId);
     context.pop();
   }
 
   void _handleDeleteUniversity(String universityId) {
-    setState(() {
-      _universities.removeWhere((u) => u.id == universityId);
-      _filteredUniversities.removeWhere((u) => u.id == universityId);
-    });
     BlocProvider.of<DeleteUniversityCubit>(
       context,
     ).deleteUniversity(universityId);
@@ -570,10 +576,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _handleDeleteCity(String cityId) {
-    setState(() {
-      _cities.removeWhere((u) => u.id == cityId);
-      _filteredCities.removeWhere((u) => u.id == cityId);
-    });
     BlocProvider.of<DeleteDownTownCubit>(context).deleteDownTown(cityId);
     context.pop();
   }

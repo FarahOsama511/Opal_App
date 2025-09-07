@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/delete_user/delete_user_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/widgets/delete_dialog.dart';
 import '../../../../core/resources/color_manager.dart';
@@ -61,12 +62,6 @@ class _StudentListState extends State<StudentList> {
 
   void _handleDeleteUser(String userId) {
     BlocProvider.of<DeleteUserCubit>(context).deleteUser(userId);
-    setState(() {
-      _users.removeWhere((u) => u.id == userId);
-      _filteredUsers.removeWhere((u) => u.id == userId);
-    });
-
-    Navigator.pop(context);
   }
 
   @override
@@ -83,6 +78,15 @@ class _StudentListState extends State<StudentList> {
               ScaffoldMessenger.of(
                 context,
               ).showSnackBar(SnackBar(content: Text(state.deleteUser)));
+
+              setState(() {
+                _users.removeWhere(
+                  (u) => u.id == state.userId,
+                ); // احذفي من القائمة الأصلية
+                _updateFilteredUsers();
+              });
+
+              context.pop();
             }
           },
         ),
@@ -117,16 +121,21 @@ class _StudentListState extends State<StudentList> {
                         ScaffoldMessenger.of(
                           context,
                         ).showSnackBar(SnackBar(content: Text(state.message)));
-                      } else if (state is UserSuccess) {
+                      }
+                      if (state is UserSuccess) {
                         setState(() {
                           _users = state.user
                               .where((u) => u.status == 'active')
                               .toList();
+
                           _updateFilteredUsers();
                         });
                       }
+                      print("Filtered after update: ${_filteredUsers.length}");
                     },
+
                     builder: (context, state) {
+                      print("Builder triggered with state: $state");
                       if (state is UserSuccess) {
                         if (_filteredUsers.isEmpty) {
                           return Center(
@@ -148,7 +157,7 @@ class _StudentListState extends State<StudentList> {
                               return ExpandableCard(
                                 name: user.name!,
                                 phone: user.phone!,
-                                universityId: user.universityId,
+                                university: user.university ?? null,
                                 isSupervisor: false,
                                 isExpanded: _isExpandedStudents[index],
                                 onToggle: () {

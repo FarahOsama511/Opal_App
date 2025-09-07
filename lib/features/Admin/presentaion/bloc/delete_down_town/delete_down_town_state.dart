@@ -6,7 +6,8 @@ class DeleteDownTownLoading extends DeleteDownTownState {}
 
 class DeleteDownTownSuccess extends DeleteDownTownState {
   final String message;
-  DeleteDownTownSuccess(this.message);
+  final String id;
+  DeleteDownTownSuccess(this.message, this.id);
 }
 
 class DeleteDownTownError extends DeleteDownTownState {

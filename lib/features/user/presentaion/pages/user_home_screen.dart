@@ -17,13 +17,10 @@ import '../../../Admin/presentaion/bloc/get_tour_bloc/tour_state.dart';
 import '../../../Admin/presentaion/widgets/app_header.dart';
 import '../../../Admin/presentaion/widgets/custom_widgets.dart';
 import '../bloc/selection_tour/selection_tour_cubit.dart';
-import '../../../../core/get_it.dart' as di;
 
 class UserHomeScreen extends StatefulWidget {
   final bool isTripConfirmed;
-
   const UserHomeScreen({super.key, this.isTripConfirmed = false});
-
   @override
   State<UserHomeScreen> createState() => _UserHomeScreenState();
 }
@@ -45,6 +42,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   @override
   void initState() {
     super.initState();
+    BlocProvider.of<TourCubit>(context).getAllTours();
     isTripConfirmed = widget.isTripConfirmed;
     tripTimer = Timer.periodic(Duration(minutes: 1), (_) {
       _checkTripTime();
@@ -67,7 +65,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           selectedLine = null;
           selectedTime = null;
 
-          // selectedTab = lastTripType == 'go' ? 1 : 0;
+          selectedTab = lastTripType == 'go' ? 1 : 0;
         });
       }
     }
@@ -177,11 +175,14 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                             ),
                           ),
                           onPressed: () {
+                            print(
+                              'selectedTour: ${context.read<SelectionTourCubit>().tourCurrent!}',
+                            );
                             context.go(
                               '/tripDetails',
                               extra: context
                                   .read<SelectionTourCubit>()
-                                  .tourCurrent!,
+                                  .tourCurrent,
                             );
                           },
                           child: Text(
@@ -293,15 +294,10 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                         onPressed: () async {
                           final confirmed = await showDialog<bool>(
                             context: context,
-                            builder: (dialogContext) =>
-                                BlocProvider<SelectionTourCubit>(
-                                  create: (_) => di.setUp<SelectionTourCubit>(),
-                                  child: Builder(
-                                    builder: (context) => ConfirmDetailsScreen(
-                                      tour: selectedTour!,
-                                    ),
-                                  ),
-                                ),
+                            builder: (dialogContext) => Builder(
+                              builder: (_) =>
+                                  ConfirmDetailsScreen(tour: selectedTour!),
+                            ),
                           );
                           print('تم الدخول للدالة');
                           print('قيمة confirmed: $confirmed');

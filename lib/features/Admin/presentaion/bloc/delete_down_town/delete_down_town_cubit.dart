@@ -19,7 +19,7 @@ class DeleteDownTownCubit extends Cubit<DeleteDownTownState> {
         emit(DeleteDownTownError(_errorMessage(failure)));
       },
       (_) {
-        emit(DeleteDownTownSuccess(DELETED_SUCCESS_MESSAGE));
+        emit(DeleteDownTownSuccess(DELETED_SUCCESS_MESSAGE, id));
       },
     );
   }

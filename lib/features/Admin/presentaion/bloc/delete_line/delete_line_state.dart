@@ -6,8 +6,8 @@ class DeleteLineLoading extends DeleteLineState {}
 
 class DeleteLineLoaded extends DeleteLineState {
   final String deleteLine;
-
-  DeleteLineLoaded(this.deleteLine);
+  final String id;
+  DeleteLineLoaded(this.deleteLine, this.id);
 }
 
 class DeleteLineError extends DeleteLineState {

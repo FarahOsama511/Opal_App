@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:opal_app/features/supervisor/bloc/get_university_by_id/get_university_by_id_state.dart';
 import '../../../../core/resources/text_styles.dart';
-import '../../../supervisor/bloc/get_university_by_id/get_university_by_id_cubit.dart';
+import '../../../user/Domain/entities/university_entity.dart';
 
 class ExpandableCard extends StatefulWidget {
   final String name;
   final String? phone;
-  final String university;
-  final String? universityId;
+  final UniversityEntity? university;
+
   final String line;
   final bool isSupervisor;
   final bool isExpanded;
@@ -18,13 +16,12 @@ class ExpandableCard extends StatefulWidget {
   final Widget? deleteIcon;
 
   ExpandableCard({
-    this.universityId,
     this.onLongPress,
     this.deleteIcon,
     super.key,
     required this.name,
     this.phone,
-    this.university = '',
+    this.university,
     this.line = '',
     required this.isSupervisor,
     required this.isExpanded,
@@ -37,23 +34,11 @@ class ExpandableCard extends StatefulWidget {
 
 class _ExpandableCardState extends State<ExpandableCard> {
   @override
-  void initState() {
-    super.initState();
-    if (widget.universityId != null && widget.universityId!.isNotEmpty) {
-      BlocProvider.of<GetUniversityByIdCubit>(context)
-          .getUniversityById(widget.universityId!);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final universityName = widget.universityId != null
-        ? context.read<GetUniversityByIdCubit>().nameOfUniversity ?? ""
-        : "";
-
     return Container(
       width: double.infinity,
-      margin: EdgeInsets.only(top: 2.h, bottom: 1.h),
+      margin: EdgeInsets.symmetric(vertical: 6.h),
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 2.h),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -67,7 +52,7 @@ class _ExpandableCardState extends State<ExpandableCard> {
         ],
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min, // يخلي الكارد يلتزم بمحتواه فقط
+        mainAxisSize: MainAxisSize.min,
         children: [
           InkWell(
             onLongPress: widget.onLongPress,
@@ -97,29 +82,19 @@ class _ExpandableCardState extends State<ExpandableCard> {
           ),
           if (widget.isExpanded)
             Padding(
-              padding: EdgeInsets.only(top: 6.h), // أقل من قبل
-              child: BlocBuilder<GetUniversityByIdCubit, GetUniversityByIdState>(
-                builder: (context, state) {
-                  String universityName = 'غير متوفر';
-                  if (state is getUniversityByIdSuccess &&
-                      state.university.id == widget.universityId) {
-                    universityName = state.university.name ?? 'غير متوفر';
-                  }
-
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      _buildInfoRow(widget.phone ?? 'غير متوفر', 'رقم الهاتف:'),
-                      if (!widget.isSupervisor)
-                        _buildInfoRow(universityName, 'الجامعة:')
-                      else
-                        _buildInfoRow(
-                          widget.line.isNotEmpty ? widget.line : 'غير متوفر',
-                          'الخط:',
-                        ),
-                    ],
-                  );
-                },
+              padding: EdgeInsets.only(top: 6.h),
+    child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _buildInfoRow(widget.phone ?? 'غير متوفر', 'رقم الهاتف:'),
+                  if (!widget.isSupervisor)
+                    _buildInfoRow(widget.university?.name ?? "", 'الجامعة:')
+                  else
+                    _buildInfoRow(
+                      widget.line.isNotEmpty ? widget.line : 'غير متوفر',
+                      'الخط:',
+                    ),
+                ],
               ),
             ),
         ],

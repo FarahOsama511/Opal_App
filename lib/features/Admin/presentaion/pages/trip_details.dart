@@ -10,7 +10,6 @@ import '../widgets/cancel_trip_dialog.dart';
 class TripDetailsScreen extends StatelessWidget {
   final TourModel tour;
   TripDetailsScreen({super.key, required this.tour});
-
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -86,7 +85,7 @@ class TripDetailsScreen extends StatelessWidget {
                             SizedBox(height: 40.h),
                             _InfoCard(tour: tour),
                             SizedBox(height: 20.h),
-                            _ActionButtons(tourId: tour.id!),
+                            _ActionButtons(tourId: tour.id ?? ""),
                           ],
                         ),
                       ),
