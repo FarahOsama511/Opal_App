@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:opal_app/core/network/local_network.dart';
@@ -29,11 +30,23 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   int currentIndex = 0;
   bool showAddTripBox = false;
   int? expandedIndex;
+
+  Timer? _timer;
+
   @override
   void initState() {
     super.initState();
     BlocProvider.of<TourCubit>(context).getAllTours();
-    BlocProvider.of<GetAllUserCubit>(context).fetchAllUsers();
+    // BlocProvider.of<GetAllUserCubit>(context).fetchAllUsers();
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      BlocProvider.of<GetAllUserCubit>(context).fetchAllUsers();
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -213,7 +226,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                     child: CircularProgressIndicator(color: Colors.white),
                   );
                 } else {
-                  return const Center(child: Text("ERROR"));
+                  return const Center(child: Text("حدث فشل في تحميل البيانات"));
                 }
               },
             ),

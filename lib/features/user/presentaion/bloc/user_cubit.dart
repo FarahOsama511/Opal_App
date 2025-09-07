@@ -33,12 +33,11 @@ class GetAllUserCubit extends Cubit<UserState> {
         (user) {
           _users = user;
           emit(UserSuccess(user));
-          print("Fetched users successfully: ${user}");
         },
       );
     } catch (e) {
       print('Server error: ${e}');
-      emit(UserError(e.toString()));
+      emit(UserError("حدث خطأ ما، يرجى المحاولة مرة أخرى"));
     }
   }
 
@@ -62,7 +61,8 @@ class GetAllUserCubit extends Cubit<UserState> {
         },
       );
     } catch (e) {
-      emit(UserError(e.toString()));
+      print('Server error: ${e}');
+      emit(UserError("حدث خطأ ما، يرجى المحاولة مرة أخرى"));
     }
   }
 
@@ -85,7 +85,8 @@ class GetAllUserCubit extends Cubit<UserState> {
         },
       );
     } catch (e) {
-      emit(UserError(e.toString()));
+      print('Server error: ${e}');
+      emit(UserError("حدث خطأ ما، يرجى المحاولة مرة أخرى"));
     }
   }
 
@@ -110,7 +111,8 @@ class GetAllUserCubit extends Cubit<UserState> {
         },
       );
     } catch (e) {
-      emit(UserError(e.toString()));
+      print('Server error: ${e}');
+      emit(UserError("حدث خطأ ما، يرجى المحاولة مرة أخرى"));
     }
   }
 

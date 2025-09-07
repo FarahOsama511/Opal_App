@@ -5,10 +5,12 @@ import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_bloc/tour_stat
 import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
 
 import '../../../../../core/strings/failures.dart';
+import '../../../Domain/entities/tour.dart';
 
 class TourCubit extends Cubit<TourState> {
   final GetAllToursUseCase getAllToursUseCase;
   List<UserEntity>? numOfUsers;
+  //  List<Tour> _tours = [];
   TourCubit(this.getAllToursUseCase) : super(TourInitial());
 
   Future<void> getAllTours() async {
@@ -21,6 +23,7 @@ class TourCubit extends Cubit<TourState> {
           emit(TourError(_errorMessage(Failure)));
         },
         (tours) {
+          //   _tours = tours;
           emit(TourLoaded(tours));
           print("USE CASE RESULT: $tours");
         },

@@ -21,21 +21,9 @@ class TripDetailsDialog extends StatefulWidget {
 }
 
 class _TripDetailsDialogState extends State<TripDetailsDialog> {
-  // bool _inInit = true;
-
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   if (_inInit) {
-  //     BlocProvider.of<GetTourIdCubit>(context).getTourById(widget.tourId);
-  //     _inInit = false;
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-
     return Dialog(
       backgroundColor: Colors.transparent,
       insetPadding: EdgeInsets.all(16.w),

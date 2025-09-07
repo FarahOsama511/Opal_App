@@ -157,7 +157,7 @@ class _StudentListState extends State<StudentList> {
                               return ExpandableCard(
                                 name: user.name!,
                                 phone: user.phone!,
-                                universityId: user.universityId,
+                                university: user.university ?? null,
                                 isSupervisor: false,
                                 isExpanded: _isExpandedStudents[index],
                                 onToggle: () {

@@ -259,8 +259,7 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
                                     return ExpandableCard(
                                       name: student.name ?? 'غير معروف',
                                       phone: student.phone ?? "",
-                                      universityId:
-                                          student.university?.id ?? "",
+                                      university: student.university,
                                       isSupervisor: false,
                                       isExpanded: _isExpandedStudents[index],
                                       onToggle: () {

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
+import '../bloc/update_add_delete_tour/update_add_delete_tour_cubit.dart';
+import '../bloc/update_add_delete_tour/update_add_delete_tour_state.dart';
 
 class StepHeader extends StatelessWidget {
   final VoidCallback onClose;
@@ -43,22 +46,47 @@ class StepButtons extends StatelessWidget {
                 minimumSize: Size.fromHeight(50.h),
               ),
               onPressed: onPrevious,
-              child: Text('السابق', style: TextStyles.white14Bold.copyWith(fontSize: 14.sp)),
+              child: Text(
+                'السابق',
+                style: TextStyles.white14Bold.copyWith(fontSize: 14.sp),
+              ),
             ),
           ),
         if (currentStep > 0) SizedBox(width: 10.w),
+
+        /// 👇 هنا نربط مع Cubit
         Expanded(
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFE71A45),
-              minimumSize: Size.fromHeight(50.h),
-            ),
-            onPressed: onNext,
-            child: Text(
-              currentStep < 4 ? 'التالي' : 'تأكيد',
-              style: TextStyles.white14Bold.copyWith(fontSize: 14.sp),
-            ),
-          ),
+          child:
+              BlocBuilder<UpdateAddDeleteTourCubit, UpdateAddDeleteTourState>(
+                builder: (context, state) {
+                  if (state is UpdateAddDeleteTourLoading && currentStep == 4) {
+                    // لودينج مكان زرار التأكيد فقط
+                    return Container(
+                      height: 50.h,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: ColorManager.primaryColor,
+                        borderRadius: BorderRadius.circular(15.r),
+                      ),
+                      child: const CircularProgressIndicator(
+                        color: Colors.white,
+                      ),
+                    );
+                  }
+
+                  return ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: ColorManager.primaryColor,
+                      minimumSize: Size.fromHeight(50.h),
+                    ),
+                    onPressed: onNext,
+                    child: Text(
+                      currentStep < 4 ? 'التالي' : 'تأكيد',
+                      style: TextStyles.white14Bold.copyWith(fontSize: 14.sp),
+                    ),
+                  );
+                },
+              ),
         ),
       ],
     );

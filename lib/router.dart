@@ -79,17 +79,7 @@ class AppRouter {
       GoRoute(
         path: '/home',
         builder: (context, state) {
-          return MultiBlocProvider(
-            providers: [
-              BlocProvider(create: (_) => di.setUp<TourCubit>()..getAllTours()),
-              BlocProvider(create: (_) => di.setUp<SelectionTourCubit>()),
-            ],
-            child: Builder(
-              builder: (context) {
-                return const UserHomeScreen();
-              },
-            ),
-          );
+          return UserHomeScreen();
         },
       ),
       GoRoute(

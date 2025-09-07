@@ -17,6 +17,7 @@ class SelectionTourCubit extends Cubit<SelectionTourState> {
     emit(SelectionTourLoading());
     try {
       final selectTour = await selectionTourUseCase(tourId);
+      print("tour id is ${tourId}");
 
       selectTour.fold(
         (failure) {

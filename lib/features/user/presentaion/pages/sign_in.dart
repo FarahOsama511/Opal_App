@@ -61,6 +61,8 @@ class _SignInScreenState extends State<SignInScreen> {
       credentialController.text,
       selectedRole!,
     );
+    identifierController.clear();
+    credentialController.clear();
   }
 
   SnackBar _buildSnackBar(String message) {

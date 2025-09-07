@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../core/constants/constants.dart' as university;
 import '../../../../core/resources/text_styles.dart';
-import 'delete_dialog.dart';
 
 class SettingsExpandableCard extends StatelessWidget {
   final String name;
