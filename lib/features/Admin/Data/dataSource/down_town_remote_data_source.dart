@@ -10,8 +10,9 @@ import '../../../../core/errors/exceptions.dart';
 
 abstract class DownTownRemoteDataSource {
   Future<List<DownTownModel>> getAllDownTown();
-  Future<Unit> AddDownTown(DownTownEntity DownTown);
+  Future<Unit> addDownTown(DownTownEntity downTown);
   Future<Unit> deleteDownTown(String id);
+  Future<Unit> updateDownTown(DownTownEntity downTown);
 }
 
 class DownTownRemoteDataSourceImpl extends DownTownRemoteDataSource {
@@ -38,7 +39,7 @@ class DownTownRemoteDataSourceImpl extends DownTownRemoteDataSource {
   }
 
   @override
-  Future<Unit> AddDownTown(DownTownEntity downTown) async {
+  Future<Unit> addDownTown(DownTownEntity downTown) async {
     final body = jsonEncode({'name': downTown.name});
     final response = await client.post(
       Uri.parse('${Base_Url}downtown'),
@@ -67,6 +68,25 @@ class DownTownRemoteDataSourceImpl extends DownTownRemoteDataSource {
     } else {
       print("state code is ${response.statusCode}");
       print("body:${response.body}");
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<Unit> updateDownTown(DownTownEntity downTown) async {
+    final body = jsonEncode({'name': downTown.name, "id": downTown.id});
+    final response = await client.put(
+      Uri.parse('${Base_Url}downtown/${downTown.id}'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: body,
+    );
+
+    if (response.statusCode == 200) {
+      return unit;
+    } else {
       throw ServerException();
     }
   }

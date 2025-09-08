@@ -178,7 +178,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                             print(
                               'selectedTour: ${context.read<SelectionTourCubit>().tourCurrent!}',
                             );
-                            context.go(
+                            context.push(
                               '/tripDetails',
                               extra: context
                                   .read<SelectionTourCubit>()

@@ -78,6 +78,7 @@ class AuthCubit extends Cubit<AuthState> {
     _user = user;
     await Future.wait([
       CacheNetwork.insertToCache(key: "Save_UserName", value: user.user.name!),
+      CacheNetwork.insertToCache(key: "Save_UserId", value: user.user.id!),
     ]);
 
     emit(AuthSuccess());

@@ -11,6 +11,7 @@ abstract class UniversityDataSource {
   Future<UniversityModel> getUniversityById(String id);
   Future<UniversityModel> addUniversity(UniversityModel university);
   Future<Unit> deleteUniversity(String id);
+  Future<Unit> updateUniversity(UniversityModel university);
 }
 
 class UniversityDataSourceImpl implements UniversityDataSource {
@@ -94,6 +95,32 @@ class UniversityDataSourceImpl implements UniversityDataSource {
     if (response.statusCode == 204) {
       print("status code is ${response.statusCode}");
       print("body:${response.body}");
+      return unit;
+    } else {
+      print("status code is ${response.statusCode}");
+      print("body:${response.body}");
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<Unit> updateUniversity(UniversityModel university) async {
+    final body = {
+      'name': university.name,
+      'location': university.location,
+      "id": university.id,
+    };
+    final response = await client.put(
+      Uri.parse('${Base_Url}universities/${university.id}'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${token}',
+      },
+      body: jsonEncode(body),
+    );
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+      print('the updated university is: $jsonResponse');
       return unit;
     } else {
       print("status code is ${response.statusCode}");

@@ -7,6 +7,9 @@ class DownTownEntity extends Equatable {
   final List<UserEntity>? users;
 
   DownTownEntity({this.id, this.name, this.users});
+  DownTownEntity copyWith({String? id, String? name}) {
+    return DownTownEntity(id: id ?? this.id, name: name ?? this.name);
+  }
 
   @override
   List<Object?> get props => [name, id];

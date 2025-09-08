@@ -6,10 +6,13 @@ import 'package:opal_app/core/resources/color_manager.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/settings.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/student_list.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/trips.dart';
+import 'package:opal_app/features/user/presentaion/bloc/get_all_downtowns/get_all_down_town_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/user_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/user_state.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/resources/text_styles.dart';
+import '../../../user/presentaion/bloc/get_all_universities/get_all_universities_cubit.dart';
+import '../bloc/get_lines/get_all_lines_cubit.dart';
 import '../bloc/get_tour_bloc/tour_cubit.dart';
 import '../widgets/add_menu.dart';
 import '../widgets/app_header.dart';
@@ -37,10 +40,12 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   void initState() {
     super.initState();
     BlocProvider.of<TourCubit>(context).getAllTours();
-    // BlocProvider.of<GetAllUserCubit>(context).fetchAllUsers();
-    // _timer = Timer.periodic(const Duration(seconds: 100), (_) {
-    //   BlocProvider.of<GetAllUserCubit>(context).fetchAllUsers();
-    // });
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      BlocProvider.of<GetAllUserCubit>(context).fetchAllUsers();
+      BlocProvider.of<GetAllUniversitiesCubit>(context).fetchAlluniversities();
+      BlocProvider.of<GetAllDownTownCubit>(context).fetchAllDownTowns();
+      BlocProvider.of<LinesCubit>(context).getAllLiness();
+    });
   }
 
   @override

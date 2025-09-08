@@ -3,10 +3,10 @@ import 'package:opal_app/core/errors/failure.dart';
 import 'package:opal_app/features/Admin/Domain/entities/down_town_entity.dart';
 import 'package:opal_app/features/Admin/Domain/reporistires/down_town_repo.dart';
 
-class AddDownTownUsecase {
+class UpdateDownTownUsecase {
   DownTownRepo downTownRepo;
-  AddDownTownUsecase(this.downTownRepo);
+  UpdateDownTownUsecase(this.downTownRepo);
   Future<Either<Failure, Unit>> call(DownTownEntity downTown) {
-    return downTownRepo.addDownTown(downTown);
+    return downTownRepo.updateDownTown(downTown);
   }
 }

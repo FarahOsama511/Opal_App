@@ -52,11 +52,11 @@ class DownTownRepoImpl extends DownTownRepo {
     }
   }
 
-  Future<Either<Failure, Unit>> AddDownTown(DownTownEntity downTown) async {
+  Future<Either<Failure, Unit>> addDownTown(DownTownEntity downTown) async {
     final DownTownModel downTownModel = DownTownModel(name: downTown.name);
     if (await networkInfo.isConnected) {
       try {
-        await downTownRemoteDataSource.AddDownTown(downTownModel);
+        await downTownRemoteDataSource.addDownTown(downTownModel);
         return Right(unit);
       } on ServerException {
         return Left(ServerFailure());
@@ -83,5 +83,23 @@ class DownTownRepoImpl extends DownTownRepo {
   @override
   Future<Either<Failure, DownTownEntity>> getDownTownById(String id) {
     throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, Unit>> updateDownTown(DownTownEntity downTown) async {
+    final DownTownModel downTownModel = DownTownModel(
+      name: downTown.name,
+      id: downTown.id,
+    );
+    if (await networkInfo.isConnected) {
+      try {
+        await downTownRemoteDataSource.updateDownTown(downTownModel);
+        return Right(unit);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NoInternetFailure());
+    }
   }
 }

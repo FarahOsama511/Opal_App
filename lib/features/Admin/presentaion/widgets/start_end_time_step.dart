@@ -17,27 +17,13 @@ class StartEndTimeStep extends StatelessWidget {
     required this.onEndDateChanged,
   });
 
-  Future<void> _pickDateTime(
+  Future<void> _pickTime(
     BuildContext context,
     DateTime? initial,
-    void Function(DateTime) onPicked,
-  ) async {
-    final DateTime now = DateTime.now();
-    final DateTime safeInitialDate = (initial != null && initial.isAfter(now))
-        ? initial
-        : now;
-
-    // اختيار التاريخ
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: safeInitialDate,
-      firstDate: now,
-      lastDate: DateTime(2100),
-    );
-
-    if (pickedDate == null) return;
-
-    // اختيار الوقت
+    void Function(DateTime) onPicked, {
+    bool isEndTime = false,
+    DateTime? startDate,
+  }) async {
     final TimeOfDay? pickedTime = await showTimePicker(
       context: context,
       initialTime: initial != null
@@ -47,14 +33,43 @@ class StartEndTimeStep extends StatelessWidget {
 
     if (pickedTime == null) return;
 
-    // دمج التاريخ والوقت
-    final DateTime fullDateTime = DateTime(
-      pickedDate.year,
-      pickedDate.month,
-      pickedDate.day,
+    final now = DateTime.now();
+
+    // نخلي التاريخ دايمًا النهاردة
+    DateTime fullDateTime = DateTime(
+      now.year,
+      now.month,
+      now.day,
       pickedTime.hour,
       pickedTime.minute,
     );
+
+    // لو هو وقت النهاية → نتحقق
+    if (isEndTime && startDate != null) {
+      DateTime startFull = DateTime(
+        now.year,
+        now.month,
+        now.day,
+        startDate.hour,
+        startDate.minute,
+      );
+
+      // لو النهاية قبل البداية → نضيف يوم
+      if (fullDateTime.isBefore(startFull)) {
+        fullDateTime = fullDateTime.add(const Duration(days: 1));
+      }
+
+      // لو بعد الإضافة لسه قبل البداية → يبقى خطأ
+      if (fullDateTime.isBefore(startFull)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("⏰ وقت الانتهاء لازم يكون بعد وقت البداية"),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
+    }
 
     onPicked(fullDateTime);
   }
@@ -89,12 +104,17 @@ class StartEndTimeStep extends StatelessWidget {
           ),
           title: Text(
             startDate != null
-                ? "بداية: ${startDate!.day}/${startDate!.month}/${startDate!.year} - ${formatTime(startDate!)}"
+                ? "بداية: ${formatTime(startDate!)}"
                 : "اختر وقت البداية",
             style: TextStyles.black14Bold.copyWith(fontSize: 14.sp),
           ),
-          trailing: Icon(Icons.calendar_today, size: 24.sp),
-          onTap: () => _pickDateTime(context, startDate, onStartDateChanged),
+          trailing: Icon(Icons.access_time, size: 24.sp),
+          onTap: () => _pickTime(
+            context,
+            startDate,
+            onStartDateChanged,
+            isEndTime: false,
+          ),
         ),
 
         Divider(height: 1.h, thickness: 1.h),
@@ -104,12 +124,18 @@ class StartEndTimeStep extends StatelessWidget {
           leading: Icon(Icons.stop_circle, color: Colors.red, size: 28.sp),
           title: Text(
             endDate != null
-                ? "نهاية: ${endDate!.day}/${endDate!.month}/${endDate!.year} - ${formatTime(endDate!)}"
+                ? "نهاية: ${formatTime(endDate!)}"
                 : "اختر وقت النهاية",
             style: TextStyles.black14Bold.copyWith(fontSize: 14.sp),
           ),
-          trailing: Icon(Icons.calendar_today, size: 24.sp),
-          onTap: () => _pickDateTime(context, endDate, onEndDateChanged),
+          trailing: Icon(Icons.access_time, size: 24.sp),
+          onTap: () => _pickTime(
+            context,
+            endDate,
+            onEndDateChanged,
+            isEndTime: true,
+            startDate: startDate, // مهم جدًا
+          ),
         ),
       ],
     );

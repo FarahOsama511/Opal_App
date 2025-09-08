@@ -93,10 +93,31 @@ class UniversityRepoImpl extends UniversityRepo {
   }
 
   @override
-  Future<Either<Failure, Unit>> DeleteUniversity(String id) async {
+  Future<Either<Failure, Unit>> deleteUniversity(String id) async {
     if (await networkInfo.isConnected) {
       try {
         await universityDataSource.deleteUniversity(id);
+        return Right(unit);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NoInternetFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> updateUniversity(
+    UniversityEntity university,
+  ) async {
+    if (await networkInfo.isConnected) {
+      final UniversityModel universityModel = UniversityModel(
+        id: university.id,
+        name: university.name,
+        location: university.location,
+      );
+      try {
+        await universityDataSource.updateUniversity(universityModel);
         return Right(unit);
       } on ServerException {
         return Left(ServerFailure());

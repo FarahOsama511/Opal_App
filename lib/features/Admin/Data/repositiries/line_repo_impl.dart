@@ -51,7 +51,7 @@ class LineRepoImpl extends LineRepo {
     final LineModel lineModel = LineModel(name: Line.name, notes: Line.notes);
     if (await networkInfo.isConnected) {
       try {
-        await remoteDataSource.AddLine(lineModel);
+        await remoteDataSource.addLine(lineModel);
         return Right(unit);
       } on ServerException {
         return Left(ServerFailure());
@@ -90,7 +90,21 @@ class LineRepoImpl extends LineRepo {
   }
 
   @override
-  Future<Either<Failure, Unit>> updateLine(LineEntity lineEntity) {
-    throw UnimplementedError();
+  Future<Either<Failure, Unit>> updateLine(LineEntity line) async {
+    final LineModel lineModel = LineModel(
+      name: line.name,
+      notes: line.notes,
+      id: line.id,
+    );
+    if (await networkInfo.isConnected) {
+      try {
+        await remoteDataSource.updateLine(lineModel);
+        return Right(unit);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NoInternetFailure());
+    }
   }
 }

@@ -35,7 +35,7 @@ class _StudentListState extends State<StudentList> {
     }).toList();
 
     if (_searchQuery.isNotEmpty) {
-      _filteredUsers = _filteredUsers.where((user) {
+      _filteredUsers = _users.where((user) {
         return user.name!.toLowerCase().contains(_searchQuery.toLowerCase()) ||
             user.id!.contains(_searchQuery) ||
             user.phone!.contains(_searchQuery) ||

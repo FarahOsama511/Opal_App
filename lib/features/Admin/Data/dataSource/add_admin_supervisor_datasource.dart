@@ -7,6 +7,7 @@ import '../../../../core/errors/exceptions.dart';
 
 abstract class AddAdminSupervisorDatasource {
   Future<Unit> AddAdminOrSupervisor(AddAdminSupervisorModel addUser);
+  Future<Unit> UpdateAdminOrSupervisor(AddAdminSupervisorModel user);
 }
 
 class AddAdminSupervisorDatasourceImpl implements AddAdminSupervisorDatasource {
@@ -40,6 +41,35 @@ class AddAdminSupervisorDatasourceImpl implements AddAdminSupervisorDatasource {
       print("Status: ${response.statusCode}");
       print("Body: ${response.body}");
 
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<Unit> UpdateAdminOrSupervisor(AddAdminSupervisorModel user) async {
+    final body = {
+      'name': user.name,
+      'phone': user.phone,
+      'password': user.password,
+      'email': user.email,
+      'role': user.role,
+      'lineId': user.lineId,
+      'line': user.line,
+      'universities': user.universitiesId,
+    };
+    final response = await client.put(
+      Uri.parse('${Base_Url}users/${user.id}'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${token}',
+      },
+      body: jsonEncode(body),
+    );
+    print("Status: ${response.statusCode}");
+    print("Body: ${response.body}");
+    if (response.statusCode == 200) {
+      return unit;
+    } else {
       throw ServerException();
     }
   }

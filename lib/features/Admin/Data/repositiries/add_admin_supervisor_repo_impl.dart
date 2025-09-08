@@ -45,4 +45,32 @@ class AddAdminSupervisorRepoImpl extends AddAdminORSupervisorRepo {
       return Left(NoInternetFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, Unit>> UpdateAdminOrSupervisor(UserEntity user) async {
+    final AddAdminSupervisorModel addAdminSupervisorModel =
+        AddAdminSupervisorModel(
+          id: user.id,
+          name: user.name,
+          password: user.password,
+          phone: user.phone,
+          role: user.role,
+          email: user.email,
+          lineId: user.lineId,
+          line: user.line,
+          universitiesId: user.universitiesId,
+        );
+    if (await networkInfo.isConnected) {
+      try {
+        await addAdminSupervisorDatasource.UpdateAdminOrSupervisor(
+          addAdminSupervisorModel,
+        );
+        return Right(unit);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NoInternetFailure());
+    }
+  }
 }

@@ -52,9 +52,22 @@ class _AddTripBoxState extends State<AddTripBox> {
       ).showSnackBar(SnackBar(content: Text("يرجى تعبئة جميع الحقول")));
       return;
     }
+    final now = DateTime.now();
+    final fullStartTime = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      startDate!.hour,
+      startDate!.minute,
+    );
 
-    final DateTime fullStartTime = startDate!;
-    final DateTime fullEndTime = endDate!;
+    final fullEndTime = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      endDate!.hour,
+      endDate!.minute,
+    );
 
     if (fullEndTime.isBefore(fullStartTime)) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -63,10 +76,10 @@ class _AddTripBoxState extends State<AddTripBox> {
       return;
     }
 
-    final DateTime fullLeavesAt = DateTime(
-      selectedDate!.year,
-      selectedDate!.month,
-      selectedDate!.day,
+    final fullLeavesAt = DateTime(
+      now.year,
+      now.month,
+      now.day,
       leavesAtPeriod == 'صباحًا' ? leavesAtHour : leavesAtHour + 12,
       leavesAtMinute,
     );

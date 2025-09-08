@@ -10,6 +10,7 @@ import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/
 import '../../../../core/resources/text_styles.dart';
 import '../bloc/get_tour_bloc/tour_cubit.dart';
 import '../pages/edit_trip_time.dart';
+import '../pages/reservation_screen.dart';
 
 class TripDetailsDialog extends StatefulWidget {
   final String tourId;
@@ -111,6 +112,7 @@ class _TripDetailsDialogState extends State<TripDetailsDialog> {
                     style: TextStyles.white12Bold.copyWith(fontSize: 12.sp),
                   ),
                 ),
+
                 SizedBox(height: 12.h),
                 BlocConsumer<
                   UpdateAddDeleteTourCubit,
@@ -176,6 +178,31 @@ class _TripDetailsDialogState extends State<TripDetailsDialog> {
                   },
                 ),
 
+                SizedBox(height: 12.h),
+                ElevatedButton(
+                  onPressed: () {
+                    // نروح للصفحة الجديدة
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ReservationsPage(tour: widget.selectedtour),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        ColorManager.primaryColor, // لون مميز للزرار
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.r),
+                    ),
+                    minimumSize: Size.fromHeight(50.h),
+                  ),
+                  child: Text(
+                    'عرض الحجوزات',
+                    style: TextStyles.white12Bold.copyWith(fontSize: 12.sp),
+                  ),
+                ),
                 SizedBox(height: 12.h),
                 ElevatedButton(
                   onPressed: () {

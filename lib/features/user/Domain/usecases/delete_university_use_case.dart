@@ -7,6 +7,6 @@ class DeleteUniversityUseCase {
 
   DeleteUniversityUseCase(this.universityRepo);
   Future<Either<Failure, Unit>> call(String id) {
-    return universityRepo.DeleteUniversity(id);
+    return universityRepo.deleteUniversity(id);
   }
 }

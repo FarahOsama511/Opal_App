@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,6 +13,8 @@ import 'package:opal_app/features/Admin/presentaion/bloc/delete_university/delet
 import 'package:opal_app/features/Admin/presentaion/bloc/delete_university/delete_university_state.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_state.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/update_line/update_line_cubit.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/update_university/update_university_cubit.dart';
 import 'package:opal_app/features/user/Domain/entities/university_entity.dart';
 import 'package:opal_app/features/user/presentaion/bloc/get_all_downtowns/get_all_down_town_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/get_all_downtowns/get_all_down_town_state.dart';
@@ -19,9 +23,13 @@ import 'package:opal_app/features/user/presentaion/bloc/get_all_universities/get
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
 import '../bloc/delete_down_town/delete_down_town_state.dart';
+import '../bloc/update_down_town/update_down_town_cubit.dart';
 import '../widgets/SettingsExpandableCard.dart';
 import '../widgets/delete_dialog.dart';
+import '../widgets/more_options_button.dart';
 import '../widgets/search_field.dart';
+import '../widgets/text_field.dart';
+import 'edit_page.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -272,9 +280,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         !_isExpandedUniversity[index];
                   });
                 },
-                deleteIcon: IconButton(
-                  icon: Icon(Icons.delete, color: Colors.red, size: 22.sp),
-                  onPressed: () => _showDeleteDialog(university),
+                deleteIcon: MoreOptionsButton(
+                  entity: university, // أو line أو city
+                  onEdit: (e) => _handleEdit(context, e),
+                  onDelete: _showDeleteDialog,
                 ),
               );
             },
@@ -340,9 +349,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     _isExpandedLines[index] = !_isExpandedLines[index];
                   });
                 },
-                deleteIcon: IconButton(
-                  icon: Icon(Icons.delete, color: Colors.red, size: 22.sp),
-                  onPressed: () => _showDeleteDialog(line),
+                deleteIcon: MoreOptionsButton(
+                  entity: line, // أو line أو city
+                  onEdit: (e) => _handleEdit(context, e),
+                  onDelete: _showDeleteDialog,
                 ),
               );
             },
@@ -409,9 +419,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     _isExpandedCities[index] = !_isExpandedCities[index];
                   });
                 },
-                deleteIcon: IconButton(
-                  icon: Icon(Icons.delete, color: Colors.red, size: 22.sp),
-                  onPressed: () => _showDeleteDialog(city),
+                deleteIcon: MoreOptionsButton(
+                  entity: city, // أو line أو city
+                  onEdit: (e) => _handleEdit(context, e),
+                  onDelete: _showDeleteDialog,
                 ),
               );
             },
@@ -453,7 +464,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: isUniversitySelected ? ColorManager.primaryColor: Colors.grey.shade300,
+                backgroundColor: isUniversitySelected
+                    ? ColorManager.primaryColor
+                    : Colors.grey.shade300,
                 minimumSize: Size(0, 45.h),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30.r),
@@ -484,7 +497,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: isLineSelected ? ColorManager.primaryColor : Colors.grey.shade300,
+                backgroundColor: isLineSelected
+                    ? ColorManager.primaryColor
+                    : Colors.grey.shade300,
                 minimumSize: Size(0, 45.h),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30.r),
@@ -515,7 +530,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: isCitySelected ?ColorManager.primaryColor : Colors.grey.shade300,
+                backgroundColor: isCitySelected
+                    ? ColorManager.primaryColor
+                    : Colors.grey.shade300,
                 minimumSize: Size(0, 45.h),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30.r),
@@ -536,7 +553,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
     );
   }
-
 
   // 🔹 الديليت
   void _showDeleteDialog(dynamic entity) {
@@ -577,5 +593,79 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void _handleDeleteCity(String cityId) {
     BlocProvider.of<DeleteDownTownCubit>(context).deleteDownTown(cityId);
     context.pop();
+  }
+}
+
+void _handleEdit(BuildContext context, dynamic entity) {
+  if (entity is UniversityEntity) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => EditPage(
+          title: "تعديل الجامعة",
+          buttonText: "تعديل الجامعة",
+          initialValues: {"name": entity.name ?? "", "notes": ""},
+          extraFields: [
+            CustomTextField(
+              hint: 'الموقع',
+              controller: TextEditingController(text: entity.location ?? ""),
+            ),
+          ],
+          onSave: (values) async {
+            final updateEntity = entity.copyWith(name: values["name"]);
+            await context.read<UpdateUniversityCubit>().updateUniversity(
+              updateEntity,
+            );
+            print("تم تعديل الجامعة: ${values['name']} - ${values['notes']}");
+          },
+        ),
+      ),
+    );
+  } else if (entity is LineEntity) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => EditPage(
+          title: "تعديل الخط",
+          buttonText: "تعديل الخط",
+          initialValues: {
+            "name": entity.name ?? "",
+            "notes": entity.notes ?? "",
+          },
+          extraFields: [
+            CustomTextField(
+              hint: 'ملاحظات',
+              controller: TextEditingController(text: entity.notes ?? ""),
+            ),
+          ],
+          onSave: (values) async {
+            final updateEntity = entity.copyWith(
+              name: values["name"],
+              notes: values["notes"],
+            );
+            await context.read<UpdateLineCubit>().updateLine(updateEntity);
+            print("تم تعديل الخط: ${values['name']} - ${values['notes']}");
+          },
+        ),
+      ),
+    );
+  } else if (entity is DownTownEntity) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => EditPage(
+          title: "تعديل المدينة",
+          buttonText: "تعديل المدينة",
+          initialValues: {"name": entity.name ?? "", "notes": ""},
+          onSave: (values) async {
+            final updateEntity = entity.copyWith(name: values["name"]);
+            await context.read<UpdateDownTownCubit>().updateDownTown(
+              updateEntity,
+            );
+            print("تم تعديل المدينة: ${values['name']}");
+          },
+        ),
+      ),
+    );
   }
 }

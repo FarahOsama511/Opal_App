@@ -8,9 +8,10 @@ import '../../Domain/entities/line_entity.dart';
 
 abstract class LineRemoteDataSource {
   Future<List<LineModel>> getAllLines();
-  Future<Unit> AddLine(LineEntity line);
+  Future<Unit> addLine(LineEntity line);
   Future<LineModel> getLineById(String id);
   Future<Unit> deleteLine(String id);
+  Future<Unit> updateLine(LineEntity line);
 }
 
 class LineRemoteDataSourceImpl extends LineRemoteDataSource {
@@ -36,7 +37,7 @@ class LineRemoteDataSourceImpl extends LineRemoteDataSource {
   }
 
   @override
-  Future<Unit> AddLine(LineEntity line) async {
+  Future<Unit> addLine(LineEntity line) async {
     final body = jsonEncode({'name': line.name, 'notes': line.notes});
     final response = await client.post(
       Uri.parse('${Base_Url}lines'),
@@ -84,6 +85,28 @@ class LineRemoteDataSourceImpl extends LineRemoteDataSource {
     } else {
       print("state code is ${response.statusCode}");
       print("body:${response.body}");
+      throw ServerException();
+    }
+  }
+
+  Future<Unit> updateLine(LineEntity line) async {
+    final body = jsonEncode({
+      'name': line.name,
+      'notes': line.notes,
+      'id': line.id,
+    });
+    final response = await client.put(
+      Uri.parse('${Base_Url}lines/${line.id}'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: body,
+    );
+
+    if (response.statusCode == 200) {
+      return unit;
+    } else {
       throw ServerException();
     }
   }

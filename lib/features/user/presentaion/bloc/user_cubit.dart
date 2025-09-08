@@ -15,6 +15,7 @@ class GetAllUserCubit extends Cubit<UserState> {
   final GetUserIdUseCase getUserIdUseCase;
   String? userId;
   String? lineName;
+  UserEntity? user;
   List<UserEntity> _users = [];
   GetAllUserCubit(
     this.getUserIdUseCase,
@@ -93,16 +94,14 @@ class GetAllUserCubit extends Cubit<UserState> {
   Future<void> getUserById(String userId) async {
     emit(UserLoading());
     try {
-      final userById = await getUserIdUseCase(userId);
-      userById.fold(
+      final result = await getUserIdUseCase(userId);
+      result.fold(
         (failure) {
           emit(UserError(_errorMessage(failure)));
         },
-        (userById) async {
+        (userById) {
           if (userById != null) {
             emit(UserByIdSuccess(userById));
-            userId = userById.id ?? "";
-            lineName = userById.line?.name ?? "";
             print("User successfully: $userById");
           } else {
             emit(UserError("المستخدم غير موجود"));
@@ -111,7 +110,7 @@ class GetAllUserCubit extends Cubit<UserState> {
         },
       );
     } catch (e) {
-      print('Server error: ${e}');
+      print('Server error: $e');
       emit(UserError("حدث خطأ ما، يرجى المحاولة مرة أخرى"));
     }
   }

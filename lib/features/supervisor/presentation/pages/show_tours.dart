@@ -12,51 +12,58 @@ import '../../../../../../core/resources/text_styles.dart';
 import '../../../Admin/presentaion/bloc/get_tour_bloc/tour_cubit.dart';
 import '../../../Admin/presentaion/bloc/get_tour_bloc/tour_state.dart';
 import '../../../Admin/presentaion/widgets/search_field.dart';
+import '../../../Admin/presentaion/widgets/trip_type_selector.dart';
 import '../../../user/presentaion/bloc/user_cubit.dart';
 import '../../../user/presentaion/bloc/user_state.dart';
 
 class ShowToursBySuperVisor extends StatefulWidget {
   final bool? isTripConfirmed;
-  UserEntity user;
-  ShowToursBySuperVisor({
-    super.key,
-    this.isTripConfirmed = false,
-    required this.user,
-  });
+
+  const ShowToursBySuperVisor({super.key, this.isTripConfirmed = false});
+
   @override
   State<ShowToursBySuperVisor> createState() => _ShowToursBySuperVisorState();
 }
 
 class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
-  int? expandedCardIndex;
-  String? lineId;
+  UserEntity? user;
+  String lineName = "";
   late bool isTripConfirmed;
+
+  // التحكم في التوسيع
   List<bool> _isExpandedStudents = [];
+
+  // البيانات
   List<UserEntity> _users = [];
   List<UserEntity> _filteredUsers = [];
   String _searchQuery = '';
+
+  // نوع الرحلة (0 ذهاب، 1 عودة)
+  int _selectedTripType = 0;
+
+  final userId = CacheNetwork.getCacheData(key: "Save_UserId");
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<TourCubit>(context).getAllTours();
+    BlocProvider.of<GetAllUserCubit>(context).getUserById(userId);
+  }
+
   void _updateFilteredUsers() {
     _filteredUsers = _users;
     if (_searchQuery.isNotEmpty) {
-      _filteredUsers = _filteredUsers.where((user) {
-        return user.name!.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-            user.id!.contains(_searchQuery) ||
-            user.phone!.contains(_searchQuery) ||
-            (user.university?.name?.toLowerCase().contains(_searchQuery) ??
-                false);
+      _filteredUsers = _filteredUsers.where((u) {
+        return u.name!.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+            u.id!.contains(_searchQuery) ||
+            u.phone!.contains(_searchQuery) ||
+            (u.university?.name?.toLowerCase().contains(_searchQuery) ?? false);
       }).toList();
     }
 
     if (_isExpandedStudents.length != _filteredUsers.length) {
       _isExpandedStudents = List.generate(_filteredUsers.length, (_) => false);
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    BlocProvider.of<TourCubit>(context).getAllTours();
-    BlocProvider.of<GetAllUserCubit>(context).getUserById(widget.user.id!);
   }
 
   @override
@@ -90,13 +97,8 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
                         children: [
                           BlocBuilder<GetAllUserCubit, UserState>(
                             builder: (context, state) {
-                              String lineName = '...';
                               if (state is UserByIdSuccess) {
-                                widget.user = state.userById;
-                                print("user${widget.user}");
-                                print(
-                                  'LINEName:${state.userById.line?.name ?? ""}',
-                                );
+                                user = state.userById;
                                 lineName =
                                     state.userById.line?.name ?? 'غير معروف';
                               } else if (state is UserError) {
@@ -132,32 +134,24 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
                   ),
                   titleWidget: Align(
                     alignment: Alignment.centerLeft,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: Transform(
-                            alignment: Alignment.center,
-                            transform: Matrix4.identity()..scale(-1.0, 1.0),
-                            child: Icon(
-                              Icons.logout,
-                              size: 30.sp,
-                              color: Colors.black,
-                            ),
-                          ),
-                          onPressed: () async {
-                            await CacheNetwork.deleteCacheData(
-                              key: 'access_token',
-                            );
-                            context.go('/signin');
-                          },
+                    child: IconButton(
+                      icon: Transform(
+                        alignment: Alignment.center,
+                        transform: Matrix4.identity()..scale(-1.0, 1.0),
+                        child: Icon(
+                          Icons.logout,
+                          size: 30.sp,
+                          color: Colors.black,
                         ),
-                      ],
+                      ),
+                      onPressed: () async {
+                        await CacheNetwork.deleteCacheData(key: 'access_token');
+                        context.go('/signin');
+                      },
                     ),
                   ),
                 ),
                 const SizedBox(height: 12),
-                const SizedBox(height: 10),
                 Expanded(
                   child: Container(
                     width: double.infinity,
@@ -174,19 +168,29 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(vertical: 0.h),
-                          child: SearchField(
-                            hintText: 'ابحث عن مستخدم',
-                            fillColor: Colors.white,
-                            iconColor: Colors.red,
-                            onChanged: (value) {
-                              setState(() {
-                                _searchQuery = value;
-                                _updateFilteredUsers();
-                              });
-                            },
-                          ),
+                        Column(
+                          children: [
+                            SearchField(
+                              hintText: 'ابحث عن مستخدم',
+                              fillColor: Colors.white,
+                              iconColor: Colors.red,
+                              onChanged: (value) {
+                                setState(() {
+                                  _searchQuery = value;
+                                  _updateFilteredUsers();
+                                });
+                              },
+                            ),
+                            SizedBox(height: 12.h),
+                            TripTypeSelector(
+                              selectedIndex: _selectedTripType,
+                              onChanged: (index) {
+                                setState(() {
+                                  _selectedTripType = index;
+                                });
+                              },
+                            ),
+                          ],
                         ),
                         Align(
                           alignment: Alignment.centerRight,
@@ -201,7 +205,7 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
                             if (state is TourLoading) {
                               return const Center(
                                 child: CircularProgressIndicator(
-                                  color: ColorManager.primaryColor,
+                                  color: ColorManager.secondColor,
                                 ),
                               );
                             } else if (state is TourError) {
@@ -212,70 +216,78 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
                                 ),
                               );
                             } else if (state is TourLoaded) {
-                              print("Tours Count: ${state.tours.length}");
-
                               final tours = state.tours
                                   .where(
                                     (tour) =>
                                         tour.line.id != null &&
-                                        widget.user.line?.id == tour.line.id,
-                                  )
-                                  .toList();
-                              print("User Line ID: ${widget.user.line?.id}");
-                              print("Filtered Tours: ${tours.length}");
-
-                              final studentInTours = tours
-                                  .where(
-                                    (tour) => tour.users?.isNotEmpty ?? false,
-                                  )
-                                  .toList();
-                              print("Student Tours: ${studentInTours.length}");
-
-                              final allUsers = studentInTours
-                                  .expand((tour) => tour.users ?? [])
-                                  .toList();
-                              print("All Users: ${allUsers.length}");
-
-                              final allowedUniversities =
-                                  widget.user.universitiesId ?? [];
-
-                              _users = allUsers
-                                  .whereType<UserEntity>()
-                                  .where(
-                                    (user) => allowedUniversities.contains(
-                                      user.university?.id,
-                                    ),
+                                        user?.line?.id == tour.line.id,
                                   )
                                   .toList();
 
+                              // حسب نوع الرحلة
+                              List<UserEntity> allUsers = [];
+                              if (_selectedTripType == 0) {
+                                // رحلات الذهاب: الطلاب المرتبطين بالخط
+                                final studentInTours = tours
+                                    .where(
+                                      (tour) => tour.users?.isNotEmpty ?? false,
+                                    )
+                                    .toList();
+                                allUsers = studentInTours
+                                    .expand((tour) => tour.users ?? [])
+                                    .whereType<UserEntity>()
+                                    .toList();
+                              } else {
+                                // رحلات العودة: الطلاب المرتبطين بالجامعات
+                                final allowedUniversities =
+                                    user?.universitiesId ?? [];
+                                final studentInTours = tours
+                                    .where(
+                                      (tour) => tour.users?.isNotEmpty ?? false,
+                                    )
+                                    .toList();
+                                allUsers = studentInTours
+                                    .expand((tour) => tour.users ?? [])
+                                    .whereType<UserEntity>()
+                                    .where(
+                                      (u) => allowedUniversities.contains(
+                                        u.university?.id,
+                                      ),
+                                    )
+                                    .toList();
+                              }
+
+                              _users = allUsers;
                               _updateFilteredUsers();
 
                               if (_filteredUsers.isEmpty) {
                                 return Center(
                                   child: Text(
-                                    'لا يوجد طلاب مرتبطين بهذه الرحلات أو الجامعات',
+                                    'لا يوجد طلاب مرتبطين بهذه الرحلات',
                                     style: TextStyles.white20Bold,
                                   ),
                                 );
                               } else {
-                                return ListView.builder(
-                                  itemCount: _filteredUsers.length,
-                                  itemBuilder: (context, index) {
-                                    final student = _filteredUsers[index];
-                                    return ExpandableCard(
-                                      name: student.name ?? 'غير معروف',
-                                      phone: student.phone ?? "",
-                                      university: student.university,
-                                      isSupervisor: false,
-                                      isExpanded: _isExpandedStudents[index],
-                                      onToggle: () {
-                                        setState(() {
-                                          _isExpandedStudents[index] =
-                                              !_isExpandedStudents[index];
-                                        });
-                                      },
-                                    );
-                                  },
+                                return Expanded(
+                                  child: ListView.builder(
+                                    itemCount: _filteredUsers.length,
+                                    itemBuilder: (context, index) {
+                                      final student = _filteredUsers[index];
+                                      return ExpandableCard(
+                                        name: student.name ?? 'غير معروف',
+                                        phone: student.phone ?? "",
+                                        university: student.university,
+                                        isSupervisor: false,
+                                        isExpanded: _isExpandedStudents[index],
+                                        onToggle: () {
+                                          setState(() {
+                                            _isExpandedStudents[index] =
+                                                !_isExpandedStudents[index];
+                                          });
+                                        },
+                                      );
+                                    },
+                                  ),
                                 );
                               }
                             } else {

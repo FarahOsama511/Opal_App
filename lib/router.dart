@@ -8,12 +8,12 @@ import 'package:opal_app/features/Admin/presentaion/bloc/add_university/add_univ
 import 'package:opal_app/features/Admin/presentaion/bloc/create_admin_supervisors/add_admin_supervisor_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/delete_user/delete_user_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_bloc/tour_cubit.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/update_down_town/update_down_town_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/add_down_town.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/add_line.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/add_university.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/trip_details.dart';
 import 'package:opal_app/features/supervisor/presentation/pages/show_tours.dart';
-import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
 import 'package:opal_app/features/user/presentaion/bloc/get_all_downtowns/get_all_down_town_cubit.dart';
 import 'package:opal_app/features/user/presentaion/pages/sign_in.dart';
 import 'package:opal_app/features/user/presentaion/pages/sign_up.dart';
@@ -24,6 +24,8 @@ import 'features/Admin/presentaion/bloc/delete_down_town/delete_down_town_cubit.
 import 'features/Admin/presentaion/bloc/delete_line/delete_line_cubit.dart';
 import 'features/Admin/presentaion/bloc/delete_university/delete_university_cubit.dart';
 import 'features/Admin/presentaion/bloc/get_lines/get_all_lines_cubit.dart';
+import 'features/Admin/presentaion/bloc/update_line/update_line_cubit.dart';
+import 'features/Admin/presentaion/bloc/update_university/update_university_cubit.dart';
 import 'features/Admin/presentaion/pages/add_admin.dart';
 import 'features/Admin/presentaion/pages/add_supervisor.dart';
 import 'features/Admin/presentaion/pages/admin_home_screen.dart';
@@ -131,6 +133,9 @@ class AppRouter {
               BlocProvider(create: (_) => di.setUp<DeleteUniversityCubit>()),
               BlocProvider(create: (_) => di.setUp<DeleteLineCubit>()),
               BlocProvider(create: (_) => di.setUp<DeleteDownTownCubit>()),
+              BlocProvider(create: (_) => di.setUp<UpdateDownTownCubit>()),
+              BlocProvider(create: (_) => di.setUp<UpdateUniversityCubit>()),
+              BlocProvider(create: (_) => di.setUp<UpdateLineCubit>()),
             ],
             child: Builder(
               builder: (context) {
@@ -143,8 +148,7 @@ class AppRouter {
       GoRoute(
         path: '/supervisorScreen',
         builder: (context, state) {
-          final user = state.extra as UserEntity;
-          return ShowToursBySuperVisor(user: user);
+          return ShowToursBySuperVisor();
         },
       ),
       GoRoute(

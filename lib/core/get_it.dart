@@ -24,6 +24,7 @@ import 'package:opal_app/features/Admin/Domain/usecase/get_all_lines.dart';
 import 'package:opal_app/features/Admin/Domain/usecase/get_all_tours.dart';
 import 'package:opal_app/features/Admin/Domain/usecase/get_line_Id.dart';
 import 'package:opal_app/features/Admin/Domain/usecase/get_tour_id_use_case.dart';
+import 'package:opal_app/features/Admin/Domain/usecase/update_down_town.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/add_down_town/add_down_town_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/add_lines/add_line_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/add_university/add_university_cubit.dart';
@@ -32,6 +33,9 @@ import 'package:opal_app/features/Admin/presentaion/bloc/delete_line/delete_line
 import 'package:opal_app/features/Admin/presentaion/bloc/delete_user/delete_user_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_bloc/tour_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_id.dart/get_tour_id_cubit.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/update_down_town/update_down_town_cubit.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/update_line/update_line_cubit.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/update_university/update_university_cubit.dart';
 import 'package:opal_app/features/supervisor/bloc/get_university_by_id/get_university_by_id_cubit.dart';
 import 'package:opal_app/features/user/Data/datasource/select_tour_remote_data_source.dart';
 import 'package:opal_app/features/user/Data/datasource/university_data_source.dart';
@@ -53,6 +57,7 @@ import 'package:opal_app/features/user/Domain/usecases/get_university_id_usecase
 import 'package:opal_app/features/user/Domain/usecases/get_user_id_use_case.dart';
 import 'package:opal_app/features/user/Domain/usecases/select_tour_use_case.dart';
 import 'package:opal_app/features/user/Domain/usecases/unconfirm_tour_use_case.dart';
+import 'package:opal_app/features/user/Domain/usecases/update_university_usecase.dart';
 import 'package:opal_app/features/user/presentaion/bloc/auth_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/get_all_downtowns/get_all_down_town_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/get_all_universities/get_all_universities_cubit.dart';
@@ -103,6 +108,9 @@ Future<void> init() async {
   setUp.registerFactory(() => GetAllDownTownCubit(setUp()));
   setUp.registerFactory(() => AddDownTownCubit(setUp()));
   setUp.registerFactory(() => DeleteDownTownCubit(setUp()));
+  setUp.registerFactory(() => UpdateLineCubit(setUp()));
+  setUp.registerFactory(() => UpdateUniversityCubit(setUp()));
+  setUp.registerFactory(() => UpdateDownTownCubit(setUp()));
 
   //usecases
   setUp.registerLazySingleton(() => GetAllToursUseCase(setUp()));
@@ -131,6 +139,9 @@ Future<void> init() async {
   setUp.registerLazySingleton(() => DeleteDownTownUsecase(setUp()));
   setUp.registerLazySingleton(() => AddDownTownUsecase(setUp()));
   setUp.registerLazySingleton(() => GetAllDownTownUsecase(setUp()));
+  setUp.registerLazySingleton(() => UpdateLineUseCase(setUp()));
+  setUp.registerLazySingleton(() => UpdateUniversityUsecase(setUp()));
+  setUp.registerLazySingleton(() => UpdateDownTownUsecase(setUp()));
 
   //repositories
   setUp.registerLazySingleton<ToursRepository>(

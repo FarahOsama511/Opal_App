@@ -159,7 +159,7 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   void _navigateBasedOnRole(String? role) {
-    final user = context.read<AuthCubit>().user!.user;
+    // final user = context.read<AuthCubit>().user!.user;
 
     switch (role) {
       case 'student':
@@ -167,8 +167,8 @@ class _SignInScreenState extends State<SignInScreen> {
 
         break;
       case 'supervisor':
-        print("user is $user");
-        context.go('/supervisorScreen', extra: user);
+        //  print("user is $user");
+        context.go('/supervisorScreen');
 
         break;
       case 'admin':
