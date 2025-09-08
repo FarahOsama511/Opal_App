@@ -453,20 +453,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: isUniversitySelected
-                    ? ColorManager.primaryColor
-                    : Colors.grey.shade300,
-                minimumSize: Size.fromHeight(38.h),
+                backgroundColor: isUniversitySelected ? ColorManager.primaryColor: Colors.grey.shade300,
+                minimumSize: Size(0, 45.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.r),
+                ),
               ),
-              child: Text(
-                'الجامعات',
-                style: isUniversitySelected
-                    ? TextStyles.white14Bold
-                    : TextStyles.black14Bold,
+              child: FittedBox(
+                fit: BoxFit.scaleDown, // النص يتغير حجمه تلقائيًا
+                child: Text(
+                  'الجامعات',
+                  style: isUniversitySelected
+                      ? TextStyles.white14Bold
+                      : TextStyles.black14Bold,
+                ),
               ),
             ),
           ),
-          SizedBox(width: 12.w),
+          SizedBox(width: 8.w),
           Expanded(
             child: ElevatedButton(
               onPressed: () {
@@ -480,20 +484,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: isLineSelected
-                    ? ColorManager.primaryColor
-                    : Colors.grey.shade300,
-                minimumSize: Size.fromHeight(38.h),
+                backgroundColor: isLineSelected ? ColorManager.primaryColor : Colors.grey.shade300,
+                minimumSize: Size(0, 45.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.r),
+                ),
               ),
-              child: Text(
-                'الخطوط',
-                style: isLineSelected
-                    ? TextStyles.white14Bold
-                    : TextStyles.black14Bold,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  'الخطوط',
+                  style: isLineSelected
+                      ? TextStyles.white14Bold
+                      : TextStyles.black14Bold,
+                ),
               ),
             ),
           ),
-          SizedBox(width: 12.w),
+          SizedBox(width: 8.w),
           Expanded(
             child: ElevatedButton(
               onPressed: () {
@@ -507,16 +515,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: isCitySelected
-                    ? ColorManager.primaryColor
-                    : Colors.grey.shade300,
-                minimumSize: Size.fromHeight(38.h),
+                backgroundColor: isCitySelected ?ColorManager.primaryColor : Colors.grey.shade300,
+                minimumSize: Size(0, 45.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.r),
+                ),
               ),
-              child: Text(
-                'المدن',
-                style: isCitySelected
-                    ? TextStyles.white14Bold
-                    : TextStyles.black14Bold,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  'المدن',
+                  style: isCitySelected
+                      ? TextStyles.white14Bold
+                      : TextStyles.black14Bold,
+                ),
               ),
             ),
           ),
@@ -524,6 +536,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
     );
   }
+
 
   // 🔹 الديليت
   void _showDeleteDialog(dynamic entity) {

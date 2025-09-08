@@ -37,8 +37,9 @@ class _ExpandableCardState extends State<ExpandableCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.infinity,
       margin: EdgeInsets.symmetric(vertical: 6.h),
-      padding: EdgeInsets.all(14.w),
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 2.h),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16.r),
@@ -51,6 +52,7 @@ class _ExpandableCardState extends State<ExpandableCard> {
         ],
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           InkWell(
             onLongPress: widget.onLongPress,
@@ -71,7 +73,7 @@ class _ExpandableCardState extends State<ExpandableCard> {
                         ? Icons.keyboard_arrow_up
                         : Icons.keyboard_arrow_down_rounded,
                     color: Colors.black,
-                    size: 24.sp,
+                    size: 22.sp, // صغرنا الأيقونة شوية
                   ),
                   onPressed: widget.onToggle,
                 ),
@@ -80,8 +82,8 @@ class _ExpandableCardState extends State<ExpandableCard> {
           ),
           if (widget.isExpanded)
             Padding(
-              padding: EdgeInsets.only(top: 12.h),
-              child: Column(
+              padding: EdgeInsets.only(top: 6.h),
+    child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   _buildInfoRow(widget.phone ?? 'غير متوفر', 'رقم الهاتف:'),
