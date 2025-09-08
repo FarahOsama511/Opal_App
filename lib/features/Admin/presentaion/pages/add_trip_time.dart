@@ -113,7 +113,7 @@ class _AddTripBoxState extends State<AddTripBox> {
 
   @override
   Widget build(BuildContext context) {
-    double boxWidth = 0.85.sw; // بدل MediaQuery
+    double boxWidth = 0.85.sw;
     double boxHeight = 0.7.sh;
 
     Widget stepContent;
@@ -223,8 +223,6 @@ class _AddTripBoxState extends State<AddTripBox> {
               ),
             ),
           );
-
-          // ✅ تحديث الرحلات بعد الإضافة
           BlocProvider.of<TourCubit>(context).getAllTours();
         } else if (state is UpdateAddDeleteTourError) {
           ScaffoldMessenger.of(

@@ -12,7 +12,7 @@ import '../../../../../../core/resources/text_styles.dart';
 import '../../../Admin/presentaion/bloc/get_tour_bloc/tour_cubit.dart';
 import '../../../Admin/presentaion/bloc/get_tour_bloc/tour_state.dart';
 import '../../../Admin/presentaion/widgets/search_field.dart';
-import '../../../Admin/presentaion/widgets/trip_type_selector.dart';
+import '../../../Admin/presentaion/widgets/switch_button.dart';
 import '../../../user/presentaion/bloc/user_cubit.dart';
 import '../../../user/presentaion/bloc/user_state.dart';
 
@@ -29,17 +29,12 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
   UserEntity? user;
   String lineName = "";
   late bool isTripConfirmed;
-
-  // التحكم في التوسيع
   List<bool> _isExpandedStudents = [];
-
-  // البيانات
   List<UserEntity> _users = [];
   List<UserEntity> _filteredUsers = [];
   String _searchQuery = '';
-
-  // نوع الرحلة (0 ذهاب، 1 عودة)
   int _selectedTripType = 0;
+  int _currentIndex = 0;
 
   final userId = CacheNetwork.getCacheData(key: "Save_UserId");
 
@@ -182,15 +177,16 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
                               },
                             ),
                             SizedBox(height: 12.h),
-                            TripTypeSelector(
-                              selectedIndex: _selectedTripType,
-                              onChanged: (index) {
-                                setState(() {
-                                  _selectedTripType = index;
-                                });
-                              },
-                            ),
-                          ],
+                    CustomSwitchButtons(
+                      labels: ['رحلات الذهاب', 'رحلات العودة'],
+                      selectedIndex: _currentIndex,
+                      onTap: (index) {
+                        setState(() {
+                          _currentIndex = index;
+                        });
+                      },)
+
+                    ],
                         ),
                         Align(
                           alignment: Alignment.centerRight,
@@ -224,10 +220,8 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
                                   )
                                   .toList();
 
-                              // حسب نوع الرحلة
                               List<UserEntity> allUsers = [];
                               if (_selectedTripType == 0) {
-                                // رحلات الذهاب: الطلاب المرتبطين بالخط
                                 final studentInTours = tours
                                     .where(
                                       (tour) => tour.users?.isNotEmpty ?? false,
@@ -238,7 +232,6 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
                                     .whereType<UserEntity>()
                                     .toList();
                               } else {
-                                // رحلات العودة: الطلاب المرتبطين بالجامعات
                                 final allowedUniversities =
                                     user?.universitiesId ?? [];
                                 final studentInTours = tours

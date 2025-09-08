@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:opal_app/core/resources/color_manager.dart';
 import 'package:opal_app/core/resources/text_styles.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_state.dart';
@@ -10,6 +9,7 @@ import '../../Data/models/tour_model.dart';
 import '../../Domain/entities/line_entity.dart';
 import '../../Domain/entities/tour.dart';
 import '../widgets/calender_step.dart';
+import '../widgets/confirmation_dialog.dart';
 import '../widgets/start_end_time_step.dart';
 import '../widgets/summary_step.dart';
 import '../widgets/supervisor_step.dart';
@@ -230,44 +230,14 @@ class _EditTripTimeState extends State<EditTripBox> {
           );
           showDialog(
             context: context,
-            builder: (context) => AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16.r),
-              ),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'تم التأكيد',
-                    style: TextStyle(
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 20.h),
-                  Icon(Icons.check_circle, color: Colors.green, size: 100.sp),
-                  SizedBox(height: 20.h),
-                  ElevatedButton(
-                    onPressed: () {
-                      context.pop();
-                      widget.onClose();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: ColorManager.primaryColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.r),
-                      ),
-                      minimumSize: Size(double.infinity, 50.h),
-                    ),
-                    child: Text(
-                      'العودة الى الرئيسية',
-                      style: TextStyles.white14Bold.copyWith(fontSize: 14.sp),
-                    ),
-                  ),
-                ],
-              ),
+            builder: (context) => ConfirmationDialog(
+              onReturn: () {
+                context.pop();
+                widget.onClose();
+              },
             ),
           );
+
         } else if (state is UpdateAddDeleteTourError) {
           ScaffoldMessenger.of(
             context,

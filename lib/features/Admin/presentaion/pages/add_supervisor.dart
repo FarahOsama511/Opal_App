@@ -155,18 +155,18 @@ class _AddSupervisorState extends State<AddSupervisor> {
                           context
                               .read<AddAdminSupervisorCubit>()
                               .AddAdminORSupervisor(
-                                AddAdminSupervisorModel(
-                                  name: nameController.text,
-                                  phone: phoneController.text,
-                                  password: passwordController.text,
-                                  email: emailController.text,
-                                  role: "supervisor",
-                                  lineId: selectedLine!.id,
-                                  line: selectedLine,
-                                  universitiesId: universitiesIds,
-                                ),
-                                context,
-                              );
+                            AddAdminSupervisorModel(
+                              name: nameController.text,
+                              phone: phoneController.text,
+                              password: passwordController.text,
+                              email: emailController.text,
+                              role: "supervisor",
+                              lineId: selectedLine!.id,
+                              line: selectedLine,
+                              universitiesId: universitiesIds,
+                            ),
+                            context,
+                          );
                         }
                       },
                     );
@@ -188,28 +188,4 @@ class _AddSupervisorState extends State<AddSupervisor> {
       ),
     );
   }
-
-  // Widget _buildTextField({required String hint, IconData? icon}) {
-  //   return Padding(
-  //     padding: EdgeInsets.symmetric(vertical: 6.h),
-  //     child: TextField(
-  //       textAlign: TextAlign.right,
-  //       decoration: InputDecoration(
-  //         hintText: hint,
-  //         hintStyle: TextStyle(fontSize: 14.sp),
-  //         prefixIcon: icon != null ? Icon(icon, color: Colors.grey) : null,
-  //         filled: true,
-  //         fillColor: Colors.grey.shade200,
-  //         contentPadding: EdgeInsets.symmetric(
-  //           horizontal: 16.w,
-  //           vertical: 18.h,
-  //         ),
-  //         border: OutlineInputBorder(
-  //           borderRadius: BorderRadius.circular(12.r),
-  //           borderSide: BorderSide.none,
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
 }

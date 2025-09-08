@@ -12,6 +12,7 @@ import '../../../user/presentaion/bloc/user_state.dart';
 import '../bloc/delete_user/delete_user_state.dart';
 import '../widgets/expandable_card.dart';
 import '../widgets/search_field.dart';
+import '../widgets/switch_button.dart';
 
 class StudentList extends StatefulWidget {
   const StudentList({super.key});
@@ -47,23 +48,21 @@ class _StudentListState extends State<StudentList> {
       if (_isExpandedStudents.length != _filteredUsers.length) {
         _isExpandedStudents = List.generate(
           _filteredUsers.length,
-          (_) => false,
+              (_) => false,
         );
       }
     } else {
       if (_isExpandedSupervisors.length != _filteredUsers.length) {
         _isExpandedSupervisors = List.generate(
           _filteredUsers.length,
-          (_) => false,
+              (_) => false,
         );
       }
     }
   }
-
   void _handleDeleteUser(String userId) {
     BlocProvider.of<DeleteUserCubit>(context).deleteUser(userId);
   }
-
   @override
   Widget build(BuildContext context) {
     return MultiBlocListener(
@@ -81,8 +80,8 @@ class _StudentListState extends State<StudentList> {
 
               setState(() {
                 _users.removeWhere(
-                  (u) => u.id == state.userId,
-                ); // احذفي من القائمة الأصلية
+                      (u) => u.id == state.userId,
+                );
                 _updateFilteredUsers();
               });
 
@@ -110,8 +109,16 @@ class _StudentListState extends State<StudentList> {
                   },
                 ),
               ),
-              _buildSwitchButtons(),
-              Expanded(
+        CustomSwitchButtons(
+          labels: ['الطلاب', 'المشرفين'],
+          selectedIndex: isStudentsSelected ? 0 : 1,
+          onTap: (index) {
+            setState(() {
+              isStudentsSelected = index == 0;
+              _updateFilteredUsers();
+            });
+          },)
+           , Expanded(
                 child: Container(
                   width: double.infinity,
                   decoration: const BoxDecoration(color: Color(0xFFE71A45)),
@@ -133,7 +140,6 @@ class _StudentListState extends State<StudentList> {
                       }
                       print("Filtered after update: ${_filteredUsers.length}");
                     },
-
                     builder: (context, state) {
                       print("Builder triggered with state: $state");
                       if (state is UserSuccess) {
@@ -147,7 +153,6 @@ class _StudentListState extends State<StudentList> {
                             ),
                           );
                         }
-
                         return ListView.builder(
                           padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 90.h),
                           itemCount: _filteredUsers.length,
@@ -163,7 +168,7 @@ class _StudentListState extends State<StudentList> {
                                 onToggle: () {
                                   setState(() {
                                     _isExpandedStudents[index] =
-                                        !_isExpandedStudents[index];
+                                    !_isExpandedStudents[index];
                                   });
                                 },
                                 deleteIcon: IconButton(
@@ -185,7 +190,7 @@ class _StudentListState extends State<StudentList> {
                                 onToggle: () {
                                   setState(() {
                                     _isExpandedSupervisors[index] =
-                                        !_isExpandedSupervisors[index];
+                                    !_isExpandedSupervisors[index];
                                   });
                                 },
                                 deleteIcon: IconButton(
@@ -226,78 +231,16 @@ class _StudentListState extends State<StudentList> {
       ),
     );
   }
-
   void _showDeleteDialog(UserEntity user) {
     showDialog(
       context: context,
-      builder: (context) => DeleteDialog(
-        context: context,
-        title: "تأكيد الحذف",
-        content: "هل تريد حذف ${user.name}؟",
-        onConfirm: () => _handleDeleteUser(user.id!),
-      ),
-    );
-  }
-
-  Widget _buildSwitchButtons() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-      child: Row(
-        children: [
-          Expanded(
-            child: ElevatedButton(
-              onPressed: () {
-                if (!isStudentsSelected) {
-                  setState(() {
-                    isStudentsSelected = true;
-                    _updateFilteredUsers();
-                  });
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: isStudentsSelected
-                    ? const Color(0xFFE71A45)
-                    : Colors.grey.shade300,
-                minimumSize: Size.fromHeight(38.h),
-              ),
-              child: Text(
-                'الطلاب',
-                style: isStudentsSelected
-                    ? TextStyles.white14Bold
-                    : TextStyles.black14Bold,
-              ),
-            ),
+      builder: (context) =>
+          DeleteDialog(
+            context: context,
+            title: "تأكيد الحذف",
+            content: "هل تريد حذف ${user.name}؟",
+            onConfirm: () => _handleDeleteUser(user.id!),
           ),
-          SizedBox(width: 12.w),
-          Expanded(
-            child: ElevatedButton(
-              onPressed: () {
-                if (isStudentsSelected) {
-                  setState(() {
-                    isStudentsSelected = false;
-                    _updateFilteredUsers();
-                  });
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: isStudentsSelected
-                    ? Colors.grey.shade300
-                    : ColorManager.primaryColor,
-                minimumSize: Size.fromHeight(38.h),
-              ),
-              child: Text(
-                'المشرفين',
-                style: TextStyle(
-                  color: isStudentsSelected
-                      ? ColorManager.blackColor
-                      : ColorManager.secondColor,
-                  fontSize: 16.sp,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
