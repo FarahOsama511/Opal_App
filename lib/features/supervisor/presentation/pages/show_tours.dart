@@ -212,6 +212,8 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
                                 ),
                               );
                             } else if (state is TourLoaded) {
+                              print("Tours Count: ${state.tours.length}");
+
                               final tours = state.tours
                                   .where(
                                     (tour) =>
@@ -219,16 +221,20 @@ class _ShowToursBySuperVisorState extends State<ShowToursBySuperVisor> {
                                         widget.user.line?.id == tour.line.id,
                                   )
                                   .toList();
+                              print("User Line ID: ${widget.user.line?.id}");
+                              print("Filtered Tours: ${tours.length}");
 
                               final studentInTours = tours
                                   .where(
                                     (tour) => tour.users?.isNotEmpty ?? false,
                                   )
                                   .toList();
+                              print("Student Tours: ${studentInTours.length}");
 
                               final allUsers = studentInTours
                                   .expand((tour) => tour.users ?? [])
                                   .toList();
+                              print("All Users: ${allUsers.length}");
 
                               final allowedUniversities =
                                   widget.user.universitiesId ?? [];

@@ -109,11 +109,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               );
             } else if (state is DeleteUniversitySuccess) {
-              setState(() {
-                _universities.removeWhere((u) => u.id == state.id);
-                _filteredUniversities.removeWhere((u) => u.id == state.id);
-                _updateFiltered();
-              });
+              BlocProvider.of<GetAllUniversitiesCubit>(
+                context,
+              ).fetchAlluniversities();
+
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(

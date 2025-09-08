@@ -38,9 +38,9 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     super.initState();
     BlocProvider.of<TourCubit>(context).getAllTours();
     // BlocProvider.of<GetAllUserCubit>(context).fetchAllUsers();
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      BlocProvider.of<GetAllUserCubit>(context).fetchAllUsers();
-    });
+    // _timer = Timer.periodic(const Duration(seconds: 100), (_) {
+    //   BlocProvider.of<GetAllUserCubit>(context).fetchAllUsers();
+    // });
   }
 
   @override

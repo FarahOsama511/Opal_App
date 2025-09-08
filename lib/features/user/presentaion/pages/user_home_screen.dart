@@ -182,7 +182,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                               '/tripDetails',
                               extra: context
                                   .read<SelectionTourCubit>()
-                                  .tourCurrent,
+                                  .tourCurrent!,
                             );
                           },
                           child: Text(

@@ -32,7 +32,6 @@ import 'features/selection/presentation/pages/confirm_details.dart';
 import 'features/selection/presentation/pages/confirmation_success.dart';
 import 'features/user/presentaion/bloc/auth_cubit.dart';
 import 'features/user/presentaion/bloc/get_all_universities/get_all_universities_cubit.dart';
-import 'features/user/presentaion/bloc/selection_tour/selection_tour_cubit.dart';
 import 'features/user/presentaion/pages/user_home_screen.dart';
 import 'features/user/presentaion/pages/waiting_screen.dart';
 
@@ -86,10 +85,7 @@ class AppRouter {
         path: '/ConfirmDetailsScreen',
         builder: (context, state) {
           final tour = state.extra as Tour;
-          return BlocProvider(
-            create: (_) => di.setUp<SelectionTourCubit>(),
-            child: ConfirmDetailsScreen(tour: tour),
-          );
+          return ConfirmDetailsScreen(tour: tour);
         },
       ),
       GoRoute(
