@@ -65,20 +65,29 @@ class _EditTripTimeState extends State<EditTripBox> {
       return;
     }
 
-    final DateTime fullStartTime = DateTime(
-      startDate!.year,
-      startDate!.month,
-      startDate!.day,
-      startPeriod == 'صباحًا' ? startHour : startHour + 12,
-      startMinute,
+    final now = DateTime.now();
+    final fullStartTime = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      startDate!.hour,
+      startDate!.minute,
     );
 
-    final DateTime fullEndTime = DateTime(
-      endDate!.year,
-      endDate!.month,
-      endDate!.day,
-      endPeriod == 'صباحًا' ? endHour : endHour + 12,
-      endMinute,
+    final fullEndTime = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      endDate!.hour,
+      endDate!.minute,
+    );
+
+    final fullLeavesAt = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      leavesAtPeriod == 'صباحًا' ? leavesAtHour : leavesAtHour + 12,
+      leavesAtMinute,
     );
 
     if (fullEndTime.isBefore(fullStartTime)) {
@@ -87,13 +96,6 @@ class _EditTripTimeState extends State<EditTripBox> {
       );
       return;
     }
-    final DateTime fullLeavesAt = DateTime(
-      selectedDate!.year,
-      selectedDate!.month,
-      selectedDate!.day,
-      leavesAtPeriod == 'صباحًا' ? leavesAtHour : leavesAtHour + 12,
-      leavesAtMinute,
-    );
 
     final tour = TourModel(
       id: widget.tourId,

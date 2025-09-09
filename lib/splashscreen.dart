@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:opal_app/core/constants/constants.dart';
+import 'package:opal_app/core/get_it.dart' as DataCacheManager;
 import 'package:opal_app/core/network/local_network.dart';
-import 'package:opal_app/core/resources/color_manager.dart';
+
+import 'features/Admin/presentaion/widgets/animated_spalsh.dart';
 
 class DeciderPage extends StatefulWidget {
   const DeciderPage({super.key});
@@ -12,27 +14,48 @@ class DeciderPage extends StatefulWidget {
 }
 
 class _DeciderPageState extends State<DeciderPage> {
+  bool _isInitialized = false;
+
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _checkAuth();
-    });
+    _initializeApp();
   }
 
-  Future<void> _checkAuth() async {
+  Future<void> _initializeApp() async {
+    // Initialize cache manager in background
+    DataCacheManager.init();
+
+    // Mark as initialized
+    _isInitialized = true;
+  }
+
+  void _onSplashComplete() {
+    if (_isInitialized) {
+      _checkAuth();
+    } else {
+      // Fallback if initialization takes longer
+      Future.delayed(const Duration(milliseconds: 100), _checkAuth);
+    }
+  }
+
+  void _checkAuth() {
     token = CacheNetwork.getCacheData(key: 'access_token');
     role = CacheNetwork.getCacheData(key: 'access_role');
 
     if (token != null && token!.isNotEmpty) {
-      if (role == 'student') {
-        context.go('/home');
-      } else if (role == 'admin') {
-        context.go('/adminScreen');
-      } else if (role == 'supervisor') {
-        context.go('/supervisorScreen');
-      } else {
-        context.go('/signin');
+      switch (role) {
+        case 'student':
+          context.go('/home');
+          break;
+        case 'admin':
+          context.go('/adminScreen');
+          break;
+        case 'supervisor':
+          context.go('/supervisorScreen');
+          break;
+        default:
+          context.go('/signin');
       }
     } else {
       context.go('/signin');
@@ -41,10 +64,6 @@ class _DeciderPageState extends State<DeciderPage> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: CircularProgressIndicator(color: ColorManager.primaryColor),
-      ),
-    );
+    return AnimatedSplash(onComplete: _onSplashComplete);
   }
 }

@@ -34,24 +34,19 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   bool showAddTripBox = false;
   int? expandedIndex;
 
-  Timer? _timer;
-
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<TourCubit>(context).getAllTours();
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      BlocProvider.of<GetAllUserCubit>(context).fetchAllUsers();
-      BlocProvider.of<GetAllUniversitiesCubit>(context).fetchAlluniversities();
-      BlocProvider.of<GetAllDownTownCubit>(context).fetchAllDownTowns();
-      BlocProvider.of<LinesCubit>(context).getAllLiness();
-    });
+    // نجلب البيانات أول مرة
+    _fetchInitialData();
   }
 
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
+  void _fetchInitialData() {
+    BlocProvider.of<TourCubit>(context).getAllTours();
+    BlocProvider.of<GetAllUserCubit>(context).fetchAllUsers();
+    BlocProvider.of<GetAllUniversitiesCubit>(context).fetchAlluniversities();
+    BlocProvider.of<GetAllDownTownCubit>(context).fetchAllDownTowns();
+    BlocProvider.of<LinesCubit>(context).getAllLiness();
   }
 
   @override
@@ -109,11 +104,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                         index: currentIndex,
                         children: [
                           _buildJoinRequests(),
-                          // تأكد من استدعاء getAllTours هنا
                           const TripsScreen(),
-
                           const StudentList(),
-
                           const SettingsScreen(),
                         ],
                       ),
@@ -181,12 +173,11 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 }
               },
               builder: (context, state) {
-                print("Current state: $state");
-
                 if (state is UserSuccess) {
                   final unactivatedUsers = state.user
                       .where((u) => u.status == 'pending')
                       .toList();
+
                   if (unactivatedUsers.isEmpty) {
                     return Center(
                       child: Text(
@@ -195,14 +186,15 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                       ),
                     );
                   }
+
                   return ListView.builder(
                     padding: EdgeInsets.symmetric(horizontal: 12.w),
                     itemCount: unactivatedUsers.length,
                     itemBuilder: (context, index) {
                       final data = unactivatedUsers[index];
                       return JoinRequestCard(
-                        name: data.name!,
-                        phone: data.phone!,
+                        name: data.name ?? "",
+                        phone: data.phone ?? "",
                         university: data.university?.name ?? "",
                         downTown: data.downTown?.name ?? "",
                         isExpanded: expandedIndex == index,
@@ -217,11 +209,17 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                           await context.read<GetAllUserCubit>().userIsActivate(
                             data.id!,
                           );
+                          context
+                              .read<GetAllUserCubit>()
+                              .fetchAllUsers(); // refresh
                         },
                         onReject: () async {
                           await context
                               .read<GetAllUserCubit>()
                               .userIsDeactivate(data.id!);
+                          context
+                              .read<GetAllUserCubit>()
+                              .fetchAllUsers(); // refresh
                         },
                       );
                     },
