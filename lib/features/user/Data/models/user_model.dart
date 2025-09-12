@@ -17,6 +17,8 @@ class UserModel extends UserEntity {
     super.password,
     super.line,
     super.downTown,
+    super.universities,
+    super.universitiesId,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -30,11 +32,28 @@ class UserModel extends UserEntity {
       email: json['email'] as String?,
       status: json['status'] as String?,
       password: json['password'] as String?,
-      // 👇 المشكلة هنا: لازم تعمل parsing للـ university object
+
+      // object واحد
       university: json['university'] != null
           ? UniversityModel.fromJson(json['university'])
           : null,
+
+      // object واحد
       line: json['line'] != null ? LineModel.fromJson(json['line']) : null,
+
+      // لستة objects
+      universities: json['universities'] != null
+          ? (json['universities'] as List)
+                .map((e) => UniversityModel.fromJson(e as Map<String, dynamic>))
+                .toList()
+          : [],
+
+      // لستة ids
+      universitiesId: json['universitiesId'] != null
+          ? List<String>.from(json['universitiesId'])
+          : [],
+
+      // object واحد
       downTown: json['downTown'] != null
           ? DownTownModel.fromJson(json['downTown'])
           : null,
@@ -43,9 +62,6 @@ class UserModel extends UserEntity {
 
   Map<String, dynamic> toJson() {
     return {
-      'downTown': downTown != null
-          ? (downTown as DownTownModel).toJson()
-          : null,
       'id': id,
       'name': name,
       'phone': phone,
@@ -54,11 +70,23 @@ class UserModel extends UserEntity {
       'password': password,
       'universityId': universityId,
       'universityCardId': universityCardId,
-      'line': line != null ? (line as LineModel).toJson() : null,
       'status': status,
+
+      'line': line != null ? (line as LineModel).toJson() : null,
       'university': university != null
           ? (university as UniversityModel).toJson()
           : null,
+      'downTown': downTown != null
+          ? (downTown as DownTownModel).toJson()
+          : null,
+
+      // ✅ مهم: تحويل الجامعات إلى Json
+      'universities': universities != null
+          ? universities!.map((u) => (u as UniversityModel).toJson()).toList()
+          : [],
+
+      // ✅ ids كمان
+      'universitiesId': universitiesId ?? [],
     };
   }
 }

@@ -24,6 +24,7 @@ import 'package:opal_app/features/Admin/Domain/usecase/get_all_lines.dart';
 import 'package:opal_app/features/Admin/Domain/usecase/get_all_tours.dart';
 import 'package:opal_app/features/Admin/Domain/usecase/get_line_Id.dart';
 import 'package:opal_app/features/Admin/Domain/usecase/get_tour_id_use_case.dart';
+import 'package:opal_app/features/Admin/Domain/usecase/update_admin_supervisor.dart';
 import 'package:opal_app/features/Admin/Domain/usecase/update_down_town.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/add_down_town/add_down_town_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/add_lines/add_line_cubit.dart';
@@ -73,6 +74,7 @@ import '../features/Admin/presentaion/bloc/create_admin_supervisors/add_admin_su
 import '../features/Admin/presentaion/bloc/delete_university/delete_university_cubit.dart';
 import '../features/Admin/presentaion/bloc/get_lines/get_all_lines_cubit.dart';
 import '../features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_cubit.dart';
+import '../features/Admin/presentaion/bloc/update_admin_supervisor/update_admin_supervisor_cubit.dart';
 import '../features/user/Data/datasource/remote_data_source.dart';
 import '../features/user/Data/repositiries/auth_repo_impl.dart';
 import '../features/user/Domain/repositires/auth_repo.dart';
@@ -111,6 +113,7 @@ Future<void> init() async {
   setUp.registerFactory(() => UpdateLineCubit(setUp()));
   setUp.registerFactory(() => UpdateUniversityCubit(setUp()));
   setUp.registerFactory(() => UpdateDownTownCubit(setUp()));
+  setUp.registerFactory(() => UpdateAdminOrSupervisorCubit(setUp()));
 
   //usecases
   setUp.registerLazySingleton(() => GetAllToursUseCase(setUp()));
@@ -142,6 +145,7 @@ Future<void> init() async {
   setUp.registerLazySingleton(() => UpdateLineUseCase(setUp()));
   setUp.registerLazySingleton(() => UpdateUniversityUsecase(setUp()));
   setUp.registerLazySingleton(() => UpdateDownTownUsecase(setUp()));
+  setUp.registerLazySingleton(() => UpdateAdminSupervisorUseCase(setUp()));
 
   //repositories
   setUp.registerLazySingleton<ToursRepository>(

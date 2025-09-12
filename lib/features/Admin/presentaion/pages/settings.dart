@@ -13,7 +13,10 @@ import 'package:opal_app/features/Admin/presentaion/bloc/delete_university/delet
 import 'package:opal_app/features/Admin/presentaion/bloc/delete_university/delete_university_state.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_cubit.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_state.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/update_University/update_University_state.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/update_down_town/update_down_town_state.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/update_line/update_line_cubit.dart';
+import 'package:opal_app/features/Admin/presentaion/bloc/update_line/update_line_state.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/update_university/update_university_cubit.dart';
 import 'package:opal_app/features/user/Domain/entities/university_entity.dart';
 import 'package:opal_app/features/user/presentaion/bloc/get_all_downtowns/get_all_down_town_cubit.dart';
@@ -149,6 +152,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 _filteredLines.removeWhere((u) => u.id == state.id);
                 _updateFiltered();
               });
+              BlocProvider.of<LinesCubit>(context).getAllLiness();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
@@ -178,7 +182,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 _filteredCities.removeWhere((u) => u.id == state.id);
                 _updateFiltered();
               });
-              // context.pop();
+              BlocProvider.of<GetAllDownTownCubit>(context).fetchAllDownTowns();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: ColorManager.greyColor,
@@ -188,6 +192,62 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ),
               );
+            }
+          },
+        ),
+        BlocListener<UpdateUniversityCubit, UpdateUniversityState>(
+          listener: (context, state) {
+            if (state is UpdateUniversityError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: ColorManager.greyColor,
+                  content: Text(
+                    state.message,
+                    style: TextStyle(fontSize: 14.sp),
+                  ),
+                ),
+              );
+            }
+            if (state is UpdateUniversitySuccess) {
+              BlocProvider.of<GetAllUniversitiesCubit>(
+                context,
+              ).fetchAlluniversities();
+            }
+          },
+        ),
+        BlocListener<UpdateLineCubit, UpdateLineState>(
+          listener: (context, state) {
+            if (state is UpdateLineError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: ColorManager.greyColor,
+                  content: Text(
+                    state.message,
+                    style: TextStyle(fontSize: 14.sp),
+                  ),
+                ),
+              );
+            }
+            if (state is UpdateLineSuccess) {
+              BlocProvider.of<LinesCubit>(context).getAllLiness();
+            }
+          },
+        ),
+        BlocListener<UpdateDownTownCubit, UpdateDownTownState>(
+          listener: (context, state) {
+            if (state is UpdateDownTownError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: ColorManager.greyColor,
+                  content: Text(
+                    state.message,
+                    style: TextStyle(fontSize: 14.sp),
+                  ),
+                ),
+              );
+            }
+            if (state is UpdateDownTownSuccess) {
+              BlocProvider.of<GetAllDownTownCubit>(context).fetchAllDownTowns();
             }
           },
         ),

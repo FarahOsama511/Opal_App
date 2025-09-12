@@ -34,7 +34,10 @@ class SummaryStep extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text('بيانات الرحلة', style: TextStyles.black20Bold.copyWith(fontSize: 20.sp)),
+        Text(
+          'بيانات الرحلة',
+          style: TextStyles.black20Bold.copyWith(fontSize: 20.sp),
+        ),
         SizedBox(height: 10.h),
         Container(
           width: double.infinity,
@@ -50,12 +53,15 @@ class SummaryStep extends StatelessWidget {
             children: [
               _buildRow('الخط', selectedLine?.name ?? ''),
               SizedBox(height: 8.h),
-              _buildRow(tripTypeMap[typeOfTrip] ?? '', '$hour:${minute.toString().padLeft(2, '0')} $period'),
+              _buildRow(
+                tripTypeMap[typeOfTrip] ?? '',
+                '$hour:${minute.toString().padLeft(2, '0')} $period',
+              ),
               SizedBox(height: 8.h),
               _buildRow('اسم المشرف', selectedSupervisor?.name ?? ''),
               SizedBox(height: 8.h),
               _buildRow(
-                'تاريخ اليوم',
+                'تاريخ الرحلة',
                 selectedDate != null
                     ? '${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}'
                     : '',

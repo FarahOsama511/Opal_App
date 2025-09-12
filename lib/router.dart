@@ -24,6 +24,7 @@ import 'features/Admin/presentaion/bloc/delete_down_town/delete_down_town_cubit.
 import 'features/Admin/presentaion/bloc/delete_line/delete_line_cubit.dart';
 import 'features/Admin/presentaion/bloc/delete_university/delete_university_cubit.dart';
 import 'features/Admin/presentaion/bloc/get_lines/get_all_lines_cubit.dart';
+import 'features/Admin/presentaion/bloc/update_admin_supervisor/update_admin_supervisor_cubit.dart';
 import 'features/Admin/presentaion/bloc/update_line/update_line_cubit.dart';
 import 'features/Admin/presentaion/bloc/update_university/update_university_cubit.dart';
 import 'features/Admin/presentaion/pages/add_admin.dart';
@@ -47,16 +48,17 @@ class AppRouter {
           return MultiBlocProvider(
             providers: [
               BlocProvider(create: (_) => di.setUp<AuthCubit>()),
-              BlocProvider(
-                create: (_) =>
-                    di.setUp<GetAllUniversitiesCubit>()..fetchAlluniversities(),
-              ),
+
               BlocProvider(
                 create: (_) => di.setUp<LinesCubit>()..getAllLiness(),
               ),
               BlocProvider(
                 create: (_) =>
                     di.setUp<GetAllDownTownCubit>()..fetchAllDownTowns(),
+              ),
+              BlocProvider(
+                create: (_) =>
+                    di.setUp<GetAllUniversitiesCubit>()..fetchAlluniversities(),
               ),
             ],
 
@@ -116,20 +118,10 @@ class AppRouter {
               //BlocProvider(create: (_) => di.setUp<TourCubit>()..getAllTours()),
               BlocProvider(create: (_) => di.setUp<DeleteUserCubit>()),
               BlocProvider(create: (_) => di.setUp<AddAdminSupervisorCubit>()),
+
               // BlocProvider(
               //   create: (_) => di.setUp<GetAllUserCubit>()..fetchAllUsers(),
               // ),
-              BlocProvider(
-                create: (_) =>
-                    di.setUp<GetAllDownTownCubit>()..fetchAllDownTowns(),
-              ),
-              BlocProvider(
-                create: (_) => di.setUp<LinesCubit>()..getAllLiness(),
-              ),
-              BlocProvider(
-                create: (_) =>
-                    di.setUp<GetAllUniversitiesCubit>()..fetchAlluniversities(),
-              ),
               BlocProvider(create: (_) => di.setUp<DeleteUniversityCubit>()),
               BlocProvider(create: (_) => di.setUp<DeleteLineCubit>()),
               BlocProvider(create: (_) => di.setUp<DeleteDownTownCubit>()),
@@ -166,10 +158,7 @@ class AppRouter {
           return MultiBlocProvider(
             providers: [
               BlocProvider(create: (_) => di.setUp<AddAdminSupervisorCubit>()),
-              BlocProvider(
-                create: (_) =>
-                    di.setUp<GetAllUniversitiesCubit>()..fetchAlluniversities(),
-              ),
+
               BlocProvider(
                 create: (_) => di.setUp<LinesCubit>()..getAllLiness(),
               ),
@@ -199,7 +188,6 @@ class AppRouter {
               BlocProvider<AddUniversityCubit>(
                 create: (_) => di.setUp<AddUniversityCubit>(),
               ),
-              BlocProvider(create: (_) => di.setUp<GetAllUniversitiesCubit>()),
             ],
             child: Builder(builder: (context) => const AddUniversity()),
           );
@@ -213,7 +201,6 @@ class AppRouter {
               BlocProvider<AddDownTownCubit>(
                 create: (_) => di.setUp<AddDownTownCubit>(),
               ),
-              BlocProvider(create: (_) => di.setUp<GetAllDownTownCubit>()),
             ],
             child: Builder(builder: (context) => const AddDownTown()),
           );

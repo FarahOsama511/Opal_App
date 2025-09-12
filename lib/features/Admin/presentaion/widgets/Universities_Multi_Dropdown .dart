@@ -10,7 +10,13 @@ import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 class UniversitiesMultiDropdown extends StatefulWidget {
   final Function(List<UniversityEntity>) onSelectionChanged;
-  UniversitiesMultiDropdown({super.key, required this.onSelectionChanged});
+  final List<String> initialSelectedIds;
+
+  const UniversitiesMultiDropdown({
+    super.key,
+    required this.onSelectionChanged,
+    this.initialSelectedIds = const [],
+  });
 
   @override
   State<UniversitiesMultiDropdown> createState() =>
@@ -19,6 +25,7 @@ class UniversitiesMultiDropdown extends StatefulWidget {
 
 class _UniversitiesMultiDropdownState extends State<UniversitiesMultiDropdown> {
   List<UniversityEntity> _selectedUniversities = [];
+  bool _initialized = false;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +39,36 @@ class _UniversitiesMultiDropdownState extends State<UniversitiesMultiDropdown> {
           return Center(child: Text("Error: ${state.message}"));
         } else if (state is GetAllUniversitiesSuccess) {
           final universities = state.GetAllUniversities;
+
+          // حساب الاختيارات الابتدائية محليًا (بدون تغيير state أثناء build)
+          List<UniversityEntity> initialSelection = _selectedUniversities;
+          if (!_initialized) {
+            initialSelection = universities.where((u) {
+              final uid = (u.id ?? '').trim();
+              return widget.initialSelectedIds
+                  .map((s) => (s ?? '').trim())
+                  .contains(uid);
+            }).toList();
+
+            // بعد انتهاء الـ frame نحدّث الـ state ونُبلغ الـ parent بالاختيارات الابتدائية
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (!mounted) return;
+              setState(() {
+                _selectedUniversities = initialSelection;
+                _initialized = true;
+              });
+              // نبعت الاختيارات للـ parent علشان يتزامن معانا (مثلاً يتحولوا إلى ids)
+              widget.onSelectionChanged(_selectedUniversities);
+
+              // طباعة للتصحيح — امسحيها بعد ما تظبطي
+              print(
+                'UniversitiesMultiDropdown.initialSelectedIds: ${widget.initialSelectedIds}',
+              );
+              print(
+                'Resolved initialSelection ids: ${_selectedUniversities.map((e) => e.id).toList()}',
+              );
+            });
+          }
 
           return MultiSelectDialogField<UniversityEntity>(
             items: universities
@@ -59,7 +96,7 @@ class _UniversitiesMultiDropdownState extends State<UniversitiesMultiDropdown> {
               border: Border.all(color: ColorManager.greyColor, width: 1.w),
             ),
             listType: MultiSelectListType.LIST,
-            initialValue: _selectedUniversities,
+            initialValue: initialSelection,
             onConfirm: (values) {
               setState(() {
                 _selectedUniversities = values;

@@ -71,7 +71,7 @@ class BusCard extends StatelessWidget {
                     label: typeOfTrip ?? 'نوع الرحلة',
                     value: departureTime,
                   ),
-                  _RowInfo(label: 'تاريخ اليوم', value: date),
+                  _RowInfo(label: 'تاريخ الرحلة', value: date),
                   SizedBox(height: 10.h),
                 ],
               ),

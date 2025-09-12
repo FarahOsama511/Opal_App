@@ -76,7 +76,7 @@ class _TripDetailsDialogState extends State<TripDetailsDialog> {
                         widget.selectedtour.supervisor.name ?? "غير معرف",
                       ),
                       _buildRow(
-                        'تاريخ اليوم',
+                        'تاريخ الرحلة',
                         DateFormat(
                           'yyyy-MM-dd',
                         ).format(widget.selectedtour.leavesAt),

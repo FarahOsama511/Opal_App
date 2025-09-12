@@ -135,7 +135,7 @@ class _InfoCardState extends State<_InfoCard> {
                   '${intl.DateFormat('HH:mm').format(widget.tour.leavesAt)} صباحاً',
             ),
             _InfoRow(
-              title: 'تاريخ اليوم',
+              title: 'تاريخ الرحلة',
               value: intl.DateFormat('yyyy-MM-dd').format(widget.tour.leavesAt),
             ),
           ],

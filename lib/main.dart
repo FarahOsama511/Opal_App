@@ -6,8 +6,11 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:opal_app/core/get_it.dart' as di;
 import 'package:opal_app/core/network/local_network.dart';
 import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_cubit.dart';
+import 'package:opal_app/features/user/presentaion/bloc/get_all_downtowns/get_all_down_town_cubit.dart';
+import 'package:opal_app/features/user/presentaion/bloc/get_all_universities/get_all_universities_cubit.dart';
 import 'features/Admin/presentaion/bloc/get_tour_bloc/tour_cubit.dart';
 import 'features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_cubit.dart';
+import 'features/Admin/presentaion/bloc/update_admin_supervisor/update_admin_supervisor_cubit.dart';
 import 'features/user/presentaion/bloc/selection_tour/selection_tour_cubit.dart';
 import 'features/user/presentaion/bloc/user_cubit.dart';
 import 'router.dart';
@@ -15,7 +18,7 @@ import 'router.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await CacheNetwork.cacheInitialization();
-  await di.init();
+  //  await di.init();
   await initializeDateFormatting('ar', null);
   runApp(StudentBusApp());
 }
@@ -36,9 +39,13 @@ class StudentBusApp extends StatelessWidget {
             BlocProvider(create: (_) => di.setUp<LinesCubit>()),
             BlocProvider(create: (_) => di.setUp<UpdateAddDeleteTourCubit>()),
             BlocProvider(create: (_) => di.setUp<SelectionTourCubit>()),
-            // BlocProvider(create: (_) => di.setUp<GetTourIdCubit>()),
+            BlocProvider(create: (_) => di.setUp<GetAllUniversitiesCubit>()),
+            BlocProvider(create: (_) => di.setUp<GetAllDownTownCubit>()),
             // BlocProvider(create: (_) => di.setUp<GetUniversityByIdCubit>()),
             BlocProvider(create: (_) => di.setUp<GetAllUserCubit>()),
+            BlocProvider(
+              create: (_) => di.setUp<UpdateAdminOrSupervisorCubit>(),
+            ),
           ],
           child: MaterialApp.router(
             routerConfig: AppRouter.router,

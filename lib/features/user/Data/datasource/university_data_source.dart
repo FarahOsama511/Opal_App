@@ -2,15 +2,16 @@ import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
 import 'package:opal_app/core/constants/constants.dart';
+import 'package:opal_app/features/user/Domain/entities/university_entity.dart';
 import '../../../../core/errors/exceptions.dart';
 import '../models/university_model.dart';
 
 abstract class UniversityDataSource {
   Future<List<UniversityModel>> getAllUniversity();
   Future<UniversityModel> getUniversityById(String id);
-  Future<UniversityModel> addUniversity(UniversityModel university);
+  Future<Unit> addUniversity(UniversityEntity university);
   Future<Unit> deleteUniversity(String id);
-  Future<Unit> updateUniversity(UniversityModel university);
+  Future<Unit> updateUniversity(UniversityEntity university);
 }
 
 class UniversityDataSourceImpl implements UniversityDataSource {
@@ -20,7 +21,6 @@ class UniversityDataSourceImpl implements UniversityDataSource {
   @override
   Future<List<UniversityModel>> getAllUniversity() async {
     final response = await client.get(Uri.parse('${Base_Url}universities'));
-
     print(
       "=== Get All universities Response Status: ${response.statusCode} ===",
     );
@@ -61,7 +61,7 @@ class UniversityDataSourceImpl implements UniversityDataSource {
   }
 
   @override
-  Future<UniversityModel> addUniversity(UniversityModel university) async {
+  Future<Unit> addUniversity(UniversityEntity university) async {
     final body = {'name': university.name, 'location': university.location};
     final response = await client.post(
       Uri.parse('${Base_Url}universities'),
@@ -74,7 +74,7 @@ class UniversityDataSourceImpl implements UniversityDataSource {
     if (response.statusCode == 201) {
       final jsonResponse = jsonDecode(response.body);
       print('the added university is: $jsonResponse');
-      return UniversityModel.fromJson(jsonResponse);
+      return unit;
     } else {
       print("status code is ${response.statusCode}");
       print("body:${response.body}");
@@ -103,7 +103,7 @@ class UniversityDataSourceImpl implements UniversityDataSource {
   }
 
   @override
-  Future<Unit> updateUniversity(UniversityModel university) async {
+  Future<Unit> updateUniversity(UniversityEntity university) async {
     final body = {
       'name': university.name,
       'location': university.location,

@@ -5,7 +5,6 @@ import '../../../../core/resources/text_styles.dart';
 class StartEndTimeStep extends StatelessWidget {
   final DateTime? startDate;
   final DateTime? endDate;
-
   final void Function(DateTime) onStartDateChanged;
   final void Function(DateTime) onEndDateChanged;
 

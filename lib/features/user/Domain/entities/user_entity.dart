@@ -20,8 +20,10 @@ class UserEntity extends Equatable {
   final String? downTownId;
   final DownTownEntity? downTown;
   final List<String>? universitiesId;
+  final List<UniversityEntity>? universities;
 
   UserEntity({
+    this.universities,
     this.downTown,
     this.downTownId,
     this.lineId,
@@ -56,6 +58,7 @@ class UserEntity extends Equatable {
     password,
     downTownId,
     universitiesId,
+    universities,
   ];
 }
 
@@ -75,6 +78,8 @@ extension UserEntityCopyWith on UserEntity {
     String? password,
     String? downTownId,
     DownTownEntity? downTown,
+    List<String>? universitiesId,
+    List<UniversityEntity>? universities,
   }) {
     return UserEntity(
       id: id ?? this.id,
@@ -91,6 +96,8 @@ extension UserEntityCopyWith on UserEntity {
       password: password ?? this.password,
       downTownId: downTownId ?? this.downTownId,
       downTown: downTown ?? this.downTown,
+      universitiesId: universitiesId ?? this.universitiesId,
+      universities: universities ?? this.universities,
     );
   }
 }

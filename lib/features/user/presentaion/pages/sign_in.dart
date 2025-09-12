@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:opal_app/core/resources/color_manager.dart';
 import 'package:opal_app/features/user/presentaion/bloc/auth_cubit.dart';
 import 'package:opal_app/features/user/presentaion/bloc/auth_state.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/resources/text_styles.dart';
 import '../../../Admin/presentaion/widgets/custom_widgets.dart';
 import '../../../Admin/presentaion/widgets/text_field.dart';
@@ -173,7 +174,6 @@ class _SignInScreenState extends State<SignInScreen> {
         break;
       case 'admin':
         context.go('/adminScreen');
-
         break;
     }
   }
@@ -193,14 +193,29 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   Widget _buildTermsAndConditions() {
-    return Column(
+    final Uri solvestaUrl = Uri.parse(
+      'https://www.facebook.com/share/1CGQ35xSun/?mibextid=wwXIfr',
+    );
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text('بتسجيلك فإنك توافق على', style: TextStyles.black10Bold),
-        SizedBox(height: 4.h),
-        Text(
-          'شروط الخدمة وسياسة الخصوصية واستخدام الكوكيز',
-          style: TextStyles.red10Bold,
-          textAlign: TextAlign.center,
+        Text('Powered By ', style: TextStyles.black10Bold),
+        GestureDetector(
+          onTap: () async {
+            if (await canLaunchUrl(solvestaUrl)) {
+              await launchUrl(
+                solvestaUrl,
+                mode: LaunchMode.externalApplication,
+              );
+            }
+          },
+          child: Text(
+            'Solvesta',
+            style: TextStyles.red10Bold.copyWith(
+              decoration: TextDecoration.underline,
+            ),
+          ),
         ),
       ],
     );

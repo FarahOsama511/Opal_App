@@ -11,7 +11,9 @@ import '../../../user/presentaion/bloc/user_cubit.dart' show GetAllUserCubit;
 import '../../../user/presentaion/bloc/user_state.dart';
 import '../bloc/delete_user/delete_user_state.dart';
 import '../widgets/expandable_card.dart';
+import '../widgets/more_options_button.dart';
 import '../widgets/search_field.dart';
+import 'edit_supervisor_page.dart';
 
 class StudentList extends StatefulWidget {
   const StudentList({super.key});
@@ -180,6 +182,7 @@ class _StudentListState extends State<StudentList> {
                                 name: user.name!,
                                 phone: user.phone!,
                                 line: user.line?.name ?? '',
+                                universities: user.universities,
                                 isSupervisor: true,
                                 isExpanded: _isExpandedSupervisors[index],
                                 onToggle: () {
@@ -188,13 +191,19 @@ class _StudentListState extends State<StudentList> {
                                         !_isExpandedSupervisors[index];
                                   });
                                 },
-                                deleteIcon: IconButton(
-                                  icon: Icon(
-                                    Icons.delete,
-                                    color: Colors.red,
-                                    size: 24.sp,
-                                  ),
-                                  onPressed: () => _showDeleteDialog(user),
+                                deleteIcon: MoreOptionsButton(
+                                  onEdit: (e) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) =>
+                                            EditSupervisorPage(user: user),
+                                      ),
+                                    );
+                                  },
+                                  onDelete: (entity) =>
+                                      _showDeleteDialog(entity),
+                                  entity: user,
                                 ),
                               );
                             }

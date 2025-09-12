@@ -44,7 +44,6 @@ class _AddTripBoxState extends State<AddTripBox> {
   void submitTour() {
     if (startDate == null ||
         endDate == null ||
-        selectedDate == null ||
         selectedSupervisor == null ||
         selectedLine == null) {
       ScaffoldMessenger.of(
@@ -52,7 +51,10 @@ class _AddTripBoxState extends State<AddTripBox> {
       ).showSnackBar(SnackBar(content: Text("يرجى تعبئة جميع الحقول")));
       return;
     }
+
     final now = DateTime.now();
+
+    // بناء startTime و endTime في يوم اليوم
     final fullStartTime = DateTime(
       now.year,
       now.month,
@@ -61,7 +63,7 @@ class _AddTripBoxState extends State<AddTripBox> {
       startDate!.minute,
     );
 
-    final fullEndTime = DateTime(
+    DateTime fullEndTime = DateTime(
       now.year,
       now.month,
       now.day,
@@ -69,20 +71,25 @@ class _AddTripBoxState extends State<AddTripBox> {
       endDate!.minute,
     );
 
+    // لو النهاية قبل البداية → نزود يوم
     if (fullEndTime.isBefore(fullStartTime)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("وقت الانتهاء يجب أن يكون بعد وقت البداية")),
-      );
-      return;
+      fullEndTime = fullEndTime.add(const Duration(days: 1));
     }
 
-    final fullLeavesAt = DateTime(
+    // نحسب leavesAt
+    DateTime fullLeavesAt = DateTime(
       now.year,
       now.month,
       now.day,
-      leavesAtPeriod == 'صباحًا' ? leavesAtHour : leavesAtHour + 12,
+      leavesAtPeriod == 'صباحًا' ? leavesAtHour % 12 : (leavesAtHour % 12) + 12,
       leavesAtMinute,
     );
+
+    // لو وقت الرحلة أقل أو يساوي endTime → نزود يوم عشان يركب صح
+    if (fullLeavesAt.isBefore(fullEndTime) ||
+        fullLeavesAt.isAtSameMomentAs(fullEndTime)) {
+      fullLeavesAt = fullLeavesAt.add(const Duration(days: 1));
+    }
 
     final tour = TourModel(
       supervisor: SuperVisorEntity(
@@ -115,7 +122,6 @@ class _AddTripBoxState extends State<AddTripBox> {
   Widget build(BuildContext context) {
     double boxWidth = 0.85.sw; // بدل MediaQuery
     double boxHeight = 0.7.sh;
-
     Widget stepContent;
     switch (currentStep) {
       case 0:

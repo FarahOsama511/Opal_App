@@ -95,15 +95,6 @@ class _EditPageState extends State<EditPage> {
                           'notes': notesController.text,
                         });
 
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            backgroundColor: ColorManager.greyColor,
-                            content: Text(
-                              'تم ${widget.buttonText} بنجاح',
-                              style: TextStyles.white12Bold,
-                            ),
-                          ),
-                        );
                         context.pop();
                       }
                     },

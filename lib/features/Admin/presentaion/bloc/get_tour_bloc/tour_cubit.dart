@@ -10,7 +10,7 @@ import '../../../Domain/entities/tour.dart';
 class TourCubit extends Cubit<TourState> {
   final GetAllToursUseCase getAllToursUseCase;
   List<UserEntity>? numOfUsers;
-  //  List<Tour> _tours = [];
+  List<Tour> tours = [];
   TourCubit(this.getAllToursUseCase) : super(TourInitial());
 
   Future<void> getAllTours() async {
@@ -23,7 +23,7 @@ class TourCubit extends Cubit<TourState> {
           emit(TourError(_errorMessage(Failure)));
         },
         (tours) {
-          //   _tours = tours;
+          tours = tours;
           emit(TourLoaded(tours));
           print("USE CASE RESULT: $tours");
         },

@@ -72,7 +72,7 @@ class _ConfirmDetailsScreenState extends State<ConfirmDetailsScreen> {
                         value: widget.tour.driverName ?? "غير معرف",
                       ),
                       _RowInfo(
-                        label: 'تاريخ اليوم',
+                        label: 'تاريخ الرحلة',
                         value:
                             '${DateFormat('yyyy-MM-dd').format(widget.tour.leavesAt)}',
                       ),

@@ -38,14 +38,73 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   TextEditingController notesController = TextEditingController();
   Timer? tripTimer;
   String? lastTripType; // go أو return
+  Future<void> _saveSelectedTrip(Tour tour) async {
+    await CacheNetwork.insertToCache(
+      key: "selected_tour_id",
+      value: tour.id ?? "",
+    );
+    await CacheNetwork.insertToCache(
+      key: "selected_trip_type",
+      value: tour.type,
+    );
+    await CacheNetwork.insertToCache(
+      key: "selected_leaves_at",
+      value: tour.leavesAt.toIso8601String(),
+    );
+    print("tour is ==$selectedTour");
+  }
+
+  Future<void> _loadSelectedTrip() async {
+    final tourId = CacheNetwork.getCacheData(key: "selected_tour_id");
+    final tripType = CacheNetwork.getCacheData(key: "selected_trip_type");
+    final leavesAtStr = CacheNetwork.getCacheData(key: "selected_leaves_at");
+    if (tourId != null && leavesAtStr != null) {
+      final leavesAt = DateTime.parse(leavesAtStr);
+      final now = DateTime.now();
+      if (now.isBefore(leavesAt)) {
+        // استدعاء الرحلة من الـ API
+        await context.read<SelectionTourCubit>().selectionTour(tourId);
+        final tour = context.read<SelectionTourCubit>().tourCurrent;
+        if (tour != null) {
+          setState(() {
+            isTripConfirmed = true;
+            lastTripType = tripType;
+            selectedTab = (tripType == "go") ? 0 : 1;
+            selectedTour = tour;
+          });
+        }
+        //  else {
+        //   // لو الرحلة مش اتحملت لأي سبب
+        //   await CacheNetwork.deleteCacheData(key: "selected_tour_id");
+        //   await CacheNetwork.deleteCacheData(key: "selected_trip_type");
+        //   await CacheNetwork.deleteCacheData(key: "selected_leaves_at");
+        // }
+      } else {
+        // لو ميعاد الرحلة خلص
+        await CacheNetwork.deleteCacheData(key: "selected_tour_id");
+        await CacheNetwork.deleteCacheData(key: "selected_trip_type");
+        await CacheNetwork.deleteCacheData(key: "selected_leaves_at");
+      }
+    }
+  }
+
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
     BlocProvider.of<TourCubit>(context).getAllTours();
     isTripConfirmed = widget.isTripConfirmed;
+    _initData();
     tripTimer = Timer.periodic(Duration(minutes: 1), (_) {
       _checkTripTime();
+    });
+  }
+
+  Future<void> _initData() async {
+    await _loadSelectedTrip();
+    setState(() {
+      isLoading = false;
     });
   }
 
@@ -161,7 +220,8 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                     SizedBox(height: 15.h),
                     if (isTripConfirmed &&
                         ((selectedTab == 0 && lastTripType == 'go') ||
-                            (selectedTab == 1 && lastTripType == 'return')))
+                            (selectedTab == 1 && lastTripType == 'return')) &&
+                        selectedTour != null)
                       Center(
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
@@ -180,9 +240,10 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                             );
                             context.push(
                               '/tripDetails',
-                              extra: context
-                                  .read<SelectionTourCubit>()
-                                  .tourCurrent!,
+                              extra: selectedTour,
+                              //  context
+                              //     .read<SelectionTourCubit>()
+                              //     .tourCurrent!,
                             );
                           },
                           child: Text(
@@ -216,7 +277,11 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
       child: BlocBuilder<TourCubit, TourState>(
         builder: (context, state) {
           if (state is TourLoading) {
-            return Center(child: CircularProgressIndicator());
+            return Center(
+              child: CircularProgressIndicator(
+                color: ColorManager.primaryColor,
+              ),
+            );
           } else if (state is TourLoaded) {
             print('عدد الرحلات المستلمة: ${state.tours.length}');
 
@@ -303,6 +368,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                           print('قيمة confirmed: $confirmed');
                           if (confirmed == true) {
                             setState(() {
+                              _saveSelectedTrip(selectedTour!);
                               isTripConfirmed = true;
                               lastTripType = selectedTour!.type;
                               print('isTripConfirmed: $isTripConfirmed');

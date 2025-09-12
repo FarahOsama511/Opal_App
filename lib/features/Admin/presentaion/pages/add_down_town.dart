@@ -39,74 +39,76 @@ class _AddDownTownState extends State<AddDownTown> {
     return Scaffold(
       backgroundColor: ColorManager.secondColor,
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                SizedBox(height: 50.h),
-                LogoCircle(),
-                SizedBox(height: 47.h),
-                CustomTextField(
-                  hint: 'اسم المدينة',
-                  controller: downTownController,
-                  validator: validatorMessage,
-                ),
-                SizedBox(height: 20.h),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  SizedBox(height: 50.h),
+                  LogoCircle(),
+                  SizedBox(height: 47.h),
+                  CustomTextField(
+                    hint: 'اسم المدينة',
+                    controller: downTownController,
+                    validator: validatorMessage,
+                  ),
+                  SizedBox(height: 20.h),
 
-                BlocConsumer<AddDownTownCubit, AddDownTownState>(
-                  listener: (context, state) {
-                    if (state is AddDownTownFailure) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(state.errorMessage)),
-                      );
-                    } else if (state is AddDownTownSuccess) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            state.successMessage,
-                            style: TextStyles.white12Bold,
+                  BlocConsumer<AddDownTownCubit, AddDownTownState>(
+                    listener: (context, state) {
+                      if (state is AddDownTownFailure) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(state.errorMessage)),
+                        );
+                      } else if (state is AddDownTownSuccess) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              state.successMessage,
+                              style: TextStyles.white12Bold,
+                            ),
                           ),
-                        ),
+                        );
+                        context.go('/adminScreen');
+                        BlocProvider.of<GetAllDownTownCubit>(
+                          context,
+                        ).fetchAllDownTowns();
+                      }
+                    },
+                    builder: (context, state) {
+                      if (state is AddDownTownLoading) {
+                        return const Center(
+                          child: CircularProgressIndicator(
+                            color: ColorManager.primaryColor,
+                          ),
+                        );
+                      }
+                      return PrimaryButton(
+                        backgroundColor: ColorManager.primaryColor,
+                        text: 'اضافة مدينة',
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            context.read<AddDownTownCubit>().addDownTown(
+                              DownTownEntity(name: downTownController.text),
+                              context,
+                            );
+                          }
+                        },
                       );
-                      context.go('/adminScreen');
-                      BlocProvider.of<GetAllDownTownCubit>(
-                        context,
-                      ).fetchAllDownTowns();
-                    }
-                  },
-                  builder: (context, state) {
-                    if (state is AddDownTownLoading) {
-                      return const Center(
-                        child: CircularProgressIndicator(
-                          color: ColorManager.primaryColor,
-                        ),
-                      );
-                    }
-                    return PrimaryButton(
-                      backgroundColor: ColorManager.primaryColor,
-                      text: 'اضافة مدينة',
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          context.read<AddDownTownCubit>().addDownTown(
-                            DownTownEntity(name: downTownController.text),
-                            context,
-                          );
-                        }
-                      },
-                    );
-                  },
-                ),
-                SizedBox(height: 20.h),
-                PrimaryButton(
-                  text: 'إلغاء ',
-                  onPressed: () {
-                    context.pop();
-                  },
-                  backgroundColor: ColorManager.greyColor,
-                ),
-              ],
+                    },
+                  ),
+                  SizedBox(height: 20.h),
+                  PrimaryButton(
+                    text: 'إلغاء ',
+                    onPressed: () {
+                      context.pop();
+                    },
+                    backgroundColor: ColorManager.greyColor,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

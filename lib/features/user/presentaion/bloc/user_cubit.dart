@@ -25,94 +25,74 @@ class GetAllUserCubit extends Cubit<UserState> {
   ) : super(UserInitial());
   Future<void> fetchAllUsers() async {
     emit(UserLoading());
-    try {
-      final users = await getAllUserUseCase();
-      users.fold(
-        (failure) {
-          emit(UserError(_errorMessage(failure)));
-        },
-        (user) {
-          _users = user;
-          emit(UserSuccess(user));
-        },
-      );
-    } catch (e) {
-      print('Server error: ${e}');
-      emit(UserError("حدث خطأ ما، يرجى المحاولة مرة أخرى"));
-    }
+    final users = await getAllUserUseCase();
+    users.fold(
+      (failure) {
+        emit(UserError(_errorMessage(failure)));
+      },
+      (user) {
+        _users = user;
+        emit(UserSuccess(user));
+      },
+    );
   }
 
   Future<void> userIsActivate(String userId) async {
-    try {
-      final result = await userIsactivatUseCase(userId, 'active');
-      result.fold(
-        (failure) {
-          emit(UserError(_errorMessage(failure)));
-        },
-        (activatedUser) {
-          // عدل حالة المستخدم داخل القائمة
-          _users = _users.map((user) {
-            if (user.id == userId) {
-              return user.copyWith(status: 'active');
-            }
-            return user;
-          }).toList();
+    final result = await userIsactivatUseCase(userId, 'active');
+    result.fold(
+      (failure) {
+        emit(UserError(_errorMessage(failure)));
+      },
+      (activatedUser) {
+        // عدل حالة المستخدم داخل القائمة
+        _users = _users.map((user) {
+          if (user.id == userId) {
+            return user.copyWith(status: 'active');
+          }
+          return user;
+        }).toList();
 
-          emit(UserSuccess(_users));
-        },
-      );
-    } catch (e) {
-      print('Server error: ${e}');
-      emit(UserError("حدث خطأ ما، يرجى المحاولة مرة أخرى"));
-    }
+        emit(UserSuccess(_users));
+      },
+    );
   }
 
   Future<void> userIsDeactivate(String userId) async {
-    try {
-      final result = await userIsDeactivatUseCase(userId, 'inactive');
-      result.fold(
-        (failure) {
-          emit(UserError(_errorMessage(failure)));
-        },
-        (deactivatedUser) {
-          _users = _users.map((user) {
-            if (user.id == userId) {
-              return user.copyWith(status: 'inactive');
-            }
-            return user;
-          }).toList();
+    final result = await userIsDeactivatUseCase(userId, 'inactive');
+    result.fold(
+      (failure) {
+        emit(UserError(_errorMessage(failure)));
+      },
+      (deactivatedUser) {
+        _users = _users.map((user) {
+          if (user.id == userId) {
+            return user.copyWith(status: 'inactive');
+          }
+          return user;
+        }).toList();
 
-          emit(UserSuccess(_users));
-        },
-      );
-    } catch (e) {
-      print('Server error: ${e}');
-      emit(UserError("حدث خطأ ما، يرجى المحاولة مرة أخرى"));
-    }
+        emit(UserSuccess(_users));
+      },
+    );
   }
 
   Future<void> getUserById(String userId) async {
     emit(UserLoading());
-    try {
-      final result = await getUserIdUseCase(userId);
-      result.fold(
-        (failure) {
-          emit(UserError(_errorMessage(failure)));
-        },
-        (userById) {
-          if (userById != null) {
-            emit(UserByIdSuccess(userById));
-            print("User successfully: $userById");
-          } else {
-            emit(UserError("المستخدم غير موجود"));
-            print("UserById returned null");
-          }
-        },
-      );
-    } catch (e) {
-      print('Server error: $e');
-      emit(UserError("حدث خطأ ما، يرجى المحاولة مرة أخرى"));
-    }
+    final result = await getUserIdUseCase(userId);
+    result.fold(
+      (failure) {
+        emit(UserError(_errorMessage(failure)));
+      },
+      (userById) {
+        if (userById != null) {
+          emit(UserByIdSuccess(userById));
+          print("User successfully: $userById");
+        } else {
+          emit(UserError("المستخدم غير موجود"));
+          print("UserById returned null");
+        }
+      },
+    );
   }
 
   String _errorMessage(Failure failure) {

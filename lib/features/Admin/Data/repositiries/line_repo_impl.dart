@@ -18,32 +18,25 @@ class LineRepoImpl extends LineRepo {
     required this.lineLocalDataSource,
   });
   @override
-  @override
   Future<Either<Failure, List<LineEntity>>> getAllLines() async {
     try {
+      if (await networkInfo.isConnected) {
+        final remoteLines = await remoteDataSource.getAllLines();
+        await lineLocalDataSource.saveLines(remoteLines);
+        return Right(remoteLines);
+      }
       final localLines = await lineLocalDataSource.getLines();
       if (localLines.isNotEmpty) {
-        Future.microtask(() async {
-          if (await networkInfo.isConnected) {
-            try {
-              final remoteLines = await remoteDataSource.getAllLines();
-              lineLocalDataSource.saveLines(remoteLines);
-            } catch (_) {}
-          }
-        });
         return Right(localLines);
+      } else {
+        return Left(EmptyCacheFailure());
       }
-    } catch (_) {}
-    if (await networkInfo.isConnected) {
-      try {
-        final lines = await remoteDataSource.getAllLines();
-        lineLocalDataSource.saveLines(lines);
-        return Right(lines);
-      } catch (e) {
+    } catch (e) {
+      if (e is ServerException) {
         return Left(ServerFailure());
+      } else {
+        return Left(EmptyCacheFailure());
       }
-    } else {
-      return Left(EmptyCacheFailure());
     }
   }
 

@@ -19,36 +19,25 @@ class DownTownRepoImpl extends DownTownRepo {
     required this.localDataSource,
   });
   @override
-  @override
   Future<Either<Failure, List<DownTownEntity>>> getAllDownTown() async {
     try {
-      // 1️⃣ جرّب تعرض الكاش الأول لو موجود
+      if (await networkInfo.isConnected) {
+        final remoteDownTowns = await downTownRemoteDataSource.getAllDownTown();
+        await localDataSource.saveDownTown(remoteDownTowns);
+        return Right(remoteDownTowns);
+      }
       final localDownTowns = await localDataSource.getDownTown();
       if (localDownTowns.isNotEmpty) {
-        // رجّعهم بسرعة للمستخدم
-        Future.microtask(() async {
-          if (await networkInfo.isConnected) {
-            try {
-              final remoteDownTowns = await downTownRemoteDataSource
-                  .getAllDownTown();
-              localDataSource.saveDownTown(remoteDownTowns);
-            } catch (_) {}
-          }
-        });
         return Right(localDownTowns);
+      } else {
+        return Left(EmptyCacheFailure());
       }
-    } catch (_) {}
-
-    if (await networkInfo.isConnected) {
-      try {
-        final remoteDownTowns = await downTownRemoteDataSource.getAllDownTown();
-        localDataSource.saveDownTown(remoteDownTowns);
-        return Right(remoteDownTowns);
-      } catch (e) {
+    } catch (e) {
+      if (e is ServerException) {
         return Left(ServerFailure());
+      } else {
+        return Left(EmptyCacheFailure());
       }
-    } else {
-      return Left(EmptyCacheFailure());
     }
   }
 

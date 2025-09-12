@@ -1,22 +1,22 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:opal_app/core/network/local_network.dart';
-import 'package:opal_app/core/resources/color_manager.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/settings.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/student_list.dart';
 import 'package:opal_app/features/Admin/presentaion/pages/trips.dart';
-import 'package:opal_app/features/user/presentaion/bloc/get_all_downtowns/get_all_down_town_cubit.dart';
-import 'package:opal_app/features/user/presentaion/bloc/user_cubit.dart';
-import 'package:opal_app/features/user/presentaion/bloc/user_state.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../core/network/local_network.dart';
+import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
+import '../../../user/presentaion/bloc/get_all_downtowns/get_all_down_town_cubit.dart';
 import '../../../user/presentaion/bloc/get_all_universities/get_all_universities_cubit.dart';
+import '../../../user/presentaion/bloc/user_cubit.dart';
+import '../../../user/presentaion/bloc/user_state.dart';
 import '../bloc/get_lines/get_all_lines_cubit.dart';
 import '../bloc/get_tour_bloc/tour_cubit.dart';
 import '../widgets/add_menu.dart';
 import '../widgets/app_header.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/custom_bottom_nav.dart';
 import '../widgets/join_request_card.dart';
 import 'add_trip_time.dart';
@@ -33,20 +33,24 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   int currentIndex = 0;
   bool showAddTripBox = false;
   int? expandedIndex;
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
-    // نجلب البيانات أول مرة
-    _fetchInitialData();
-  }
-
-  void _fetchInitialData() {
     BlocProvider.of<TourCubit>(context).getAllTours();
-    BlocProvider.of<GetAllUserCubit>(context).fetchAllUsers();
     BlocProvider.of<GetAllUniversitiesCubit>(context).fetchAlluniversities();
     BlocProvider.of<GetAllDownTownCubit>(context).fetchAllDownTowns();
     BlocProvider.of<LinesCubit>(context).getAllLiness();
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      BlocProvider.of<GetAllUserCubit>(context).fetchAllUsers();
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -104,8 +108,11 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                         index: currentIndex,
                         children: [
                           _buildJoinRequests(),
+                          // تأكد من استدعاء getAllTours هنا
                           const TripsScreen(),
+
                           const StudentList(),
+
                           const SettingsScreen(),
                         ],
                       ),
@@ -173,11 +180,12 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 }
               },
               builder: (context, state) {
+                print("Current state: $state");
+
                 if (state is UserSuccess) {
                   final unactivatedUsers = state.user
                       .where((u) => u.status == 'pending')
                       .toList();
-
                   if (unactivatedUsers.isEmpty) {
                     return Center(
                       child: Text(
@@ -186,15 +194,14 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                       ),
                     );
                   }
-
                   return ListView.builder(
                     padding: EdgeInsets.symmetric(horizontal: 12.w),
                     itemCount: unactivatedUsers.length,
                     itemBuilder: (context, index) {
                       final data = unactivatedUsers[index];
                       return JoinRequestCard(
-                        name: data.name ?? "",
-                        phone: data.phone ?? "",
+                        name: data.name!,
+                        phone: data.phone!,
                         university: data.university?.name ?? "",
                         downTown: data.downTown?.name ?? "",
                         isExpanded: expandedIndex == index,
@@ -209,22 +216,17 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                           await context.read<GetAllUserCubit>().userIsActivate(
                             data.id!,
                           );
-                          context
-                              .read<GetAllUserCubit>()
-                              .fetchAllUsers(); // refresh
                         },
                         onReject: () async {
                           await context
                               .read<GetAllUserCubit>()
                               .userIsDeactivate(data.id!);
-                          context
-                              .read<GetAllUserCubit>()
-                              .fetchAllUsers(); // refresh
                         },
                       );
                     },
                   );
-                } else if (state is UserLoading) {
+                }
+                if (state is UserInitial || state is UserLoading) {
                   return const Center(
                     child: CircularProgressIndicator(color: Colors.white),
                   );

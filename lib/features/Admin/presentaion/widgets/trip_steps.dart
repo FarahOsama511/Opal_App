@@ -59,7 +59,7 @@ class StepButtons extends StatelessWidget {
           child:
               BlocBuilder<UpdateAddDeleteTourCubit, UpdateAddDeleteTourState>(
                 builder: (context, state) {
-                  if (state is UpdateAddDeleteTourLoading && currentStep == 4) {
+                  if (state is UpdateAddDeleteTourLoading && currentStep == 3) {
                     // لودينج مكان زرار التأكيد فقط
                     return Container(
                       height: 50.h,
@@ -81,7 +81,7 @@ class StepButtons extends StatelessWidget {
                     ),
                     onPressed: onNext,
                     child: Text(
-                      currentStep < 4 ? 'التالي' : 'تأكيد',
+                      currentStep < 3 ? 'التالي' : 'تأكيد',
                       style: TextStyles.white14Bold.copyWith(fontSize: 14.sp),
                     ),
                   );

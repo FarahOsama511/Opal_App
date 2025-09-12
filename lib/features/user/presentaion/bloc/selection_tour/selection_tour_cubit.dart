@@ -14,10 +14,13 @@ class SelectionTourCubit extends Cubit<SelectionTourState> {
   SelectionTourCubit(this.selectionTourUseCase, this.unconfirmTourUseCase)
     : super(SelectionTourInitial());
   Future<void> selectionTour(String tourId) async {
+    print("داخل selectionTour: $tourId");
+
     emit(SelectionTourLoading());
     try {
       final selectTour = await selectionTourUseCase(tourId);
       print("tour id is ${tourId}");
+      print("النتيجة من useCase: $selectTour");
 
       selectTour.fold(
         (failure) {

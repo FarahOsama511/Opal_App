@@ -12,63 +12,33 @@ class UniversityRepoImpl extends UniversityRepo {
   final UniversityDataSource universityDataSource;
   final NetworkInfo networkInfo;
   final UniversityLocalDataSource universityLocalDataSource;
-
   UniversityRepoImpl({
     required this.universityDataSource,
     required this.networkInfo,
     required this.universityLocalDataSource,
   });
-
-  @override
   @override
   Future<Either<Failure, List<UniversityEntity>>> getAllUniversities() async {
     try {
-      // 1️⃣ جرّب تعرض الكاش الأول لو موجود
+      if (await networkInfo.isConnected) {
+        final remoteUniversities = await universityDataSource
+            .getAllUniversity();
+        await universityLocalDataSource.saveUniversities(remoteUniversities);
+        return Right(remoteUniversities);
+      }
       final localUniversities = await universityLocalDataSource
           .getUniversities();
       if (localUniversities.isNotEmpty) {
-        // رجّعهم بسرعة للمستخدم
-        Future.microtask(() async {
-          if (await networkInfo.isConnected) {
-            try {
-              final remoteUniversities = await universityDataSource
-                  .getAllUniversity();
-              universityLocalDataSource.saveUniversities(remoteUniversities);
-            } catch (_) {}
-          }
-        });
         return Right(localUniversities);
+      } else {
+        return Left(EmptyCacheFailure());
       }
-    } catch (_) {
-      // مفيش كاش
-    }
-
-    // 2️⃣ fallback: API
-    if (await networkInfo.isConnected) {
-      try {
-        final remoteUniversities = await universityDataSource
-            .getAllUniversity();
-        universityLocalDataSource.saveUniversities(remoteUniversities);
-        return Right(remoteUniversities);
-      } catch (e) {
+    } catch (e) {
+      if (e is ServerException) {
         return Left(ServerFailure());
+      } else {
+        return Left(EmptyCacheFailure());
       }
-    } else {
-      return Left(EmptyCacheFailure());
-    }
-  }
-
-  @override
-  Future<Either<Failure, UniversityEntity>> getUniversityById(String id) async {
-    if (await networkInfo.isConnected) {
-      try {
-        final university = await universityDataSource.getUniversityById(id);
-        return Right(university);
-      } on ServerException {
-        throw ServerFailure();
-      }
-    } else {
-      return Left(NoInternetFailure());
     }
   }
 
@@ -125,5 +95,11 @@ class UniversityRepoImpl extends UniversityRepo {
     } else {
       return Left(NoInternetFailure());
     }
+  }
+
+  @override
+  Future<Either<Failure, UniversityEntity>> getUniversityById(String id) {
+    // TODO: implement getUniversityById
+    throw UnimplementedError();
   }
 }

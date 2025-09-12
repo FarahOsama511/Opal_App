@@ -56,7 +56,6 @@ class _EditTripTimeState extends State<EditTripBox> {
   void submitTour() {
     if (startDate == null ||
         endDate == null ||
-        selectedDate == null ||
         selectedSupervisor == null ||
         selectedLine == null) {
       ScaffoldMessenger.of(
@@ -66,6 +65,8 @@ class _EditTripTimeState extends State<EditTripBox> {
     }
 
     final now = DateTime.now();
+
+    // بناء startTime و endTime في يوم اليوم
     final fullStartTime = DateTime(
       now.year,
       now.month,
@@ -74,7 +75,7 @@ class _EditTripTimeState extends State<EditTripBox> {
       startDate!.minute,
     );
 
-    final fullEndTime = DateTime(
+    DateTime fullEndTime = DateTime(
       now.year,
       now.month,
       now.day,
@@ -82,19 +83,24 @@ class _EditTripTimeState extends State<EditTripBox> {
       endDate!.minute,
     );
 
-    final fullLeavesAt = DateTime(
+    // لو النهاية قبل البداية → نزود يوم
+    if (fullEndTime.isBefore(fullStartTime)) {
+      fullEndTime = fullEndTime.add(const Duration(days: 1));
+    }
+
+    // نحسب leavesAt
+    DateTime fullLeavesAt = DateTime(
       now.year,
       now.month,
       now.day,
-      leavesAtPeriod == 'صباحًا' ? leavesAtHour : leavesAtHour + 12,
+      leavesAtPeriod == 'صباحًا' ? leavesAtHour % 12 : (leavesAtHour % 12) + 12,
       leavesAtMinute,
     );
 
-    if (fullEndTime.isBefore(fullStartTime)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("وقت الانتهاء يجب أن يكون بعد وقت البداية")),
-      );
-      return;
+    // لو وقت الرحلة أقل أو يساوي endTime → نزود يوم عشان يركب صح
+    if (fullLeavesAt.isBefore(fullEndTime) ||
+        fullLeavesAt.isAtSameMomentAs(fullEndTime)) {
+      fullLeavesAt = fullLeavesAt.add(const Duration(days: 1));
     }
 
     final tour = TourModel(
@@ -128,9 +134,7 @@ class _EditTripTimeState extends State<EditTripBox> {
   @override
   void initState() {
     super.initState();
-
     final selectedTour = widget.tour;
-
     selectedSupervisor = selectedTour.supervisor;
     selectedLine = selectedTour.line;
     typeOfTrip = selectedTour.type;
@@ -142,14 +146,12 @@ class _EditTripTimeState extends State<EditTripBox> {
         : selectedTour.leavesAt.hour;
     leavesAtMinute = selectedTour.leavesAt.minute;
     leavesAtPeriod = selectedTour.leavesAt.hour >= 12 ? 'مساءً' : 'صباحًا';
-
     startDate = selectedTour.startTime;
     startHour = selectedTour.startTime.hour > 12
         ? selectedTour.startTime.hour - 12
         : selectedTour.startTime.hour;
     startMinute = selectedTour.startTime.minute;
     startPeriod = selectedTour.startTime.hour >= 12 ? 'مساءً' : 'صباحًا';
-
     endDate = selectedTour.endTime;
     endHour = selectedTour.endTime.hour > 12
         ? selectedTour.endTime.hour - 12
