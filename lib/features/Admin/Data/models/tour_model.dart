@@ -1,10 +1,10 @@
 import 'dart:developer';
-import 'package:opal_app/features/Admin/Data/models/supervisor_model.dart';
-import 'package:opal_app/features/user/Data/models/user_model.dart';
-import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
+import '../../../user/Data/models/user_model.dart';
+import '../../../user/Domain/entities/user_entity.dart';
 import '../../Domain/entities/line_entity.dart';
 import '../../Domain/entities/tour.dart';
 import 'line_model.dart';
+import 'supervisor_model.dart';
 
 class TourModel extends Tour {
   TourModel({

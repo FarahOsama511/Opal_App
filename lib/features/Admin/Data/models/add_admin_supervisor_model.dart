@@ -1,5 +1,5 @@
-import 'package:opal_app/features/Admin/Data/models/line_model.dart';
-import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
+import '../../../user/Domain/entities/user_entity.dart';
+import 'line_model.dart';
 
 class AddAdminSupervisorModel extends UserEntity {
   AddAdminSupervisorModel({

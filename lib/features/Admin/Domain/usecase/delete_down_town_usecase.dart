@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:opal_app/core/errors/failure.dart';
-import 'package:opal_app/features/Admin/Domain/reporistires/down_town_repo.dart';
+
+import '../../../../core/errors/failure.dart';
+import '../reporistires/down_town_repo.dart';
 
 class DeleteDownTownUsecase {
   DownTownRepo downTownRepo;

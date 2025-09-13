@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:opal_app/core/errors/failure.dart';
-
+import '../../../../core/errors/failure.dart';
 import '../entities/line_entity.dart';
 
 abstract class LineRepo {

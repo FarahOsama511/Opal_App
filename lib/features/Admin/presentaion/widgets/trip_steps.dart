@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:opal_app/core/resources/color_manager.dart';
+import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
 import '../bloc/update_add_delete_tour/update_add_delete_tour_cubit.dart';
 import '../bloc/update_add_delete_tour/update_add_delete_tour_state.dart';

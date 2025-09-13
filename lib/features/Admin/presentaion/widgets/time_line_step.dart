@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_cubit.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_state.dart';
-import 'package:opal_app/features/Admin/presentaion/widgets/custom_widgets.dart';
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
 import '../../Domain/entities/line_entity.dart';
+import '../bloc/get_lines/get_all_lines_cubit.dart';
+import '../bloc/get_lines/get_all_lines_state.dart';
+import 'custom_widgets.dart';
 
 class TimeLineStep extends StatefulWidget {
   final int hour;
@@ -41,11 +40,11 @@ class TimeLineStep extends StatefulWidget {
 
 class _TimeLineStepState extends State<TimeLineStep> {
   Widget timeSelector(
-      String label,
-      int value,
-      VoidCallback onIncrement,
-      VoidCallback onDecrement,
-      ) {
+    String label,
+    int value,
+    VoidCallback onIncrement,
+    VoidCallback onDecrement,
+  ) {
     return Column(
       children: [
         IconButton(
@@ -91,8 +90,8 @@ class _TimeLineStepState extends State<TimeLineStep> {
           label: 'اختر نوع الرحلة',
           value: tripTypeMap.values.contains(widget.typeOfTrip)
               ? tripTypeMap.keys.firstWhere(
-                (key) => tripTypeMap[key] == widget.typeOfTrip,
-          )
+                  (key) => tripTypeMap[key] == widget.typeOfTrip,
+                )
               : null,
           items: tripTypeMap.keys.toList(),
           onChanged: (displayValue) {
@@ -109,15 +108,21 @@ class _TimeLineStepState extends State<TimeLineStep> {
               timeSelector(
                 'الساعة',
                 widget.hour,
-                    () => widget.onHourChanged(widget.hour == 12 ? 1 : widget.hour + 1),
-                    () => widget.onHourChanged(widget.hour == 1 ? 12 : widget.hour - 1),
+                () => widget.onHourChanged(
+                  widget.hour == 12 ? 1 : widget.hour + 1,
+                ),
+                () => widget.onHourChanged(
+                  widget.hour == 1 ? 12 : widget.hour - 1,
+                ),
               ),
               SizedBox(width: 15.w),
               timeSelector(
                 'الدقيقة',
                 widget.minute,
-                    () => widget.onMinuteChanged((widget.minute + 1) % 60),
-                    () => widget.onMinuteChanged(widget.minute == 0 ? 59 : widget.minute - 1),
+                () => widget.onMinuteChanged((widget.minute + 1) % 60),
+                () => widget.onMinuteChanged(
+                  widget.minute == 0 ? 59 : widget.minute - 1,
+                ),
               ),
               SizedBox(width: 15.w),
               Column(
@@ -129,7 +134,10 @@ class _TimeLineStepState extends State<TimeLineStep> {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 8.h,
+                    ),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey.shade400),
                       borderRadius: BorderRadius.circular(8.r),
@@ -154,7 +162,9 @@ class _TimeLineStepState extends State<TimeLineStep> {
         BlocBuilder<LinesCubit, GetAllLinesState>(
           builder: (context, state) {
             if (state is LinesLoading) {
-              return const CircularProgressIndicator(color: ColorManager.primaryColor);
+              return const CircularProgressIndicator(
+                color: ColorManager.primaryColor,
+              );
             } else if (state is LinesLoaded) {
               final allLines = state.Liness;
               return CustomDropdown(

@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:opal_app/features/Admin/presentaion/pages/settings.dart';
-import 'package:opal_app/features/Admin/presentaion/pages/student_list.dart';
-import 'package:opal_app/features/Admin/presentaion/pages/trips.dart';
 import '../../../../core/network/local_network.dart';
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
@@ -20,6 +17,9 @@ import '../widgets/app_header.dart';
 import '../widgets/custom_bottom_nav.dart';
 import '../widgets/join_request_card.dart';
 import 'add_trip_time.dart';
+import 'settings.dart';
+import 'student_list.dart';
+import 'trips.dart';
 
 class AdminHomeScreen extends StatefulWidget {
   const AdminHomeScreen({super.key});

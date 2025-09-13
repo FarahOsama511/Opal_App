@@ -1,12 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:opal_app/core/strings/messages.dart';
-import 'package:opal_app/features/Admin/Domain/entities/down_town_entity.dart';
-import 'package:opal_app/features/Admin/Domain/usecase/add_down_town_usecase.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/add_down_town/add_down_town_state.dart';
-
 import '../../../../../core/errors/failure.dart';
 import '../../../../../core/strings/failures.dart';
+import '../../../../../core/strings/messages.dart';
 import '../../../../user/presentaion/bloc/get_all_downtowns/get_all_down_town_cubit.dart';
+import '../../../Domain/entities/down_town_entity.dart';
+import '../../../Domain/usecase/add_down_town_usecase.dart';
+import 'add_down_town_state.dart';
 
 class AddDownTownCubit extends Cubit<AddDownTownState> {
   AddDownTownCubit(this.addDownTownUsecase) : super(AddDownTownInitial());

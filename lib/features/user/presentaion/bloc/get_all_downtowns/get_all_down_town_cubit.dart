@@ -1,9 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:opal_app/features/Admin/Domain/usecase/get_all_down_town_usecase.dart';
-import 'package:opal_app/features/user/presentaion/bloc/get_all_downtowns/get_all_down_town_state.dart';
-
 import '../../../../../core/errors/failure.dart';
 import '../../../../../core/strings/failures.dart';
+import '../../../../Admin/Domain/usecase/get_all_down_town_usecase.dart';
+import 'get_all_down_town_state.dart';
 
 class GetAllDownTownCubit extends Cubit<GetAllDownTownState> {
   final GetAllDownTownUsecase getAllDownTownUsecase;

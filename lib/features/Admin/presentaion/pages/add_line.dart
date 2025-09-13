@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:opal_app/core/resources/color_manager.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/add_lines/add_line_cubit.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/add_lines/add_line_state.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_cubit.dart';
-import 'package:opal_app/features/Admin/presentaion/widgets/custom_widgets.dart';
-import 'package:opal_app/features/Admin/presentaion/widgets/text_field.dart';
+import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
 import '../../Domain/entities/line_entity.dart';
+import '../bloc/add_lines/add_line_cubit.dart';
+import '../bloc/add_lines/add_line_state.dart';
+import '../bloc/get_lines/get_all_lines_cubit.dart';
+import '../widgets/custom_widgets.dart';
+import '../widgets/text_field.dart';
 
 class AddLine extends StatefulWidget {
   const AddLine({super.key});

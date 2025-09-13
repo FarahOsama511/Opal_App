@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
-import 'package:opal_app/core/constants/constants.dart';
-import 'package:opal_app/core/errors/exceptions.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../../core/errors/exceptions.dart';
 import '../models/tour_model.dart';
 import 'dart:convert';
 

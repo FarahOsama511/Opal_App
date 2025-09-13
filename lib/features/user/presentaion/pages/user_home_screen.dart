@@ -1,13 +1,11 @@
 import 'dart:async';
+import 'package:Opal/features/Admin/Data/models/tour_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:opal_app/core/network/local_network.dart';
-import 'package:opal_app/features/Admin/Data/models/tour_model.dart';
-import 'package:opal_app/features/selection/presentation/pages/confirm_details.dart';
-import 'package:opal_app/features/user/Domain/entities/university_entity.dart';
+import '../../../../core/network/local_network.dart';
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
 import '../../../Admin/Domain/entities/line_entity.dart';
@@ -16,6 +14,8 @@ import '../../../Admin/presentaion/bloc/get_tour_bloc/tour_cubit.dart';
 import '../../../Admin/presentaion/bloc/get_tour_bloc/tour_state.dart';
 import '../../../Admin/presentaion/widgets/app_header.dart';
 import '../../../Admin/presentaion/widgets/custom_widgets.dart';
+import '../../../selection/presentation/pages/confirm_details.dart';
+import '../../Domain/entities/university_entity.dart';
 import '../bloc/selection_tour/selection_tour_cubit.dart';
 
 class UserHomeScreen extends StatefulWidget {

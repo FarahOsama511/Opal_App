@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
-import 'package:opal_app/features/Admin/Domain/entities/down_town_entity.dart';
 import '../../../../core/errors/failure.dart';
+import '../entities/down_town_entity.dart';
 
 abstract class DownTownRepo {
   Future<Either<Failure, List<DownTownEntity>>> getAllDownTown();

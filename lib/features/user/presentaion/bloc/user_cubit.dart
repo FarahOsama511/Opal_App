@@ -1,11 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:opal_app/core/errors/failure.dart';
-import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
-import 'package:opal_app/features/user/Domain/usecases/get_all_user.dart';
-import 'package:opal_app/features/user/Domain/usecases/get_user_id_use_case.dart';
-import 'package:opal_app/features/user/Domain/usecases/user_isactivat.dart';
-import 'package:opal_app/features/user/Domain/usecases/user_isdeactivat_UseCase.dart';
+import '../../../../core/errors/failure.dart';
 import '../../../../core/strings/failures.dart';
+import '../../Domain/entities/user_entity.dart';
+import '../../Domain/usecases/get_all_user.dart';
+import '../../Domain/usecases/get_user_id_use_case.dart';
+import '../../Domain/usecases/user_isactivat.dart';
+import '../../Domain/usecases/user_isdeactivat_UseCase.dart';
 import 'user_state.dart';
 
 class GetAllUserCubit extends Cubit<UserState> {

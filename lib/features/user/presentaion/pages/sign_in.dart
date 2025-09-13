@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:opal_app/core/resources/color_manager.dart';
-import 'package:opal_app/features/user/presentaion/bloc/auth_cubit.dart';
-import 'package:opal_app/features/user/presentaion/bloc/auth_state.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
 import '../../../Admin/presentaion/widgets/custom_widgets.dart';
 import '../../../Admin/presentaion/widgets/text_field.dart';
+import '../bloc/auth_cubit.dart';
+import '../bloc/auth_state.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
-import 'package:opal_app/features/Admin/presentaion/widgets/custom_widgets.dart';
-import 'package:opal_app/features/user/presentaion/bloc/user_cubit.dart';
-import 'package:opal_app/features/user/presentaion/bloc/user_state.dart';
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
+import '../../../user/presentaion/bloc/user_cubit.dart';
+import '../../../user/presentaion/bloc/user_state.dart';
+import '../../Domain/entities/tour.dart';
+import 'custom_widgets.dart';
 
 class SupervisorStep extends StatefulWidget {
   final SuperVisorEntity? selectedSupervisor;

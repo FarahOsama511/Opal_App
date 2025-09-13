@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:opal_app/core/resources/color_manager.dart';
-import 'package:opal_app/features/Admin/presentaion/widgets/custom_widgets.dart';
+import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
+import 'custom_widgets.dart';
 
 Widget DeleteDialog({
   required BuildContext context,

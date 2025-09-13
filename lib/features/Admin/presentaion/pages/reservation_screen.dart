@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
-import 'package:opal_app/core/constants/constants.dart';
-import 'package:opal_app/core/resources/text_styles.dart';
-import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
+import '../../../../core/constants/constants.dart';
 import '../../../../core/resources/color_manager.dart';
+import '../../../../core/resources/text_styles.dart';
 import '../../../user/Domain/entities/user_entity.dart';
+import '../../Domain/entities/tour.dart';
 import '../widgets/search_field.dart';
 import '../widgets/expandable_card.dart';
 

@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
-import 'package:opal_app/features/user/Domain/repositires/university_repo.dart';
 import '../../../../core/errors/failure.dart';
+import '../repositires/university_repo.dart';
 
 class DeleteUniversityUseCase {
   final UniversityRepo universityRepo;

@@ -1,4 +1,4 @@
-import 'package:opal_app/features/user/Domain/entities/university_entity.dart';
+import '../../../user/Domain/entities/university_entity.dart';
 
 abstract class GetUniversityByIdState {}
 

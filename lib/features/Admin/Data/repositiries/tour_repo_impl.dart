@@ -1,12 +1,12 @@
 import 'package:dartz/dartz.dart';
-import 'package:opal_app/core/errors/exceptions.dart';
-import 'package:opal_app/core/errors/failure.dart';
-import 'package:opal_app/core/network/network_info.dart';
-import 'package:opal_app/features/Admin/Data/models/tour_model.dart';
-import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
-import 'package:opal_app/features/Admin/Domain/reporistires/tour_repo.dart';
+import '../../../../core/errors/exceptions.dart';
+import '../../../../core/errors/failure.dart';
+import '../../../../core/network/network_info.dart';
+import '../../Domain/entities/tour.dart';
+import '../../Domain/reporistires/tour_repo.dart';
 import '../dataSource/tour_local_data_source.dart';
 import '../dataSource/tour_remote_data_source.dart';
+import '../models/tour_model.dart';
 
 class TourRepoImpl extends ToursRepository {
   final LocalDataSource localDataSource;

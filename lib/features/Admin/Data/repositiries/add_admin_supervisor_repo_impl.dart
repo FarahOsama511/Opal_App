@@ -1,14 +1,11 @@
 import 'package:dartz/dartz.dart';
-
-import 'package:opal_app/core/errors/failure.dart';
-import 'package:opal_app/features/Admin/Data/dataSource/add_admin_supervisor_datasource.dart';
-import 'package:opal_app/features/Admin/Data/models/add_admin_supervisor_model.dart';
-
-import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
-
 import '../../../../core/errors/exceptions.dart';
+import '../../../../core/errors/failure.dart';
 import '../../../../core/network/network_info.dart';
+import '../../../user/Domain/entities/user_entity.dart';
 import '../../Domain/reporistires/add_admin_supervisor.dart';
+import '../dataSource/add_admin_supervisor_datasource.dart';
+import '../models/add_admin_supervisor_model.dart';
 
 class AddAdminSupervisorRepoImpl extends AddAdminORSupervisorRepo {
   final AddAdminSupervisorDatasource addAdminSupervisorDatasource;

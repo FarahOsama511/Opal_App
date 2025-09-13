@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
-import 'package:opal_app/core/errors/failure.dart';
-import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
-import 'package:opal_app/features/user/Domain/repositires/select_tour_repo.dart';
 import '../../../../core/errors/exceptions.dart';
+import '../../../../core/errors/failure.dart';
 import '../../../../core/network/network_info.dart';
+import '../../../Admin/Domain/entities/tour.dart';
+import '../../Domain/repositires/select_tour_repo.dart';
 import '../datasource/select_tour_remote_data_source.dart';
 
 class SelectionTourRepoImpl extends SelectionTourRepo {

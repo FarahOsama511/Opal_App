@@ -1,6 +1,6 @@
+import 'package:Opal/core/resources/color_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:opal_app/core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
 
 class JoinRequestCard extends StatelessWidget {
@@ -43,7 +43,9 @@ class JoinRequestCard extends StatelessWidget {
             ),
             trailing: IconButton(
               icon: Icon(
-                isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                isExpanded
+                    ? Icons.keyboard_arrow_up
+                    : Icons.keyboard_arrow_down,
                 size: 24.sp,
               ),
               onPressed: onToggle,
@@ -73,7 +75,9 @@ class JoinRequestCard extends StatelessWidget {
                           ),
                           child: Text(
                             'رفض الطلب',
-                            style: TextStyles.white12Bold.copyWith(fontSize: 14.sp),
+                            style: TextStyles.white12Bold.copyWith(
+                              fontSize: 14.sp,
+                            ),
                           ),
                         ),
                       ),
@@ -90,7 +94,9 @@ class JoinRequestCard extends StatelessWidget {
                           ),
                           child: Text(
                             'قبول الطلب',
-                            style: TextStyles.white12Bold.copyWith(fontSize: 14.sp),
+                            style: TextStyles.white12Bold.copyWith(
+                              fontSize: 14.sp,
+                            ),
                           ),
                         ),
                       ),
@@ -104,6 +110,7 @@ class JoinRequestCard extends StatelessWidget {
       ),
     );
   }
+
   Widget _buildInfoRow(String label, String value) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 2.h),

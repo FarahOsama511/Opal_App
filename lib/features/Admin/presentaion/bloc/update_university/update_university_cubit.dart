@@ -1,10 +1,9 @@
+import 'package:Opal/features/Admin/presentaion/bloc/update_university/update_university_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../../../../core/errors/failure.dart';
 import '../../../../../core/strings/failures.dart';
 import '../../../../user/Domain/entities/university_entity.dart';
 import '../../../../user/Domain/usecases/update_university_usecase.dart';
-import '../update_University/update_University_state.dart';
 
 class UpdateUniversityCubit extends Cubit<UpdateUniversityState> {
   UpdateUniversityCubit(this.updateUniversityUseCase)

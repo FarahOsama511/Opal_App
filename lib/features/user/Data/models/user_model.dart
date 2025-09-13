@@ -1,7 +1,7 @@
-import 'package:opal_app/features/Admin/Data/models/down_town_model.dart';
-import 'package:opal_app/features/user/Data/models/university_model.dart';
-import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
+import '../../../Admin/Data/models/down_town_model.dart';
 import '../../../Admin/Data/models/line_model.dart';
+import '../../Domain/entities/user_entity.dart';
+import 'university_model.dart';
 
 class UserModel extends UserEntity {
   UserModel({

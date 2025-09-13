@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:dartz/dartz.dart';
-import 'package:opal_app/core/errors/exceptions.dart';
-import 'package:opal_app/core/network/local_network.dart';
-import 'package:opal_app/features/Admin/Data/models/line_model.dart';
+
+import '../../../../core/errors/exceptions.dart';
+import '../../../../core/network/local_network.dart';
+import '../models/line_model.dart';
 
 abstract class LineLocalDataSource {
   Future<List<LineModel>> getLines();

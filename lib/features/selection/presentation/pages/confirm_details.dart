@@ -3,11 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:opal_app/core/resources/color_manager.dart';
-import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
-import 'package:opal_app/features/user/presentaion/bloc/selection_tour/selection_tour_cubit.dart';
-import 'package:opal_app/features/user/presentaion/bloc/selection_tour/selection_tour_state.dart';
+import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
+import '../../../Admin/Domain/entities/tour.dart';
+import '../../../user/presentaion/bloc/selection_tour/selection_tour_cubit.dart';
+import '../../../user/presentaion/bloc/selection_tour/selection_tour_state.dart';
 
 class ConfirmDetailsScreen extends StatefulWidget {
   final Tour tour;

@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:opal_app/core/strings/messages.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/add_university/add_university_state.dart';
-import 'package:opal_app/features/user/Domain/entities/university_entity.dart';
-import 'package:opal_app/features/user/Domain/usecases/add_university_usecase.dart';
 import '../../../../../core/errors/failure.dart';
 import '../../../../../core/strings/failures.dart';
+import '../../../../../core/strings/messages.dart';
+import '../../../../user/Domain/entities/university_entity.dart';
+import '../../../../user/Domain/usecases/add_university_usecase.dart';
+import 'add_university_state.dart';
 
 class AddUniversityCubit extends Cubit<AddUniversityState> {
   final AddUniversityUsecase addUniversityUsecase;

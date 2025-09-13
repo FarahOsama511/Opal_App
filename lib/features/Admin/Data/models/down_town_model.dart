@@ -1,10 +1,9 @@
-import 'package:opal_app/features/Admin/Domain/entities/down_town_entity.dart';
 import '../../../user/Data/models/user_model.dart';
+import '../../Domain/entities/down_town_entity.dart';
 
 class DownTownModel extends DownTownEntity {
   DownTownModel({super.id, super.name, super.users});
   factory DownTownModel.fromJson(Map<String, dynamic> json) {
-    final usersJson = json['users'];
     return DownTownModel(
       id: json['id'],
       name: json['name'],

@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:opal_app/features/Admin/Domain/usecase/update_down_town.dart';
 import '../../../../../core/errors/failure.dart';
 import '../../../../../core/strings/failures.dart';
 import '../../../Domain/entities/down_town_entity.dart';
+import '../../../Domain/usecase/update_down_town.dart';
 import 'update_down_town_state.dart';
 
 class UpdateDownTownCubit extends Cubit<UpdateDownTownState> {

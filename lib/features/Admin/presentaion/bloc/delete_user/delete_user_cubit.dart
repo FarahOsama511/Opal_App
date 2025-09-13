@@ -1,10 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/delete_user/delete_user_state.dart';
-import 'package:opal_app/features/user/Domain/usecases/delete_user_usecase.dart';
-
 import '../../../../../core/errors/failure.dart';
 import '../../../../../core/strings/failures.dart';
 import '../../../../../core/strings/messages.dart';
+import '../../../../user/Domain/usecases/delete_user_usecase.dart';
+import 'delete_user_state.dart';
 
 class DeleteUserCubit extends Cubit<DeleteUserState> {
   final DeleteUserUsecase deleteUserUsecase;

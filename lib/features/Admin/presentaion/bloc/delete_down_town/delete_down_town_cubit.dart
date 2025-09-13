@@ -1,10 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:opal_app/features/Admin/Domain/usecase/delete_down_town_usecase.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/delete_down_town/delete_down_town_state.dart';
-
 import '../../../../../core/errors/failure.dart';
 import '../../../../../core/strings/failures.dart';
 import '../../../../../core/strings/messages.dart';
+import '../../../Domain/usecase/delete_down_town_usecase.dart';
+import 'delete_down_town_state.dart';
 
 class DeleteDownTownCubit extends Cubit<DeleteDownTownState> {
   final DeleteDownTownUsecase deleteDownTownUsecase;

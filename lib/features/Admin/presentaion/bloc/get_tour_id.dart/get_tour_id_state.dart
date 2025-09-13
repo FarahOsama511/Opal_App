@@ -1,4 +1,4 @@
-import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
+import '../../../Domain/entities/tour.dart';
 
 abstract class GetTourIdState {}
 

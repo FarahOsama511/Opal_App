@@ -1,9 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:opal_app/features/Admin/Domain/usecase/update_admin_supervisor.dart';
-import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
-
 import '../../../../../core/errors/failure.dart';
 import '../../../../../core/strings/failures.dart';
+import '../../../../user/Domain/entities/user_entity.dart';
+import '../../../Domain/usecase/update_admin_supervisor.dart';
 import 'update_admin_supervisor_state.dart';
 
 class UpdateAdminOrSupervisorCubit extends Cubit<UpdateAdminOrSupervisorState> {

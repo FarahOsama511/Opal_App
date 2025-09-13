@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:opal_app/core/resources/color_manager.dart';
-import 'package:opal_app/core/resources/text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:table_calendar/table_calendar.dart';
+
+import '../../../../core/resources/color_manager.dart';
+import '../../../../core/resources/text_styles.dart';
 
 class CalendarStep extends StatelessWidget {
   final DateTime focusedDay;

@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:opal_app/features/Admin/Data/models/tour_model.dart';
-import 'package:opal_app/features/user/Domain/usecases/select_tour_use_case.dart';
-import 'package:opal_app/features/user/Domain/usecases/unconfirm_tour_use_case.dart';
-import 'package:opal_app/features/user/presentaion/bloc/selection_tour/selection_tour_state.dart';
 import '../../../../../core/errors/failure.dart';
 import '../../../../../core/strings/failures.dart';
+import '../../../../Admin/Data/models/tour_model.dart';
+import '../../../Domain/usecases/select_tour_use_case.dart';
+import '../../../Domain/usecases/unconfirm_tour_use_case.dart';
+import 'selection_tour_state.dart';
 
 class SelectionTourCubit extends Cubit<SelectionTourState> {
   final SelectionTourUseCase selectionTourUseCase;

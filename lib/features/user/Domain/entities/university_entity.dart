@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
+
+import 'user_entity.dart';
 
 class UniversityEntity extends Equatable {
   final String? id;

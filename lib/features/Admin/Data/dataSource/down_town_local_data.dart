@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
-import 'package:opal_app/features/Admin/Data/models/down_town_model.dart';
 
 import '../../../../core/errors/exceptions.dart';
 import '../../../../core/network/local_network.dart';
+import '../models/down_town_model.dart';
 
 abstract class DownTownLocalDataSource {
   Future<List<DownTownModel>> getDownTown();

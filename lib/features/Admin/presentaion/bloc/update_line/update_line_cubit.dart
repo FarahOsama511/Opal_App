@@ -1,9 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:opal_app/features/Admin/Domain/entities/line_entity.dart';
-import 'package:opal_app/features/Admin/Domain/usecase/add_update_delete_line.dart.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/update_line/update_line_state.dart';
 import '../../../../../core/errors/failure.dart';
 import '../../../../../core/strings/failures.dart';
+import '../../../Domain/entities/line_entity.dart';
+import '../../../Domain/usecase/add_update_delete_line.dart.dart';
+import 'update_line_state.dart';
 
 class UpdateLineCubit extends Cubit<UpdateLineState> {
   UpdateLineCubit(this.updateLineUseCase) : super(UpdateLineInitial());

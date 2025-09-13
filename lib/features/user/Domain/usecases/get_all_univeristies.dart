@@ -1,7 +1,6 @@
 import 'package:dartz/dartz.dart';
-import 'package:opal_app/features/user/Domain/entities/university_entity.dart';
-
 import '../../../../core/errors/failure.dart';
+import '../entities/university_entity.dart';
 import '../repositires/university_repo.dart';
 
 class GetAllUniveristiesUseCase {

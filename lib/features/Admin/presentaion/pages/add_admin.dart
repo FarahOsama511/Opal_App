@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:opal_app/core/resources/color_manager.dart';
-import 'package:opal_app/features/Admin/Data/models/add_admin_supervisor_model.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/create_admin_supervisors/add_admin_supervisor_cubit.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/create_admin_supervisors/add_admin_supervisor_state.dart';
+import '../../../../core/resources/color_manager.dart';
+import '../../Data/models/add_admin_supervisor_model.dart';
+import '../bloc/create_admin_supervisors/add_admin_supervisor_cubit.dart';
+import '../bloc/create_admin_supervisors/add_admin_supervisor_state.dart';
 import '../widgets/custom_widgets.dart';
 import '../widgets/text_field.dart';
 

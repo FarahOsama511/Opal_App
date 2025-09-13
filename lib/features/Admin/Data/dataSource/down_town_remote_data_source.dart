@@ -1,12 +1,10 @@
 import 'dart:convert';
-
 import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
-import 'package:opal_app/features/Admin/Data/models/down_town_model.dart';
-import 'package:opal_app/features/Admin/Domain/entities/down_town_entity.dart';
-
 import '../../../../core/constants/constants.dart';
 import '../../../../core/errors/exceptions.dart';
+import '../../Domain/entities/down_town_entity.dart';
+import '../models/down_town_model.dart';
 
 abstract class DownTownRemoteDataSource {
   Future<List<DownTownModel>> getAllDownTown();

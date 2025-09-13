@@ -1,7 +1,6 @@
 import 'package:dartz/dartz.dart';
-import 'package:opal_app/core/errors/failure.dart';
-import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
-
+import '../../../../core/errors/failure.dart';
+import '../../../user/Domain/entities/user_entity.dart';
 import '../reporistires/add_admin_supervisor.dart';
 
 class AddAdminSupervisorUseCase {

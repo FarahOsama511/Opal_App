@@ -1,11 +1,11 @@
 import 'package:dartz/dartz.dart';
-import 'package:opal_app/core/errors/exceptions.dart';
-import 'package:opal_app/core/errors/failure.dart';
-import 'package:opal_app/core/network/network_info.dart';
-import 'package:opal_app/features/user/Data/datasource/user_local_data_source.dart';
-import 'package:opal_app/features/user/Data/datasource/user_remote_data_source.dart';
-import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
-import 'package:opal_app/features/user/Domain/repositires/user_repo.dart';
+import '../../../../core/errors/exceptions.dart';
+import '../../../../core/errors/failure.dart';
+import '../../../../core/network/network_info.dart';
+import '../../Domain/entities/user_entity.dart';
+import '../../Domain/repositires/user_repo.dart';
+import '../datasource/user_local_data_source.dart';
+import '../datasource/user_remote_data_source.dart';
 
 class UserRepoImpl extends UserRepo {
   final UserRemoteDataSource userRemoteDataSource;

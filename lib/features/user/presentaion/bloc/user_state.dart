@@ -1,4 +1,4 @@
-import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
+import '../../Domain/entities/user_entity.dart';
 
 abstract class UserState {}
 

@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:opal_app/core/errors/failure.dart';
-import 'package:opal_app/features/user/Domain/entities/authentity.dart';
-import 'package:opal_app/features/user/Domain/entities/login_entity.dart';
+import '../../../../core/errors/failure.dart';
+import '../entities/authentity.dart';
+import '../entities/login_entity.dart';
 
 abstract class AuthRepository {
   Future<Either<Failure, RegisterEntity>> register(

@@ -1,8 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:opal_app/core/errors/failure.dart';
-import 'package:opal_app/features/user/Domain/entities/login_entity.dart';
-
-import 'package:opal_app/features/user/Domain/repositires/auth_repo.dart';
+import '../../../../core/errors/failure.dart';
+import '../entities/login_entity.dart';
+import '../repositires/auth_repo.dart';
 
 class LoginUsecase {
   final AuthRepository authRepository;

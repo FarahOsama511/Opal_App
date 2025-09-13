@@ -1,10 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/delete_university/delete_university_state.dart';
-import 'package:opal_app/features/user/Domain/usecases/delete_university_use_case.dart';
-
 import '../../../../../core/errors/failure.dart';
 import '../../../../../core/strings/failures.dart';
 import '../../../../../core/strings/messages.dart';
+import '../../../../user/Domain/usecases/delete_university_use_case.dart';
+import 'delete_university_state.dart';
 
 class DeleteUniversityCubit extends Cubit<DeleteUniversityState> {
   final DeleteUniversityUseCase deleteUniversityUseCase;

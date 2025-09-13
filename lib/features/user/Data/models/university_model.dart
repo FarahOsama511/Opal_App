@@ -1,8 +1,6 @@
 import 'dart:developer';
-
-import 'package:opal_app/features/user/Data/models/user_model.dart';
-
 import '../../Domain/entities/university_entity.dart';
+import 'user_model.dart';
 
 class UniversityModel extends UniversityEntity {
   UniversityModel({super.id, super.name, super.location, super.users});

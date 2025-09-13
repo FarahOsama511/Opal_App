@@ -1,13 +1,12 @@
 import 'package:dartz/dartz.dart';
-import 'package:opal_app/features/Admin/Data/dataSource/down_town_local_data.dart';
-import 'package:opal_app/features/Admin/Data/dataSource/down_town_remote_data_source.dart';
-import 'package:opal_app/features/Admin/Data/models/down_town_model.dart';
-import 'package:opal_app/features/Admin/Domain/entities/down_town_entity.dart';
-import 'package:opal_app/features/Admin/Domain/reporistires/down_town_repo.dart';
-
 import '../../../../core/errors/exceptions.dart';
 import '../../../../core/errors/failure.dart';
 import '../../../../core/network/network_info.dart';
+import '../../Domain/entities/down_town_entity.dart';
+import '../../Domain/reporistires/down_town_repo.dart';
+import '../dataSource/down_town_local_data.dart';
+import '../dataSource/down_town_remote_data_source.dart';
+import '../models/down_town_model.dart';
 
 class DownTownRepoImpl extends DownTownRepo {
   final DownTownRemoteDataSource downTownRemoteDataSource;

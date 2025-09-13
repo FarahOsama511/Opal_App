@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:opal_app/features/Admin/Domain/entities/line_entity.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/get_lines/get_all_lines_cubit.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/update_admin_supervisor/update_admin_supervisor_cubit.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/update_admin_supervisor/update_admin_supervisor_state.dart';
-import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
+import '../../../user/Domain/entities/user_entity.dart';
+import '../../Domain/entities/line_entity.dart';
+import '../bloc/get_lines/get_all_lines_cubit.dart';
 import '../bloc/get_lines/get_all_lines_state.dart';
+import '../bloc/update_admin_supervisor/update_admin_supervisor_cubit.dart';
+import '../bloc/update_admin_supervisor/update_admin_supervisor_state.dart';
 import '../widgets/Universities_Multi_Dropdown .dart';
 import '../widgets/custom_widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

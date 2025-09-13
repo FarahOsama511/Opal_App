@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:opal_app/core/resources/color_manager.dart';
-
+import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
 
 /// دائرة اللوجو الحمراء
@@ -55,9 +54,7 @@ class PrimaryButton extends StatelessWidget {
         ),
         onPressed: isLoading ? null : onPressed,
         child: isLoading
-            ? const CircularProgressIndicator(
-          color: ColorManager.primaryColor,
-        )
+            ? const CircularProgressIndicator(color: ColorManager.primaryColor)
             : Text(text, style: TextStyles.white14Bold),
       ),
     );

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:opal_app/core/constants/constants.dart';
-import 'package:opal_app/core/get_it.dart' as DataCacheManager;
-import 'package:opal_app/core/network/local_network.dart';
 
+import 'core/constants/constants.dart';
+import 'core/get_it.dart' as DataCacheManager;
+import 'core/network/local_network.dart';
 import 'features/Admin/presentaion/widgets/animated_spalsh.dart';
 
 class DeciderPage extends StatefulWidget {

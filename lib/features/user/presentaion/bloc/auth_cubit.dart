@@ -1,12 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:opal_app/core/network/local_network.dart';
-import 'package:opal_app/core/strings/failures.dart';
-import 'package:opal_app/features/user/Domain/entities/authentity.dart';
-import 'package:opal_app/features/user/Domain/entities/login_entity.dart';
-import 'package:opal_app/features/user/Domain/usecases/login_usecase.dart';
-import 'package:opal_app/features/user/presentaion/bloc/auth_state.dart';
 import '../../../../core/errors/failure.dart';
+import '../../../../core/network/local_network.dart';
+import '../../../../core/strings/failures.dart';
+import '../../Domain/entities/authentity.dart';
+import '../../Domain/entities/login_entity.dart';
+import '../../Domain/usecases/login_usecase.dart';
 import '../../Domain/usecases/register_usecase.dart';
+import 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   final LoginUsecase loginUsecase;

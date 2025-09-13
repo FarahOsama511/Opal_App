@@ -1,11 +1,11 @@
 import 'package:dartz/dartz.dart';
-import 'package:opal_app/features/user/Data/datasource/university_data_source.dart';
-import 'package:opal_app/features/user/Data/datasource/university_local_data_source.dart';
-import 'package:opal_app/features/user/Domain/entities/university_entity.dart';
 import '../../../../core/errors/exceptions.dart';
 import '../../../../core/errors/failure.dart';
 import '../../../../core/network/network_info.dart';
+import '../../Domain/entities/university_entity.dart';
 import '../../Domain/repositires/university_repo.dart';
+import '../datasource/university_data_source.dart';
+import '../datasource/university_local_data_source.dart';
 import '../models/university_model.dart';
 
 class UniversityRepoImpl extends UniversityRepo {

@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:opal_app/core/constants/constants.dart';
-import 'package:opal_app/core/errors/exceptions.dart';
-import 'package:opal_app/core/network/local_network.dart';
-import 'package:opal_app/features/user/Data/models/register_model.dart';
-import 'package:opal_app/features/user/Data/models/login_model.dart';
 
+import '../../../../core/constants/constants.dart';
+import '../../../../core/errors/exceptions.dart';
+import '../../../../core/network/local_network.dart';
 import '../../Domain/entities/authentity.dart';
+import '../models/login_model.dart';
+import '../models/register_model.dart';
 
 abstract class AuthRemoteDataSource {
   Future<LoginModel> loginStudent(String phone, String universityCardId);

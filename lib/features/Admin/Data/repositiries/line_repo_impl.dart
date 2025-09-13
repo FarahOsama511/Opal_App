@@ -1,12 +1,12 @@
 import 'package:dartz/dartz.dart';
-import 'package:opal_app/core/errors/failure.dart';
-import 'package:opal_app/features/Admin/Data/dataSource/line_remote_data_source.dart';
-import 'package:opal_app/features/Admin/Data/models/line_model.dart';
-import 'package:opal_app/features/Admin/Domain/reporistires/line_repo.dart';
 import '../../../../core/errors/exceptions.dart';
+import '../../../../core/errors/failure.dart';
 import '../../../../core/network/network_info.dart';
 import '../../Domain/entities/line_entity.dart';
+import '../../Domain/reporistires/line_repo.dart';
 import '../dataSource/line_local_data_source.dart';
+import '../dataSource/line_remote_data_source.dart';
+import '../models/line_model.dart';
 
 class LineRepoImpl extends LineRepo {
   final LineLocalDataSource lineLocalDataSource;

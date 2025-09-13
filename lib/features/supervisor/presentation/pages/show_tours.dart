@@ -2,17 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:opal_app/core/network/local_network.dart';
-import 'package:opal_app/features/Admin/presentaion/widgets/app_header.dart'
-    show AppHeader;
-import 'package:opal_app/features/Admin/presentaion/widgets/expandable_card.dart';
-import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
 import '../../../../../../core/resources/color_manager.dart';
 import '../../../../../../core/resources/text_styles.dart';
+import '../../../../core/network/local_network.dart';
 import '../../../Admin/presentaion/bloc/get_tour_bloc/tour_cubit.dart';
 import '../../../Admin/presentaion/bloc/get_tour_bloc/tour_state.dart';
+import '../../../Admin/presentaion/widgets/app_header.dart';
+import '../../../Admin/presentaion/widgets/expandable_card.dart';
 import '../../../Admin/presentaion/widgets/search_field.dart';
 import '../../../Admin/presentaion/widgets/trip_type_selector.dart';
+import '../../../user/Domain/entities/user_entity.dart';
 import '../../../user/presentaion/bloc/user_cubit.dart';
 import '../../../user/presentaion/bloc/user_state.dart';
 

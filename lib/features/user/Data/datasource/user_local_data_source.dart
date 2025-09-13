@@ -1,10 +1,8 @@
 import 'dart:convert';
-
 import 'package:dartz/dartz.dart';
-import 'package:opal_app/features/user/Data/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../../../core/errors/exceptions.dart';
+import '../models/user_model.dart';
 
 abstract class UserLocalDataSource {
   Future<List<UserModel>> getUsers();

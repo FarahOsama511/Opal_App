@@ -1,14 +1,15 @@
+import 'package:Opal/features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_cubit.dart'
+    show UpdateAddDeleteTourCubit;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:opal_app/core/resources/color_manager.dart';
-import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_cubit.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/update_add_delete_tour/update_add_delete_tour_state.dart';
+import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/text_styles.dart';
+import '../../Domain/entities/tour.dart';
 import '../bloc/get_tour_bloc/tour_cubit.dart';
+import '../bloc/update_add_delete_tour/update_add_delete_tour_state.dart';
 import '../pages/edit_trip_time.dart';
 import '../pages/reservation_screen.dart';
 

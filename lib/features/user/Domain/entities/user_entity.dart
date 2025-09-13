@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:opal_app/features/Admin/Domain/entities/down_town_entity.dart';
-
+import '../../../Admin/Domain/entities/down_town_entity.dart';
 import '../../../Admin/Domain/entities/line_entity.dart';
 import 'university_entity.dart';
 

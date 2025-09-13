@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:opal_app/features/user/Domain/entities/user_entity.dart';
+
+import '../../../user/Domain/entities/user_entity.dart';
 
 class DownTownEntity extends Equatable {
   final String? name;

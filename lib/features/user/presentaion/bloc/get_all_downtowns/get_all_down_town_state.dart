@@ -1,4 +1,4 @@
-import 'package:opal_app/features/Admin/Domain/entities/down_town_entity.dart';
+import '../../../../Admin/Domain/entities/down_town_entity.dart';
 
 abstract class GetAllDownTownState {}
 

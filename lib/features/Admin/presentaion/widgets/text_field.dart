@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:opal_app/core/resources/text_styles.dart';
+
+import '../../../../core/resources/text_styles.dart';
 
 class CustomTextField extends StatelessWidget {
   final String hint;
@@ -27,10 +28,7 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(
-        vertical: 10.h,
-        horizontal: 10.w,
-      ),
+      padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
       child: TextFormField(
         controller: controller,
         textAlign: textAlign,
@@ -39,11 +37,9 @@ class CustomTextField extends StatelessWidget {
         decoration: InputDecoration(
           hintText: hint,
           hintStyle: TextStyles.black16Regular.copyWith(fontSize: 16.sp),
-          contentPadding: contentPadding ??
-              EdgeInsets.symmetric(
-                horizontal: 10.w,
-                vertical: 15.h,
-              ),
+          contentPadding:
+              contentPadding ??
+              EdgeInsets.symmetric(horizontal: 10.w, vertical: 15.h),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.r),
             borderSide: const BorderSide(color: Colors.black),

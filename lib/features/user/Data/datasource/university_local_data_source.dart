@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:dartz/dartz.dart';
-import 'package:opal_app/core/network/local_network.dart';
-import 'package:opal_app/features/user/Data/models/university_model.dart';
 import '../../../../core/errors/exceptions.dart';
+import '../../../../core/network/local_network.dart';
+import '../models/university_model.dart';
 
 abstract class UniversityLocalDataSource {
   Future<List<UniversityModel>> getUniversities();

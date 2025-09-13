@@ -1,10 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:opal_app/features/Admin/presentaion/bloc/get_tour_id.dart/get_tour_id_state.dart';
-
 import '../../../../../core/errors/failure.dart';
 import '../../../../../core/strings/failures.dart';
 import '../../../../user/Domain/entities/user_entity.dart';
 import '../../../Domain/usecase/get_tour_id_use_case.dart';
+import 'get_tour_id_state.dart';
 
 class GetTourIdCubit extends Cubit<GetTourIdState> {
   final GetTourByIdUseCase getTourByIdUseCase;

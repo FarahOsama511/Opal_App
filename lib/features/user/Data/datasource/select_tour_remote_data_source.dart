@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
-import 'package:opal_app/core/constants/constants.dart';
-import 'package:opal_app/core/errors/exceptions.dart';
-import 'package:opal_app/features/Admin/Data/models/tour_model.dart';
+
+import '../../../../core/constants/constants.dart';
+import '../../../../core/errors/exceptions.dart';
+import '../../../Admin/Data/models/tour_model.dart';
 
 abstract class SelectTourRemoteDataSource {
   Future<TourModel> SelectionTour(String tourId);

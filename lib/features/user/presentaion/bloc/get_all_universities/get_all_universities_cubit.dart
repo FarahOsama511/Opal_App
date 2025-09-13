@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:opal_app/features/user/Domain/usecases/get_all_univeristies.dart';
 import '../../../../../core/errors/failure.dart';
 import '../../../../../core/strings/failures.dart';
+import '../../../Domain/usecases/get_all_univeristies.dart';
 import 'get_all_universities_state.dart';
 
 class GetAllUniversitiesCubit extends Cubit<GetAllUniversitiesState> {

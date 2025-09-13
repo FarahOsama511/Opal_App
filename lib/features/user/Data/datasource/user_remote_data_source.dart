@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
-import 'package:opal_app/core/constants/constants.dart';
 
+import '../../../../core/constants/constants.dart';
 import '../../../../core/errors/exceptions.dart';
 import '../../../../core/network/local_network.dart';
 import '../models/user_model.dart';

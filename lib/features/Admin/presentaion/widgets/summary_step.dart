@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:opal_app/features/Admin/Domain/entities/tour.dart';
 import '../../../../core/resources/text_styles.dart';
 import '../../Domain/entities/line_entity.dart';
+import '../../Domain/entities/tour.dart';
 
 class SummaryStep extends StatelessWidget {
   final String? typeOfTrip;
